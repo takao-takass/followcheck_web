@@ -16,3 +16,11 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+# ログイン
+# - 認証API
+Route::post('/followcheck/login/auth','LoginController@auth');
+
+# サインアップ
+# - 登録API
+Route::post('/followcheck/signup/entry','SignupController@entry');
