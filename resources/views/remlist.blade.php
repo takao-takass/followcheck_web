@@ -15,10 +15,10 @@
     <body>
     
         <!-- ヘッダ  -->
-        <div class="navbar navbar-dark shadow-sm" style="background-color: #4a84cc;">
+        <div class="navbar navbar-dark shadow-sm" style="background-color: #436be3;">
             <div class="container d-flex justify-content-between">
                 <a href="#" class="navbar-brand d-flex">
-                    <h2><strong>followcheck</strong></h2>
+                    <img class="titlelogo" src="{{ asset('/img/title2.png') }}">
                 </a>
                 <a href="" class="navbar-brand" style="text-align:right;"> 
                     <strong>ログアウト</strong>
