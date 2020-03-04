@@ -24,3 +24,7 @@ Route::post('/followcheck/login/auth','LoginController@auth');
 # サインアップ
 # - 登録API
 Route::post('/followcheck/signup/entry','SignupController@entry');
+
+# フォロバ待ちリスト
+# - 非表示API
+Route::post('/followcheck/unfblist/hide','UnfblistController@hide');

@@ -32,3 +32,7 @@ Route::get('/followcheck/signup','SignupController@index');
 Route::redirect('/followcheck/remlist', '/followcheck/remlist/0');
 Route::get('/followcheck/remlist/{page}','RemlistController@index');
 
+# フォロバ待ちリスト
+# - 画面表示
+Route::redirect('/followcheck/unfblist', '/followcheck/unfblist/0');
+Route::get('/followcheck/unfblist/{page}','UnfblistController@index');
