@@ -10,24 +10,76 @@ use Carbon\Carbon;
 
 class UnfblistController extends Controller
 {
+
+    /**
+     * 初期処理（初期ユーザ確定）
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function init()
+    {
+        $service_user_id = "0000000001";
+
+        $userIds = DB::connection('mysql')->select(
+            ' SELECT UA.user_id' .
+            ' FROM service_users SU' .
+            ' INNER JOIN users_accounts UA' .
+            ' ON SU.service_user_id = UA.service_user_id' .
+            ' ORDER BY UA.user_id DESC'
+        );
+
+        // ユーザIDの取得
+        $param = "";
+        foreach($userIds as $userId){
+            $param = $userId->user_id;
+            break;
+        }
+
+        return redirect("followcheck/unfblist/".$param."/0");
+    }
+
     /**
      * 画面表示
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($user_id, $page)
     {
 
+        // アカウントの情報を取得
+        $service_user_id = "0000000001";
+        $accounts = DB::connection('mysql')->select(
+            " SELECT RU.user_id,RU.name,RU.thumbnail_url" .
+            " FROM service_users SU" .
+            " INNER JOIN users_accounts UA" .
+            " ON SU.service_user_id = UA.service_user_id" .
+            " INNER JOIN relational_users RU" .
+            " ON UA.user_id = RU.user_id" .
+            " AND SU.service_user_id = '". $service_user_id ."'" .
+            " ORDER BY UA.create_datetime ASC"
+        );
+
+        $param['accounts'] = [];
+        foreach($accounts as $account){
+            $param['accounts'][] = [
+                'user_id' => $account->user_id,
+                'name' => $account->name,
+                'thumbnail_url'=> $account->thumbnail_url=='' ? asset('./img/usericon1.jpg'):$account->thumbnail_url,
+                'selected'=>$user_id==$account->user_id ? 1 : 0
+            ];
+        }
+
+        // フォロバ待ちリストの取得
         $remusers = DB::connection('mysql')->select(
         " SELECT RL.user_id, RL.name, RL.disp_name, RL.thumbnail_url, RL.follow_count, RL.follower_count, DATEDIFF(NOW(), RM.create_datetime) AS dayold" .
         " FROM unfollowbacked RM" .
         " LEFT JOIN relational_users RL" .
         " ON RM.unfollowbacked_user_id = RL.user_id" .
         " WHERE RM.undisplayed = '0'" .
+        " AND RM.user_id = '". $user_id ."'" .
         " ORDER BY DATEDIFF(NOW(), RM.create_datetime) DESC"
         );
 
-        // 一覧データの設定
         $param['users'] = [];
         foreach($remusers as $user){
             $param['users'][] = [

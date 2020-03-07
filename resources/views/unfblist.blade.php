@@ -31,24 +31,35 @@
             <!-- ページタイトル -->
             <div class="row" style="margin-top:2em;">
                 <div class="col-md-12">
-                    <h2 class="text-center">フォロバ待ちリスト</h2>
+                    <h2 class="text-center">
+                        @foreach($accounts as $account)
+                            @if($account['selected'] == 1)
+                            <strong><img src="{{$account['thumbnail_url']}}" class="twitterlinkicon">{{$account['name']}} のフォロバ待ちリスト</strong>
+                            @endif
+                        @endforeach
+                    </h2>
                 </div>
             </div>
         
-            <div class="row text-center">
+            <!-- 他画面遷移ボタン -->
+            <div class="row text-center" style="margin-bottom:2em;">
                 <div class="col-md-12">
                     <button class="btn btn-primary rounded-pill" onclick="location.href='../remlist'" style="width:15em;height:3em;margin-top:1em;">リムられリスト</button>
                     <button class="btn btn-primary rounded-pill" onclick="location.href='../fleolist'" style="width:15em;height:3em;margin-top:1em;">相互フォローリスト</button>
                 </div>
             </div>
 
-            <!-- ページ切り替えボタン類 -->
-            <div class="row">
-                <div class="col-md-6">
+            <div class="row text-center">
+                <!-- アカウントアイコン -->
+                <div class="col-md-12">
                     <a href="https://twitter.com/home" target="_blank" rel="noopener noreferrer"><img src="{{ asset('/img/twittericon.png') }}" class="twitterlinkicon"></a>
-                    <a href="https://twitter.com/takaosan_takas" target="_blank" rel="noopener noreferrer"><img src="{{ asset('/img/usericon.jpg') }}" class="twitterlinkicon"></a>
+                    @foreach($accounts as $account)
+                    <a href="./../{{$account['user_id']}}/0"><img src="{{$account['thumbnail_url']}}" class="twitterlinkicon"></a>
+                    @endforeach
                 </div>
-                <div class="col-md-6">
+
+                <!-- ページ切り替えボタン類 -->
+                <div class="col-md-12">
                     <div class="float-right">
                         <nav aria-label="Page navigation example" style="margin-top:1em;">
                             <ul class="pagination">

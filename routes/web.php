@@ -29,15 +29,15 @@ Route::get('/followcheck/signup','SignupController@index');
 
 # リムられリスト
 # - 画面表示
-Route::redirect('/followcheck/remlist', '/followcheck/remlist/0');
-Route::get('/followcheck/remlist/{page}','RemlistController@index');
+Route::get('/followcheck/remlist', 'RemlistController@init');
+Route::get('/followcheck/remlist/{user_id}/{page}','RemlistController@index');
 
 # フォロバ待ちリスト
 # - 画面表示
-Route::redirect('/followcheck/unfblist', '/followcheck/unfblist/0');
-Route::get('/followcheck/unfblist/{page}','UnfblistController@index');
+Route::get('/followcheck/unfblist', 'UnfblistController@init');
+Route::get('/followcheck/unfblist/{user_id}/{page}','UnfblistController@index');
 
 # 相互フォローリスト
 # - 画面表示
-Route::redirect('/followcheck/fleolist', '/followcheck/fleolist/0');
-Route::get('/followcheck/fleolist/{page}','FleolistController@index');
+Route::get('/followcheck/fleolist', 'FleolistController@init');
+Route::get('/followcheck/fleolist/{user_id}/{page}','FleolistController@index');
