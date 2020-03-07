@@ -36,6 +36,12 @@
                 </div>
             </div>
 
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <button class="btn btn-primary rounded-pill" onclick="location.href='../unfblist'" style="width:15em;height:3em;margin-top:1em;">フォロバ待ちリスト</button>
+                </div>
+            </div>
+
             <!-- ページ切り替えボタン類 -->
             <div class="row">
                 <div class="col-md-6">

@@ -26,13 +26,18 @@
             </div>
         </div>
 
-
         <div class="container">
 
             <!-- ページタイトル -->
             <div class="row" style="margin-top:2em;">
                 <div class="col-md-12">
                     <h2 class="text-center">フォロバ待ちリスト</h2>
+                </div>
+            </div>
+        
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <button class="btn btn-primary rounded-pill" onclick="location.href='../remlist'" style="width:15em;height:3em;margin-top:1em;">リムられリスト</button>
                 </div>
             </div>
 
@@ -116,8 +121,7 @@
                         unfollowbacked_user_id : this.value
                     }
                 }).done( (data) => {
-                    //$('#row_'+val).hide();
-                    location.reload();
+                    $('#row_'+val).hide();
                 }).fail( (data) => {
                     /*
                     resobj = JSON.parse(data.responseText);
