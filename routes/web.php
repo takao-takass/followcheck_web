@@ -36,3 +36,8 @@ Route::get('/followcheck/remlist/{page}','RemlistController@index');
 # - 画面表示
 Route::redirect('/followcheck/unfblist', '/followcheck/unfblist/0');
 Route::get('/followcheck/unfblist/{page}','UnfblistController@index');
+
+# 相互フォローリスト
+# - 画面表示
+Route::redirect('/followcheck/fleolist', '/followcheck/fleolist/0');
+Route::get('/followcheck/fleolist/{page}','FleolistController@index');

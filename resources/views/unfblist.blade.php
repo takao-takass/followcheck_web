@@ -21,7 +21,7 @@
                     <img class="titlelogo" src="{{ asset('/img/title2.png') }}">
                 </a>
                 <a href="" class="navbar-brand" style="text-align:right;"> 
-                    <strong>ログアウト</strong>
+                    <!--<strong>ログアウト</strong> -->
                 </a>
             </div>
         </div>
@@ -38,6 +38,7 @@
             <div class="row text-center">
                 <div class="col-md-12">
                     <button class="btn btn-primary rounded-pill" onclick="location.href='../remlist'" style="width:15em;height:3em;margin-top:1em;">リムられリスト</button>
+                    <button class="btn btn-primary rounded-pill" onclick="location.href='../fleolist'" style="width:15em;height:3em;margin-top:1em;">相互フォローリスト</button>
                 </div>
             </div>
 

@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
         <!-- App CSS -->
         <link rel="stylesheet" href="{{ asset('/css/common.css') }}">
-        <link rel="stylesheet" href="{{ asset('/css/remlist.css') }}">
+        <link rel="stylesheet" href="{{ asset('/css/fleolist.css') }}">
     </head>
 
     <body>
@@ -26,20 +26,19 @@
             </div>
         </div>
 
-
         <div class="container">
 
             <!-- ページタイトル -->
             <div class="row" style="margin-top:2em;">
                 <div class="col-md-12">
-                    <h2 class="text-center">リムられリスト</h2>
+                    <h2 class="text-center">相互フォローリスト</h2>
                 </div>
             </div>
-
+        
             <div class="row text-center">
                 <div class="col-md-12">
+                    <button class="btn btn-primary rounded-pill" onclick="location.href='../remlist'" style="width:15em;height:3em;margin-top:1em;">リムられリスト</button>
                     <button class="btn btn-primary rounded-pill" onclick="location.href='../unfblist'" style="width:15em;height:3em;margin-top:1em;">フォロバ待ちリスト</button>
-                    <button class="btn btn-primary rounded-pill" onclick="location.href='../fleolist'" style="width:15em;height:3em;margin-top:1em;">相互フォローリスト</button>
                 </div>
             </div>
 
@@ -73,31 +72,29 @@
             </div>
 
             <!-- リムられリスト -->
-            <table class="table remlist-table">
+            <table class="table fleolist-table">
                 <tbody>
 
-                    @foreach($users as $remuser)
-                    <tr>
+                    @foreach($users as $fleouser)
+                    <tr id="row_{{$fleouser['user_id']}}">
                         <td>
                             <span>
-                                <img src="{{$remuser['thumbnail_url']}}" class="usericon">
+                                <img src="{{$fleouser['thumbnail_url']}}" class="usericon">
                             </span>
                         </td>
                         <td>
                             <div>
-                                <span>{{$remuser['name']}}</span>
-                                <span><a href="https://twitter.com/{{$remuser['disp_name']}}" target="_blank" rel="noopener noreferrer">{{'@'.$remuser['disp_name']}}</a></span>
+                                <span>{{$fleouser['name']}}</span>
+                                <span><a href="https://twitter.com/{{$fleouser['disp_name']}}" target="_blank" rel="noopener noreferrer">{{'@'.$fleouser['disp_name']}}</a></span>
                             </div>
                             <div>
-                                <span>フォロー：{{$remuser['follow_count']}}</span>
-                                <span>フォロワー：{{$remuser['follower_count']}}</span>
-                                <span>{{$remuser['dayold']}}日前</span>
+                                <span>フォロー：{{$fleouser['follow_count']}}</span>
+                                <span>フォロワー：{{$fleouser['follower_count']}}</span>
+                                <span>{{$fleouser['dayold']}}日経過</span>
                             </div>
                         </td>
                         <td>
-                            @if($remuser['followed'] == '1')
-                            <span>✔</span>
-                            @endif
+                            <span><button class="btn btn-secondary rounded-pill hide-button" value="{{$fleouser['user_id']}}" onclick="" style="">非表示</button></span>
                         </td>
                     </tr>
                     @endforeach
@@ -111,6 +108,11 @@
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+        <!-- Business JavaScript -->
+        <script type="text/javascript">
+
+        </script>
 
     </body>
 </html>
