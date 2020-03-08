@@ -35,6 +35,7 @@
                         @foreach($accounts as $account)
                             @if($account['selected'] == 1)
                             <strong><img src="{{$account['thumbnail_url']}}" class="twitterlinkicon">{{$account['name']}} の相互フォローリスト</strong>
+                            <input id="selected-user-id" type="hidden" value="{{$account['user_id']}}">
                             @endif
                         @endforeach
                     </h2>
@@ -44,8 +45,8 @@
             <!-- 他画面遷移ボタン -->
             <div class="row text-center" style="margin-bottom:2em;">
                 <div class="col-md-12">
-                    <button class="btn btn-primary rounded-pill" onclick="location.href='../remlist'" style="width:15em;height:3em;margin-top:1em;">リムられリスト</button>
-                    <button class="btn btn-primary rounded-pill" onclick="location.href='../unfblist'" style="width:15em;height:3em;margin-top:1em;">フォロバ待ちリスト</button>
+                    <button class="btn btn-primary rounded-pill" onclick="location.href='{{ action('RemlistController@init') }}'" style="width:15em;height:3em;margin-top:1em;">リムられリスト</button>
+                    <button class="btn btn-primary rounded-pill" onclick="location.href='{{ action('UnfblistController@init') }}'" style="width:15em;height:3em;margin-top:1em;">フォロバ待ちリスト</button>
                 </div>
             </div>
 
@@ -63,19 +64,20 @@
                     <div class="float-right">
                         <nav aria-label="Page navigation example" style="margin-top:1em;">
                             <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                                <span class="sr-only">Previous</span>
-                                </a>
-                            </li>
-                            <li class="page-item disabled"><a class="page-link" href="#">ページ切り替え</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                                <span class="sr-only">Next</span>
-                                </a>
-                            </li>
+                                <span>{{$record}}件　</span>
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ action('FleolistController@index',[$uesr_id,$prev_page]) }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                                <li class="page-item disabled"><a class="page-link" href="#">ページ切り替え</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ action('FleolistController@index',[$uesr_id,$next_page]) }}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
                             </ul>
                         </nav>
                     </div>
@@ -83,34 +85,36 @@
             </div>
 
             <!-- リムられリスト -->
-            <table class="table fleolist-table">
-                <tbody>
+            <div class="row">
+                <table class="table fleolist-table">
+                    <tbody>
 
-                    @foreach($users as $fleouser)
-                    <tr id="row_{{$fleouser['user_id']}}">
-                        <td>
-                            <span>
-                                <img src="{{$fleouser['thumbnail_url']}}" class="usericon">
-                            </span>
-                        </td>
-                        <td>
-                            <div>
-                                <span>{{$fleouser['name']}}</span>
-                                <span><a href="https://twitter.com/{{$fleouser['disp_name']}}" target="_blank" rel="noopener noreferrer">{{'@'.$fleouser['disp_name']}}</a></span>
-                            </div>
-                            <div>
-                                <span>フォロー：{{$fleouser['follow_count']}}</span>
-                                <span>フォロワー：{{$fleouser['follower_count']}}</span>
-                                <span>{{$fleouser['dayold']}}日経過</span>
-                            </div>
-                        </td>
-                        <td>
-                            <span><button class="btn btn-secondary rounded-pill hide-button" value="{{$fleouser['user_id']}}" onclick="" style="">非表示</button></span>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-              </table>
+                        @foreach($users as $fleouser)
+                        <tr id="row_{{$fleouser['user_id']}}">
+                            <td>
+                                <span>
+                                    <img src="{{$fleouser['thumbnail_url']}}" class="usericon">
+                                </span>
+                            </td>
+                            <td>
+                                <div>
+                                    <span><a href="https://twitter.com/{{$fleouser['disp_name']}}" target="_blank" rel="noopener noreferrer">{{$fleouser['name']}}</a></span>
+                                    <span><!--<a href="https://twitter.com/{{$fleouser['disp_name']}}" target="_blank" rel="noopener noreferrer">{{'@'.$fleouser['disp_name']}}</a>--></span>
+                                </div>
+                                <div>
+                                    <span>フォロー：{{$fleouser['follow_count']}}</span>
+                                    <span>フォロワー：{{$fleouser['follower_count']}}</span>
+                                    <span>{{$fleouser['dayold']}}日前</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span><button class="btn btn-secondary rounded-pill hide-button" value="{{$fleouser['user_id']}}" onclick="" style="">×</button></span>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         

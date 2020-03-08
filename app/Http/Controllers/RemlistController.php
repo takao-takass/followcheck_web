@@ -24,7 +24,7 @@ class RemlistController extends Controller
             ' FROM service_users SU' .
             ' INNER JOIN users_accounts UA' .
             ' ON SU.service_user_id = UA.service_user_id' .
-            ' ORDER BY UA.user_id DESC'
+            ' ORDER BY UA.create_datetime'
         );
 
         // ユーザIDの取得
@@ -67,14 +67,28 @@ class RemlistController extends Controller
             ];
         }
 
+        // リムられリストの総数を取得
+        $res = DB::connection('mysql')->select(
+            " SELECT COUNT(*) AS ct" .
+            " FROM remove_users RM" .
+            " WHERE RM.user_id = '". $user_id ."'"
+        );
+        $param['record'] = $res[0]->ct;
+        
+        // ページ数から取得範囲の計算
+        $pageRecord = 50;
+        $numPage = intval($page);
+
         // リムられリストを取得
         $remusers = DB::connection('mysql')->select(
-        " SELECT RL.name, RL.disp_name, RL.thumbnail_url, RL.follow_count, RL.follower_count, RM.followed, DATEDIFF(NOW(), RM.create_datetime) AS dayold" .
-        " FROM remove_users RM" .
-        " LEFT JOIN relational_users RL" .
-        " ON RM.remove_user_id = RL.user_id" .
-        " WHERE RM.user_id = '". $user_id ."'" .
-        " ORDER BY DATEDIFF(NOW(), RM.create_datetime)"
+            " SELECT RL.name, RL.disp_name, RL.thumbnail_url, RL.follow_count, RL.follower_count, RM.followed, DATEDIFF(NOW(), RM.create_datetime) AS dayold" .
+            " FROM remove_users RM" .
+            " LEFT JOIN relational_users RL" .
+            " ON RM.remove_user_id = RL.user_id" .
+            " WHERE RM.user_id = '". $user_id ."'" .
+            " ORDER BY DATEDIFF(NOW(), RM.create_datetime)".
+            " LIMIT ". $pageRecord .
+            " OFFSET ". $pageRecord*$numPage 
         );
 
         $param['users'] = [];
@@ -89,6 +103,11 @@ class RemlistController extends Controller
                 'dayold' => $user->dayold,
             ];
         }
+
+        // ページングのリンクを設定するための条件
+        $param['uesr_id'] = $user_id;
+        $param['prev_page'] = $numPage-1;
+        $param['next_page'] = $numPage+1;
 
         return response()
         ->view('remlist', $param);

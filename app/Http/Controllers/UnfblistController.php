@@ -25,7 +25,7 @@ class UnfblistController extends Controller
             ' FROM service_users SU' .
             ' INNER JOIN users_accounts UA' .
             ' ON SU.service_user_id = UA.service_user_id' .
-            ' ORDER BY UA.user_id DESC'
+            ' ORDER BY UA.create_datetime'
         );
 
         // ユーザIDの取得
@@ -69,15 +69,30 @@ class UnfblistController extends Controller
             ];
         }
 
+        // リムられリストの総数を取得
+        $res = DB::connection('mysql')->select(
+            " SELECT COUNT(*) AS ct" .
+            " FROM unfollowbacked RM" .
+            " WHERE RM.user_id = '". $user_id ."'".
+            " AND RM.undisplayed = '0'"
+        );
+        $param['record'] = $res[0]->ct;
+        
+        // ページ数から取得範囲の計算
+        $pageRecord = 50;
+        $numPage = intval($page);
+
         // フォロバ待ちリストの取得
         $remusers = DB::connection('mysql')->select(
-        " SELECT RL.user_id, RL.name, RL.disp_name, RL.thumbnail_url, RL.follow_count, RL.follower_count, DATEDIFF(NOW(), RM.create_datetime) AS dayold" .
-        " FROM unfollowbacked RM" .
-        " LEFT JOIN relational_users RL" .
-        " ON RM.unfollowbacked_user_id = RL.user_id" .
-        " WHERE RM.undisplayed = '0'" .
-        " AND RM.user_id = '". $user_id ."'" .
-        " ORDER BY DATEDIFF(NOW(), RM.create_datetime) DESC"
+            " SELECT RL.user_id, RL.name, RL.disp_name, RL.thumbnail_url, RL.follow_count, RL.follower_count, DATEDIFF(NOW(), RM.create_datetime) AS dayold" .
+            " FROM unfollowbacked RM" .
+            " LEFT JOIN relational_users RL" .
+            " ON RM.unfollowbacked_user_id = RL.user_id" .
+            " WHERE RM.undisplayed = '0'" .
+            " AND RM.user_id = '". $user_id ."'" .
+            " ORDER BY DATEDIFF(NOW(), RM.create_datetime) DESC".
+            " LIMIT ". $pageRecord .
+            " OFFSET ". $pageRecord*$numPage 
         );
 
         $param['users'] = [];
@@ -90,9 +105,14 @@ class UnfblistController extends Controller
                 'follow_count' => $user->follow_count,
                 'follower_count' => $user->follower_count,
                 'dayold' => $user->dayold,
-                'fbrate' => intval($user->follower_count) == 0 ? 0 : round((intval($user->follow_count)/intval($user->follower_count))*100,1)
+                'fbrate' => intval($user->follower_count) == 0 ? 0 : round((intval($user->follow_count)/intval($user->follower_count))*100,0)
             ];
         }
+
+        // ページングのリンクを設定するための条件
+        $param['uesr_id'] = $user_id;
+        $param['prev_page'] = $numPage-1;
+        $param['next_page'] = $numPage+1;
 
         return response()
         ->view('unfblist', $param);
@@ -118,8 +138,6 @@ class UnfblistController extends Controller
         " AND RM.unfollowbacked_user_id = ? "
         ,[$request['user_id'],$request['unfollowbacked_user_id']]);
 
-                #return response()
-        #->view('unfblist', $param);
         return response('',200);
     }
 

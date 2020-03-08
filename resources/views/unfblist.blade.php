@@ -35,6 +35,7 @@
                         @foreach($accounts as $account)
                             @if($account['selected'] == 1)
                             <strong><img src="{{$account['thumbnail_url']}}" class="twitterlinkicon">{{$account['name']}} のフォロバ待ちリスト</strong>
+                            <input id="selected-user-id" type="hidden" value="{{$account['user_id']}}">
                             @endif
                         @endforeach
                     </h2>
@@ -44,8 +45,8 @@
             <!-- 他画面遷移ボタン -->
             <div class="row text-center" style="margin-bottom:2em;">
                 <div class="col-md-12">
-                    <button class="btn btn-primary rounded-pill" onclick="location.href='../remlist'" style="width:15em;height:3em;margin-top:1em;">リムられリスト</button>
-                    <button class="btn btn-primary rounded-pill" onclick="location.href='../fleolist'" style="width:15em;height:3em;margin-top:1em;">相互フォローリスト</button>
+                    <button class="btn btn-primary rounded-pill" onclick="location.href='{{ action('RemlistController@init') }}'" style="width:15em;height:3em;margin-top:1em;">リムられリスト</button>
+                    <button class="btn btn-primary rounded-pill" onclick="location.href='{{ action('FleolistController@init') }}'" style="width:15em;height:3em;margin-top:1em;">相互フォローリスト</button>
                 </div>
             </div>
 
@@ -63,56 +64,58 @@
                     <div class="float-right">
                         <nav aria-label="Page navigation example" style="margin-top:1em;">
                             <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                                <span class="sr-only">Previous</span>
-                                </a>
-                            </li>
-                            <li class="page-item disabled"><a class="page-link" href="#">ページ切り替え</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                                <span class="sr-only">Next</span>
-                                </a>
-                            </li>
-                            </ul>
+                                <span>{{$record}}件　</span>
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ action('UnfblistController@index',[$uesr_id,$prev_page]) }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                                <li class="page-item disabled"><a class="page-link" href="#">ページ切り替え</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ action('UnfblistController@index',[$uesr_id,$next_page]) }}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            </ul>   
                         </nav>
                     </div>
                 </div>
             </div>
 
             <!-- リムられリスト -->
-            <table class="table unfblist-table">
-                <tbody>
+            <div class="row">
+                <table class="table unfblist-table">
+                    <tbody>
 
-                    @foreach($users as $unfbuser)
-                    <tr id="row_{{$unfbuser['user_id']}}">
-                        <td>
-                            <span>
-                                <img src="{{$unfbuser['thumbnail_url']}}" class="usericon">
-                            </span>
-                        </td>
-                        <td>
-                            <div>
-                                <span>{{$unfbuser['name']}}</span>
-                                <span><a href="https://twitter.com/{{$unfbuser['disp_name']}}" target="_blank" rel="noopener noreferrer">{{'@'.$unfbuser['disp_name']}}</a></span>
-                            </div>
-                            <div>
-                                <span>フォロー：{{$unfbuser['follow_count']}}</span>
-                                <span>フォロワー：{{$unfbuser['follower_count']}}　（フォロバ率 {{$unfbuser['fbrate']}}%）</span>
-                                <span>{{$unfbuser['dayold']}}日経過</span>
-                            </div>
-                        </td>
-                        <td>
-                            <span><button class="btn btn-secondary rounded-pill hide-button" value="{{$unfbuser['user_id']}}" onclick="" style="">非表示</button></span>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-              </table>
+                        @foreach($users as $unfbuser)
+                        <tr id="row_{{$unfbuser['user_id']}}">
+                            <td>
+                                <span>
+                                    <img src="{{$unfbuser['thumbnail_url']}}" class="usericon">
+                                </span>
+                            </td>
+                            <td>
+                                <div>
+                                    <span><a href="https://twitter.com/{{$unfbuser['disp_name']}}" target="_blank" rel="noopener noreferrer">{{$unfbuser['name']}}</a></span>
+                                    <span><!--<a href="https://twitter.com/{{$unfbuser['disp_name']}}" target="_blank" rel="noopener noreferrer">{{'@'.$unfbuser['disp_name']}}</a>--></span>
+                                </div>
+                                <div>
+                                    <span>フォロー：{{$unfbuser['follow_count']}}</span>
+                                    <span>フォロワー：{{$unfbuser['follower_count']}}　FB率 {{$unfbuser['fbrate']}}%</span>
+                                    <span>{{$unfbuser['dayold']}}日前</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span><button class="btn btn-secondary rounded-pill hide-button" value="{{$unfbuser['user_id']}}" onclick="" style="">×</button></span>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
-
         
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -126,10 +129,10 @@
             $('.hide-button').on('click',function(){
                 var val = this.value;
                 $.ajax({
-                    url:'./hide',
+                    url:'{{ action('UnfblistController@hide') }}',
                     type:'POST',
                     data:{
-                        user_id : '459277410',
+                        user_id : $('#selected-user-id').val(),
                         unfollowbacked_user_id : this.value
                     }
                 }).done( (data) => {

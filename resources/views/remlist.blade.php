@@ -36,6 +36,7 @@
                         @foreach($accounts as $account)
                             @if($account['selected'] == 1)
                             <strong><img src="{{$account['thumbnail_url']}}" class="twitterlinkicon">{{$account['name']}} のリムられリスト</strong>
+                            <input id="selected-user-id" type="hidden" value="{{$account['user_id']}}">
                             @endif
                         @endforeach
                     </h2>
@@ -45,8 +46,8 @@
             <!-- 他画面遷移ボタン -->
             <div class="row text-center" style="margin-bottom:2em;">
                 <div class="col-md-12">
-                    <button class="btn btn-primary rounded-pill" onclick="location.href='../unfblist'" style="width:15em;height:3em;margin-top:1em;">フォロバ待ちリスト</button>
-                    <button class="btn btn-primary rounded-pill" onclick="location.href='../fleolist'" style="width:15em;height:3em;margin-top:1em;">相互フォローリスト</button>
+                    <button class="btn btn-primary rounded-pill" onclick="location.href='{{ action('UnfblistController@init') }}'" style="width:15em;height:3em;margin-top:1em;">フォロバ待ちリスト</button>
+                    <button class="btn btn-primary rounded-pill" onclick="location.href='{{ action('FleolistController@init') }}'" style="width:15em;height:3em;margin-top:1em;">相互フォローリスト</button>
                 </div>
             </div>
 
@@ -64,56 +65,59 @@
                     <div class="float-right">
                         <nav aria-label="Page navigation example" style="margin-top:1em;">
                             <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                                <span class="sr-only">Previous</span>
-                                </a>
-                            </li>
-                            <li class="page-item disabled"><a class="page-link" href="#">ページ切り替え</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                                <span class="sr-only">Next</span>
-                                </a>
-                            </li>
+                                <span>{{$record}}件　</span>
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ action('RemlistController@index',[$uesr_id,$prev_page]) }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                                <li class="page-item disabled"><a class="page-link" href="#">ページ切り替え</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ action('RemlistController@index',[$uesr_id,$next_page]) }}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
                             </ul>
                         </nav>
                     </div>
                 </div>
             </div>
 
-            <!-- リムられリスト -->
-            <table class="table remlist-table">
-                <tbody>
+            <div class="row">
+                <!-- リムられリスト -->
+                <table class="table remlist-table">
+                    <tbody>
 
-                    @foreach($users as $remuser)
-                    <tr>
-                        <td>
-                            <span>
-                                <img src="{{$remuser['thumbnail_url']}}" class="usericon">
-                            </span>
-                        </td>
-                        <td>
-                            <div>
-                                <span>{{$remuser['name']}}</span>
-                                <span><a href="https://twitter.com/{{$remuser['disp_name']}}" target="_blank" rel="noopener noreferrer">{{'@'.$remuser['disp_name']}}</a></span>
-                            </div>
-                            <div>
-                                <span>フォロー：{{$remuser['follow_count']}}</span>
-                                <span>フォロワー：{{$remuser['follower_count']}}</span>
-                                <span>{{$remuser['dayold']}}日前</span>
-                            </div>
-                        </td>
-                        <td>
-                            @if($remuser['followed'] == '1')
-                            <span>✔</span>
-                            @endif
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-              </table>
+                        @foreach($users as $remuser)
+                        <tr>
+                            <td>
+                                <span>
+                                    <img src="{{$remuser['thumbnail_url']}}" class="usericon">
+                                </span>
+                            </td>
+                            <td>
+                                <div>
+                                    <span><a href="https://twitter.com/{{$remuser['disp_name']}}" target="_blank" rel="noopener noreferrer">{{$remuser['name']}}</a></span>
+                                    <span><!--<a href="https://twitter.com/{{$remuser['disp_name']}}" target="_blank" rel="noopener noreferrer">{{'@'.$remuser['disp_name']}}</a>--></span>
+                                </div>
+                                <div>
+                                    <span>フォロー：{{$remuser['follow_count']}}</span>
+                                    <span>フォロワー：{{$remuser['follower_count']}}</span>
+                                    <span>{{$remuser['dayold']}}日前</span>
+                                </div>
+                            </td>
+                            <td>
+                                @if($remuser['followed'] == '1')
+                                <span>✔</span>
+                                @endif
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         
