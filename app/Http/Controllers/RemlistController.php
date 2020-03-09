@@ -73,7 +73,8 @@ class RemlistController extends Controller
             " FROM remove_users RM" .
             " WHERE RM.user_id = '". $user_id ."'"
         );
-        $param['record'] = $res[0]->ct;
+        $recordCount = $res[0]->ct;
+        $param['record'] = $recordCount;
         
         // ページ数から取得範囲の計算
         $pageRecord = 50;
@@ -86,7 +87,7 @@ class RemlistController extends Controller
             " LEFT JOIN relational_users RL" .
             " ON RM.remove_user_id = RL.user_id" .
             " WHERE RM.user_id = '". $user_id ."'" .
-            " ORDER BY DATEDIFF(NOW(), RM.create_datetime)".
+            " ORDER BY RM.create_datetime DESC, RL.disp_name".
             " LIMIT ". $pageRecord .
             " OFFSET ". $pageRecord*$numPage 
         );
@@ -108,6 +109,7 @@ class RemlistController extends Controller
         $param['uesr_id'] = $user_id;
         $param['prev_page'] = $numPage-1;
         $param['next_page'] = $numPage+1;
+        $param['max_page'] = ceil($recordCount / $pageRecord);
 
         return response()
         ->view('remlist', $param);

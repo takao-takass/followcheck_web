@@ -72,9 +72,11 @@ class FleolistController extends Controller
         $res = DB::connection('mysql')->select(
             " SELECT COUNT(*) AS ct" .
             " FROM follow_eachother RM" .
-            " WHERE RM.user_id = '". $user_id ."'"
+            " WHERE RM.user_id = '". $user_id ."'" .
+            " AND RM.undisplayed = 0"
         );
-        $param['record'] = $res[0]->ct;
+        $recordCount = $res[0]->ct;
+        $param['record'] = $recordCount;
         
         // ページ数から取得範囲の計算
         $pageRecord = 50;
@@ -86,9 +88,9 @@ class FleolistController extends Controller
             " FROM follow_eachother RM" .
             " LEFT JOIN relational_users RL" .
             " ON RM.follow_user_id = RL.user_id" .
-            " WHERE RM.undisplayed = '0'" .
+            " WHERE RM.undisplayed = 0" .
             " AND RM.user_id = '" . $user_id . "'" .
-            " ORDER BY DATEDIFF(NOW(), RM.create_datetime) DESC".
+            " ORDER BY RM.create_datetime DESC, RL.disp_name".
             " LIMIT ". $pageRecord .
             " OFFSET ". $pageRecord*$numPage 
         );
@@ -110,6 +112,7 @@ class FleolistController extends Controller
         $param['uesr_id'] = $user_id;
         $param['prev_page'] = $numPage-1;
         $param['next_page'] = $numPage+1;
+        $param['max_page'] = ceil($recordCount / $pageRecord);
 
         return response()
         ->view('fleolist', $param);
@@ -123,6 +126,19 @@ class FleolistController extends Controller
     public function hide(Request $request)
     {
 
+        // 入力チェック
+
+
+        // 非表示に更新する
+        $remusers = DB::connection('mysql')->update(
+            " UPDATE follow_eachother RM" .
+            " SET RM.undisplayed = 1" .
+            "    ,RM.update_datetime = NOW()" .
+            " WHERE RM.user_id = ?" .
+            " AND RM.follow_user_id = ? "
+            ,[$request['user_id'],$request['follow_user_id']]);
+    
+        return response('',200);
     }
 
 }

@@ -64,20 +64,23 @@
                     <div class="float-right">
                         <nav aria-label="Page navigation example" style="margin-top:1em;">
                             <ul class="pagination">
-                                <span>{{$record}}件　</span>
+                                @if($prev_page >= 0)
                                 <li class="page-item">
                                     <a class="page-link" href="{{ action('FleolistController@index',[$uesr_id,$prev_page]) }}" aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                     <span class="sr-only">Previous</span>
                                     </a>
                                 </li>
-                                <li class="page-item disabled"><a class="page-link" href="#">ページ切り替え</a></li>
+                                @endif
+                                <li class="page-item disabled"><a class="page-link" href="#">{{$record}}件</a></li>
+                                @if($next_page < $max_page)
                                 <li class="page-item">
                                     <a class="page-link" href="{{ action('FleolistController@index',[$uesr_id,$next_page]) }}" aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                     <span class="sr-only">Next</span>
                                     </a>
                                 </li>
+                                @endif
                             </ul>
                         </nav>
                     </div>
@@ -125,8 +128,31 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 
         <!-- Business JavaScript -->
+        <!-- Business JavaScript -->
         <script type="text/javascript">
-
+            
+            $('.hide-button').on('click',function(){
+                var val = this.value;
+                $.ajax({
+                    url:'{{ action('FleolistController@hide') }}',
+                    type:'POST',
+                    data:{
+                        user_id : $('#selected-user-id').val(),
+                        follow_user_id : this.value
+                    }
+                }).done( (data) => {
+                    $('#row_'+val).hide();
+                }).fail( (data) => {
+                    /*
+                    resobj = JSON.parse(data.responseText);
+                        alert(resobj.message);
+                        $('.input_error').removeClass('input_error');
+                        $.each(resobj.params, function(index, value) {
+                            $('#'+value).addClass('input_error');
+                        });
+                        */
+                });
+            });
         </script>
 
     </body>

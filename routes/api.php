@@ -28,3 +28,7 @@ Route::post('/followcheck/signup/entry','SignupController@entry');
 # フォロバ待ちリスト
 # - 非表示API
 Route::post('/followcheck/unfblist/hide','UnfblistController@hide');
+
+# 相互フォローリスト
+# - 非表示API
+Route::post('/followcheck/fleolist/hide','FleolistController@hide');

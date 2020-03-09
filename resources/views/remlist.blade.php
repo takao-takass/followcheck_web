@@ -65,20 +65,23 @@
                     <div class="float-right">
                         <nav aria-label="Page navigation example" style="margin-top:1em;">
                             <ul class="pagination">
-                                <span>{{$record}}件　</span>
+                                @if($prev_page >= 0)
                                 <li class="page-item">
                                     <a class="page-link" href="{{ action('RemlistController@index',[$uesr_id,$prev_page]) }}" aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                     <span class="sr-only">Previous</span>
                                     </a>
                                 </li>
-                                <li class="page-item disabled"><a class="page-link" href="#">ページ切り替え</a></li>
+                                @endif
+                                <li class="page-item disabled"><a class="page-link" href="#">{{$record}}件</a></li>
+                                @if($next_page < $max_page)
                                 <li class="page-item">
                                     <a class="page-link" href="{{ action('RemlistController@index',[$uesr_id,$next_page]) }}" aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                     <span class="sr-only">Next</span>
                                     </a>
                                 </li>
+                                @endif
                             </ul>
                         </nav>
                     </div>
