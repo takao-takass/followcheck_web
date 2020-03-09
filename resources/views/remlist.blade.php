@@ -56,8 +56,9 @@
                 <div class="col-md-12">
                     <a href="https://twitter.com/home" target="_blank" rel="noopener noreferrer"><img src="{{ asset('/img/twittericon.png') }}" class="twitterlinkicon"></a>
                     @foreach($accounts as $account)
-                    <a href="./../{{$account['user_id']}}/0"><img src="{{$account['thumbnail_url']}}" class="twitterlinkicon"></a>
+                    <a href="{{ action('RemlistController@index',[$account['user_id'],0]) }}"><img src="{{$account['thumbnail_url']}}" class="twitterlinkicon"></a>
                     @endforeach
+                    <a href="{{ action('AccountsController@index') }}"><img src="{{ asset('/img/setting.png') }}" class="twitterlinkicon"></a>
                 </div>
 
                 <!-- ページ切り替えボタン -->

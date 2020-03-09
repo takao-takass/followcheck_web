@@ -41,3 +41,7 @@ Route::get('/followcheck/unfblist/{user_id}/{page}','UnfblistController@index');
 # - 画面表示
 Route::get('/followcheck/fleolist', 'FleolistController@init');
 Route::get('/followcheck/fleolist/{user_id}/{page}','FleolistController@index');
+
+# アカウント管理
+# - 画面表示
+Route::get('/followcheck/accounts','AccountsController@index');
