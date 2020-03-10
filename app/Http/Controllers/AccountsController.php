@@ -66,7 +66,7 @@ class AccountsController extends Controller
 
         // デバッグ出力
         print_r($response);
-        if (!array_key_exists('id_str', $response)){
+        if (!property_exists($response, 'id_str')){
             return response('',400);
         }
 
