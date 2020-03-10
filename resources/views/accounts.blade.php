@@ -32,21 +32,22 @@
             <div class="row" style="margin-top:2em;">
                 <div class="col-md-12">
                     <h2 class="text-center">
-                       <img src="{{ asset('/img/setting.png') }}" class="twitterlinkicon"><strong>Twitterアカウント管理</strong>
+                       <strong>アカウント管理</strong>
+                       <input type="hidden" id="service-user-id" value="{{$serviceUserId}}">
                     </h2>
                 </div>
             </div>
             
             <!-- アカウント追加フォーム -->
             <div class="row text-right" style="margin-top:2em;margin-bottom:2em;">
-                <div class="col-md-3">
+                <div class="col-md-3 text-left">
                     <label>Twitterアカウントを追加：</label>
                 </div>
-                <div class="col-md-6">
-                    <span><input type="email" class="form-control rounded-pill" id="email" aria-describedby="" placeholder="アットマーク（＠）は不要"></span>
+                <div class="col-md-6 text-center">
+                    <span><input type="email" class="form-control rounded-pill" id="account-name" aria-describedby="" placeholder="アットマーク（＠）は不要"></span>
                 </div>
-                <div class="col-md-2">
-                    <button class="btn btn-primary rounded-pill"  style="width:80%;" onclick="">追加</button>
+                <div class="col-md-2 text-center">
+                    <button class="btn btn-primary rounded-pill" id="add-button" style="width:80%;" onclick="">追加</button>
                 </div>
             </div>
 
@@ -74,7 +75,7 @@
                                 </div>
                             </td>
                             <td>
-                                <span><button class="btn btn-secondary rounded-pill hide-button" value="{{$account['user_id']}}" onclick="" style="">削除</button></span>
+                                <span><button class="btn btn-secondary rounded-pill del-button" value="{{$account['user_id']}}" onclick="" style="">削除</button></span>
                             </td>
                         </tr>
                         @endforeach
@@ -97,7 +98,56 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 
         <!-- Business JavaScript -->
+        <script type="text/javascript">
 
+            // アカウント追加ボタン
+            $('#add-button').on('click',function(){
+                var val = this.value;
+                $.ajax({
+                    url:'{{ action('AccountsController@add') }}',
+                    type:'POST',
+                    data:{
+                        service_user_id : $('#service-user-id').val(),
+                        account_name : $('#account-name').val()
+                    }
+                }).done( (data) => {
+                    location.reload();
+                }).fail( (data) => {
+                    /*
+                    resobj = JSON.parse(data.responseText);
+                        alert(resobj.message);
+                        $('.input_error').removeClass('input_error');
+                        $.each(resobj.params, function(index, value) {
+                            $('#'+value).addClass('input_error');
+                        });
+                        */
+                });
+            });
+
+            // アカウント削除ボタン
+            $('.del-button').on('click',function(){
+                var val = this.value;
+                $.ajax({
+                    url:'{{ action('AccountsController@del') }}',
+                    type:'POST',
+                    data:{
+                        service_user_id : $('#service-user-id').val(),
+                        user_id : val
+                    }
+                }).done( (data) => {
+                    $('#row_'+val).hide();
+                }).fail( (data) => {
+                    /*
+                    resobj = JSON.parse(data.responseText);
+                        alert(resobj.message);
+                        $('.input_error').removeClass('input_error');
+                        $.each(resobj.params, function(index, value) {
+                            $('#'+value).addClass('input_error');
+                        });
+                        */
+                });
+            });
+        </script>
 
     </body>
 </html>

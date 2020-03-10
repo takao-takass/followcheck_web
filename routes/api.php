@@ -32,3 +32,10 @@ Route::post('/followcheck/unfblist/hide','UnfblistController@hide');
 # 相互フォローリスト
 # - 非表示API
 Route::post('/followcheck/fleolist/hide','FleolistController@hide');
+
+
+# Twitterアカウント管理
+# - アカウント追加API
+Route::post('/followcheck/accounts/add','AccountsController@add');
+# - アカウント削除API
+Route::post('/followcheck/accounts/del','AccountsController@del');

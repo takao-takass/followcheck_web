@@ -2,6 +2,12 @@
 
 return [
 
+    'vendor_path' => env('VENDOR_PATH', '/opt/followcheck_web'),
+    'consumer_key' => env('CONSUMER_KEY', ''),
+    'consumer_secret' => env('CONSUMER_SECRET', ''),
+    'access_token' => env('ACCESS_TOKEN', ''),
+    'access_token_secret' => env('ACCESS_TOKEN_SECRET', ''),
+    
     /*
     |--------------------------------------------------------------------------
     | Application Name
