@@ -45,3 +45,7 @@ Route::get('/followcheck/fleolist/{user_id}/{page}','FleolistController@index');
 # アカウント管理
 # - 画面表示
 Route::get('/followcheck/accounts','AccountsController@index');
+
+# ツイートダウンロードアカウント管理
+# - 画面表示
+Route::get('/followcheck/dlaccounts','DownloadAccountsController@index');

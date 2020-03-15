@@ -32,7 +32,7 @@
             <div class="row" style="margin-top:2em;">
                 <div class="col-md-12">
                     <h2 class="text-center">
-                       <strong>アカウント管理</strong>
+                       <strong>ツイートダウンロード管理</strong>
                        <input type="hidden" id="service-user-id" value="{{$serviceUserId}}">
                     </h2>
                 </div>
@@ -69,13 +69,17 @@
                                     <span></span>
                                 </div>
                                 <div>
-                                    <span></span>
-                                    <span></span>
+                                    <span><span class="badge badge-secondary">{{$account['status']}}</span></span>
+                                    <span>{{$account['disp_name']}}</span>
                                     <span></span>
                                 </div>
                             </td>
                             <td>
-                                <span><button class="btn btn-secondary rounded-pill del-button" value="{{$account['user_id']}}" onclick="" style="">削除</button></span>
+                                <span>
+                                    @if($account['delbtn_show']=='1')
+                                    <button class="btn btn-secondary rounded-pill del-button" value="{{$account['user_id']}}" onclick="" style="">削除</button>
+                                    @endif
+                                </span>
                             </td>
                         </tr>
                         @endforeach
@@ -86,10 +90,7 @@
             <!-- 他画面遷移ボタン -->
             <div class="row text-center" style="margin-top:1em;margin-bottom:1em;">
                 <div class="col-md-12">
-                    <button class="btn btn-primary rounded-pill" onclick="location.href='{{ action('RemlistController@init') }}'" style="width:15em;height:3em;margin-top:1em;">リムられリスト</button>
-                </div>
-                <div class="col-md-12">
-                    <button class="btn btn-primary rounded-pill" onclick="location.href='{{ action('DownloadAccountsController@index') }}'" style="width:15em;height:3em;margin-top:1em;">ダウンロード管理</button>
+                    <button class="btn btn-primary rounded-pill" onclick="location.href='{{ action('AccountsController@index') }}'" style="width:15em;height:3em;margin-top:1em;">アカウント管理</button>
                 </div>
             </div>
         </div>
@@ -107,7 +108,7 @@
             $('#add-button').on('click',function(){
                 var val = this.value;
                 $.ajax({
-                    url:'{{ action('AccountsController@add') }}',
+                    url:'{{ action('DownloadAccountsController@add') }}',
                     type:'POST',
                     data:{
                         service_user_id : $('#service-user-id').val(),
@@ -131,14 +132,14 @@
             $('.del-button').on('click',function(){
                 var val = this.value;
                 $.ajax({
-                    url:'{{ action('AccountsController@del') }}',
+                    url:'{{ action('DownloadAccountsController@del') }}',
                     type:'POST',
                     data:{
                         service_user_id : $('#service-user-id').val(),
                         user_id : val
                     }
                 }).done( (data) => {
-                    $('#row_'+val).hide();
+                    location.reload();
                 }).fail( (data) => {
                     /*
                     resobj = JSON.parse(data.responseText);

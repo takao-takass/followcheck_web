@@ -11,7 +11,7 @@ use App\Models\Token;
 use Carbon\Carbon;
 use Abraham\TwitterOAuth\TwitterOAuth;
 
-class AccountsController extends Controller
+class DownloadAccountsController extends Controller
 {
     /**
      * 画面表示
@@ -24,14 +24,23 @@ class AccountsController extends Controller
         $service_user_id = "0000000001";
         $param['serviceUserId'] = $service_user_id;
         $accounts = DB::connection('mysql')->select(
-            " SELECT RU.user_id,RU.name,RU.thumbnail_url" .
-            " FROM service_users SU" .
-            " INNER JOIN users_accounts UA" .
-            " ON SU.service_user_id = UA.service_user_id" .
-            " INNER JOIN relational_users RU" .
-            " ON UA.user_id = RU.user_id" .
-            " AND SU.service_user_id = '". $service_user_id ."'" .
-            " ORDER BY UA.create_datetime ASC"
+            " SELECT RU.user_id " .
+            " 		,RU.name " .
+            "       ,RU.disp_name" .
+            " 		,RU.thumbnail_url " .
+            " 		,TT.`status` " .
+            " 		,CASE TT.`status` " .
+            " 			WHEN '0' THEN '予約済' " .
+            " 			WHEN '1' THEN '処理中' " .
+            " 			WHEN '9' THEN '完了' " .
+            " 			WHEN 'D' THEN '削除予約済' " .
+            " 		END AS status_nm" .
+            " FROM tweet_take_users TT " .
+            " INNER JOIN relational_users RU " .
+            " ON TT.user_id = RU.user_id " .
+            " WHERE TT.service_user_id = ?" .
+            " ORDER BY TT.create_datetime desc"
+            ,[$service_user_id]
         );
 
         $param['accounts'] = [];
@@ -39,13 +48,15 @@ class AccountsController extends Controller
             $param['accounts'][] = [
                 'user_id' => $account->user_id,
                 'name' => $account->name,
+                'disp_name' => $account->disp_name,
+                'status' => $account->status_nm,
+                'delbtn_show' => $account->status=='D' ? '0':'1',
                 'thumbnail_url'=> $account->thumbnail_url=='' ? asset('./img/usericon1.jpg'):$account->thumbnail_url,
             ];
         }
 
-
         return response()
-        ->view('accounts', $param);
+        ->view('dlaccounts', $param);
     }
 
     /**
@@ -70,12 +81,11 @@ class AccountsController extends Controller
             return response('',400);
         }
 
-        // アカウントマスタに登録する
+        // ダウンロードアカウントマスタに登録する
         $remusers = DB::connection('mysql')->insert(
-        " INSERT INTO users_accounts (service_user_id, user_id, create_datetime, update_datetime, deleted)" .
-        " VALUES (?, ?, NOW(), NOW(), 0)" 
+        " INSERT INTO tweet_take_users (service_user_id, user_id, status, create_datetime, update_datetime, deleted)" .
+        " VALUES (?, ?, '0',NOW(), NOW(), 0)" 
         ,[$request['service_user_id'],$response->id_str]);
-
 
         // Twitterユーザマスタに登録する
         $remusers = DB::connection('mysql')->insert(
@@ -98,9 +108,11 @@ class AccountsController extends Controller
 
 
         
-        // アカウントマスタから削除する
-        $remusers = DB::connection('mysql')->delete(
-        " DELETE FROM users_accounts" .
+        // アカウントのステータスを削除予約にする
+        $remusers = DB::connection('mysql')->update(
+        " UPDATE tweet_take_users" .
+        " SET status = 'D' " .
+        "    ,update_datetime = NOW() " .
         " WHERE service_user_id = ?" .
         " AND user_id = ?" 
         ,[$request['service_user_id'],$request['user_id']]);

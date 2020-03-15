@@ -39,3 +39,10 @@ Route::post('/followcheck/fleolist/hide','FleolistController@hide');
 Route::post('/followcheck/accounts/add','AccountsController@add');
 # - アカウント削除API
 Route::post('/followcheck/accounts/del','AccountsController@del');
+
+
+# ツイートダウンロード管理
+# - アカウント追加API
+Route::post('/followcheck/dlaccounts/add','DownloadAccountsController@add');
+# - アカウント削除API
+Route::post('/followcheck/dlaccounts/del','DownloadAccountsController@del');
