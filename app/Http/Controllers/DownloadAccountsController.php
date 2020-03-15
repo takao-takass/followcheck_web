@@ -32,6 +32,8 @@ class DownloadAccountsController extends Controller
             " 		,CASE TT.`status` " .
             " 			WHEN '0' THEN '予約済' " .
             " 			WHEN '1' THEN '処理中' " .
+            " 			WHEN '5' THEN '完了' " .
+            " 			WHEN '6' THEN '最新化中' " .
             " 			WHEN '9' THEN '完了' " .
             " 			WHEN 'D' THEN '削除予約済' " .
             " 		END AS status_nm" .
