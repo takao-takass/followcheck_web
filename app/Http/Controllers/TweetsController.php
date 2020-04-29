@@ -28,8 +28,7 @@ class TweetsController extends Controller
             'media_check' => '',
         ];
 
-        return  response()
-        ->view('tweets', $param);
+        return  response()->view('tweets', $param);
     }
 
     /**
@@ -93,7 +92,6 @@ class TweetsController extends Controller
             " ORDER BY TW.tweeted_datetime DESC".
             " LIMIT ". $pageRecord .
             " OFFSET ". $pageRecord*$numPage;
-        //print_r($query);
 
         $accounts = DB::connection('mysql')->select($query);
         $param['accounts'] = [];

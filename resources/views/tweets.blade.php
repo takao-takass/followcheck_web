@@ -190,7 +190,7 @@
                         thumbhtml = "";
                         if(account.media_type != null){
                             for (var i = 0; i<account.thumb_names.length; i++) {
-                                thumbhtml += "<span><a href='"+account.media_path[i]+"'><img class='mr-3' style='margin:1em;width:10em;' src='/img/thumbs/"+account.thumb_names[i]+"'></a></span>";
+                                thumbhtml += "<span><a href='"+account.media_path[i]+" 'target='_blank' rel='noopener noreferrer'><img class='mr-3' style='margin:1em;width:10em;' src='/img/thumbs/"+account.thumb_names[i]+"'></a></span>";
                             }
                         }
 
