@@ -15,16 +15,29 @@
     <body>
     
         <!-- ヘッダ  -->
-        <div class="navbar navbar-dark shadow-sm" style="background-color: #436be3;">
+        <nav class="navbar navbar-dark shadow-sm" style="background-color: #436be3;">
             <div class="container d-flex justify-content-between">
                 <a href="#" class="navbar-brand d-flex">
                     <img class="titlelogo" src="{{ asset('/img/title2.png') }}">
                 </a>
-                <a href="" class="navbar-brand" style="text-align:right;"> 
-                    <!--<strong>ログアウト</strong> -->
-                </a>
+                <button class="navbar-toggler" type="button"
+                    data-toggle="collapse"
+                    data-target="#navmenu"
+                    aria-controls="navmenu"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navmenu">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link" href="{{ action('RemlistController@init') }}">リムられリスト</a>
+                        <a class="nav-item nav-link" href="{{ action('DownloadAccountsController@index') }}">ダウンロード管理</a>
+                        <a class="nav-item nav-link" href="{{ action('TweetUsersController@index') }}">ツイートを見る</a>
+                        <a class="nav-item nav-link" href="#">ログアウト</a>
+                    </div>
+                </div>
             </div>
-        </div>
+        </nav>
 
         <div class="container">
 
