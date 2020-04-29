@@ -15,3 +15,14 @@
     border-top-left-radius: 9999px;
     border-top-right-radius: 9999px;
 }
+
+
+/*  - ユーザアイコン */
+.usericon {
+    width:3.5em;
+    height:3.5em;
+    border-bottom-left-radius: 9999px;
+    border-bottom-right-radius: 9999px;
+    border-top-left-radius: 9999px;
+    border-top-right-radius: 9999px;
+}

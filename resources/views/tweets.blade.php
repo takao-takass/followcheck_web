@@ -9,48 +9,44 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
         <!-- App CSS -->
         <link rel="stylesheet" href="{{ asset('/css/common.css') }}">
-        <link rel="stylesheet" href="{{ asset('/css/remlist.css') }}">
     </head>
-
     <body>
     
         <!-- ヘッダ  -->
-        <div class="navbar navbar-dark shadow-sm" style="background-color: #436be3;">
+        <nav class="navbar navbar-dark shadow-sm" style="background-color: #436be3;">
             <div class="container d-flex justify-content-between">
                 <a href="#" class="navbar-brand d-flex">
                     <img class="titlelogo" src="{{ asset('/img/title2.png') }}">
                 </a>
-                <a href="" class="navbar-brand" style="text-align:right;"> 
-                    <!--<strong>ログアウト</strong> -->
-                </a>
+                <button class="navbar-toggler" type="button"
+                    data-toggle="collapse"
+                    data-target="#navmenu"
+                    aria-controls="navmenu"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navmenu">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link" href="{{ action('RemlistController@init') }}">リムられリスト</a>
+                        <a class="nav-item nav-link" href="{{ action('DownloadAccountsController@index') }}">ダウンロード管理</a>
+                        <a class="nav-item nav-link" href="{{ action('TweetUsersController@index') }}">ツイートを見る</a>
+                        <a class="nav-item nav-link" href="#">ログアウト</a>
+                    </div>
+                </div>
             </div>
-        </div>
-
+        </nav>
 
         <div class="container">
-{{-- 
-            <!-- ページタイトル -->
+
+
             <div class="row" style="margin-top:2em;">
+
+                <!-- ページタイトル -->
                 <div class="col-md-12">
                     <h2 class="text-center">
-                        @foreach($accounts as $account)
-                            @if($account['selected'] == 1)
-                            <strong><img src="{{$account['thumbnail_url']}}" class="twitterlinkicon">{{$account['name']}} のツイート</strong>
-                            <input id="selected-user-id" type="hidden" value="{{$account['user_id']}}">
-                            @endif
-                        @endforeach
                     </h2>
                 </div>
-            </div>
-
-            <!-- 他画面遷移ボタン -->
-            <div class="row text-center" style="margin-bottom:2em;">
-                <div class="col-md-12">
-                    <button class="btn btn-primary rounded-pill" onclick="location.href='{{ action('DownloadAccountsController@init') }}'" style="width:15em;height:3em;margin-top:1em;">ダウンロード管理</button>
-                </div>
-            </div>
-
-            <div class="row text-center">
 
                 <!-- ページ切り替えボタン -->
                 <div class="col-md-12">
@@ -59,16 +55,16 @@
                             <ul class="pagination">
                                 @if($prev_page >= 0)
                                 <li class="page-item">
-                                    <a class="page-link" href="{{ action('RemlistController@index',[$uesr_id,$prev_page]) }}" aria-label="Previous">
+                                    <a class="page-link" href="{{ action('TweetsController@index',[$uesr_id,$prev_page]) }}" aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                     <span class="sr-only">Previous</span>
                                     </a>
                                 </li>
                                 @endif
-                                <li class="page-item disabled"><a class="page-link" href="#">{{$record}}件</a></li>
+                                <li class="page-item disabled"><a class="page-link" href="#">{{$record}}ツイート</a></li>
                                 @if($next_page < $max_page)
                                 <li class="page-item">
-                                    <a class="page-link" href="{{ action('RemlistController@index',[$uesr_id,$next_page]) }}" aria-label="Next">
+                                    <a class="page-link" href="{{ action('TweetsController@index',[$uesr_id,$next_page]) }}" aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                     <span class="sr-only">Next</span>
                                     </a>
@@ -78,44 +74,33 @@
                         </nav>
                     </div>
                 </div>
+
             </div>
 
+            <!-- ツイート一覧 -->
             <div class="row">
-                <!-- リムられリスト -->
-                <table class="table remlist-table">
-                    <tbody>
 
-                        @foreach($users as $remuser)
-                        <tr>
-                            <td>
-                                <span>
-                                    <img src="{{$remuser['thumbnail_url']}}" class="usericon">
-                                </span>
-                            </td>
-                            <td>
+                @foreach($accounts as $account)
+                    <div class="media shadow-sm col-md-12" style="margin:0.5em" >
+                        <img class="mr-3 usericon" style="margin:1em" src="{{$account['thumbnail_url']}}">
+                        <div class="media-body">
+                            <h5 class="mt-0">{{$account['body']}}</h5>
+                            <div>{{$account['tweeted_datetime']}}　RT:{{$account['retweet_count']}}　FAV:{{$account['favolite_count']}}</div>
+                            @if (!is_null($account['media_type']))
                                 <div>
-                                    <span><!--<a href="https://twitter.com/{{$remuser['disp_name']}}" target="_blank" rel="noopener noreferrer">{{$remuser['name']}}</a>--></span>
-                                    <span><!--<a href="https://twitter.com/{{$remuser['disp_name']}}" target="_blank" rel="noopener noreferrer">{{'@'.$remuser['disp_name']}}</a>--></span>
+                                    
+                                    @for ($i = 0; $i < count($account['thumb_names']); $i++)
+                                        <span><a href="{{$account['media_path'][$i]}}"><img class="mr-3" style="margin:1em;width:10em;" src="{{asset('/img/thumbs/').$account['thumb_names'][$i]}}"></a></span>
+                                    @endfor
                                 </div>
-                                <div>
-                                    <span></span>
-                                </div>
-                                <div>
-                                    <span>ret：</span>
-                                    <span>fav：</span>
-                                    <span>post：</span>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            --}}
-            <video src="{{ asset('/tweetmedia/mammam0811/iloj4Ow62K32dwZu.mp4') }}" autoplay controls></video>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+
+
         </div>
 
-        
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

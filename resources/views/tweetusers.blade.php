@@ -65,7 +65,7 @@
                             <h6 class="card-subtitle text-muted">＠{{$account['disp_name']}}</h6>
                             <p class="card-text">ツイート：{{$account['tweet_ct']}}<br/>
                             メディア：{{$account['media_ct']}}</p>
-                            <a href="#" class="card-link">Tweets</a>
+                            <a href="{{ action('TweetsController@index',[$account['user_id']]) }}" class="card-link">Tweets</a>
                         </div>
                     </div>
                 @endforeach
