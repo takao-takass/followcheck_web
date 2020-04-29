@@ -49,3 +49,11 @@ Route::get('/followcheck/accounts','AccountsController@index');
 # ツイートダウンロードアカウント管理
 # - 画面表示
 Route::get('/followcheck/dlaccounts','DownloadAccountsController@index');
+
+# ツイートを見る
+# - 画面表示
+Route::get('/followcheck/tweetusers/{page?}','TweetUsersController@index');
+
+# ツイート一覧
+# - 画面表示
+Route::get('/followcheck/tweets/{user_id}/{page?}','TweetsController@index');
