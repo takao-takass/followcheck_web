@@ -39,7 +39,6 @@
 
         <div class="container">
 
-
             <div class="row" style="margin-top:2em;">
 
                 <!-- ページタイトル -->
@@ -48,56 +47,72 @@
                     </h2>
                 </div>
 
-                <!-- ページ切り替えボタン -->
+                <!-- 絞り込み -->
                 <div class="col-md-12">
-                    <div class="float-right">
-                        <nav aria-label="Page navigation example" style="margin-top:1em;">
-                            <ul class="pagination">
-                                @if($prev_page >= 0)
-                                <li class="page-item">
-                                    <a class="page-link" href="{{ action('TweetsController@index',[$uesr_id,$prev_page]) }}" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                    <span class="sr-only">Previous</span>
-                                    </a>
-                                </li>
-                                @endif
-                                <li class="page-item disabled"><a class="page-link" href="#">{{$record}}ツイート</a></li>
-                                @if($next_page < $max_page)
-                                <li class="page-item">
-                                    <a class="page-link" href="{{ action('TweetsController@index',[$uesr_id,$next_page]) }}" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                    <span class="sr-only">Next</span>
-                                    </a>
-                                </li>
-                                @endif
-                            </ul>
-                        </nav>
+                    <a class="btn btn-secondary"
+                        data-toggle="collapse"
+                        href="#filter"
+                        role="button"
+                        aria-expand="false"
+                        aria-controls="example-2">ツイートの絞り込み</a>
+                    <div class="collapse" id="filter">
+                        <div class="card card-body">
+                            <div class="form-check" style="margin:1em;">
+                                <input class="form-check-input filter-item" type="checkbox" id="filter-reply" {{$filter['reply_check']}}>
+                                <label class="form-check-label" for="filter-reply">リプライは表示しない</label>
+                            </div>
+                            <div class="form-check" style="margin:1em;">
+                                <input class="form-check-input filter-item" type="checkbox" id="filter-media" {{$filter['media_check']}}>
+                                <label class="form-check-label" for="filter-media">メディアのみ表示する</label>
+                            </div>
+                    </div>
+                </div>
+
+                <!-- 読み込み中表示 -->
+                <div class="col-md-12" style="text-align:center;margin-top:1em;" id="spinner">
+                    <div class="spinner-grow text-primary" role="status">
+                    <span class="sr-only">Loading...</span>
                     </div>
                 </div>
 
             </div>
 
-            <!-- ツイート一覧 -->
-            <div class="row">
+            <div class="row" id="body">
 
-                @foreach($accounts as $account)
-                    <div class="media shadow-sm col-md-12" style="margin:0.5em" >
-                        <img class="mr-3 usericon" style="margin:1em" src="{{$account['thumbnail_url']}}">
-                        <div class="media-body">
-                            <h5 class="mt-0">{{$account['body']}}</h5>
-                            <div>{{$account['tweeted_datetime']}}　RT:{{$account['retweet_count']}}　FAV:{{$account['favolite_count']}}</div>
-                            @if (!is_null($account['media_type']))
-                                <div>
-                                    
-                                    @for ($i = 0; $i < count($account['thumb_names']); $i++)
-                                        <span><a href="{{$account['media_path'][$i]}}"><img class="mr-3" style="margin:1em;width:10em;" src="{{asset('/img/thumbs/').$account['thumb_names'][$i]}}"></a></span>
-                                    @endfor
-                                </div>
-                            @endif
-                        </div>
+                <!-- ページ切り替えボタン -->
+                <div class="col-md-12">
+                    <div class="float-right">
+                        <nav aria-label="Page navigation example" style="margin-top:1em;">
+                            <ul class="pagination">
+                                <li class="page-item" id="prev">
+                                    <a class="page-link" id="prev-button" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#">
+                                        <span id="tweet-ct"></span>
+                                        ツイート
+                                    </a>
+                                </li>
+                                <li class="page-item" id="next">
+                                    <a class="page-link" id="next-button" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <input type="hidden" id="page" value="{{$filter['page']}}">
+                        <input type="hidden" id="user" value="{{$filter['user_id']}}">
                     </div>
-                @endforeach
+                </div>
 
+                <!-- ツイート一覧 -->
+                <div id="twlist">
+                </div>
+            </div>
 
         </div>
 
@@ -106,6 +121,102 @@
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+        <!-- Business JavaScript -->
+        <script type="text/javascript">
+
+            // 画面表示
+            $(document).ready(function(){
+                showList();
+            });
+
+            // 前ページ
+            $('#prev-button').on('click',function(){
+                $('#page').val(Number($('#page').val())-1);
+                showList();
+            });
+
+            // 次ページ
+            $('#next-button').on('click',function(){
+                $('#page').val(Number($('#page').val())+1);
+                showList();
+            });
+            
+            // 検索条件の変更
+            $('.filter-item').on('change',function(){
+                $('#page').val(0);
+                showList();
+            });
+
+            // ツイート一覧を取得する
+            function showList(){
+
+                $('#body').hide();
+                $('#spinner').show();
+
+                $.ajax({
+                    url:'{{ action('TweetsController@list') }}',
+                    type:'POST',
+                    data:{
+                        'user' : $('#user').val(),
+                        'page' : $('#page').val(),
+                        'filter-reply' : $('#filter-reply').prop('checked') ? 1:'',
+                        'filter-media' : $('#filter-media').prop('checked') ? 1:'',
+                    }
+                }).done( (data) => {
+
+                    $('#tweet-ct').text(data.record);
+                    $('#twlist').empty();
+
+                    // ページングの表示切替
+                    (data.prev_page>=0) ? $('#prev').show() : $('#prev').hide();
+                    (data.next_page<data.max_page) ? $('#next').show() : $('#next').hide();
+
+                    // ツイートの表示
+                    $.each(data.accounts, function(index,account){
+
+                        // HTMLのテンプレート
+                        html = 
+                            "<div class='media shadow-sm col-md-12' style='margin:0.5em' >"+
+                            "    <img class='mr-3 usericon' style='margin:1em' src='[[thumbnail_url]]'>"+
+                            "    <div class='media-body'>"+
+                            "        <h5 class='mt-0'>[[body]]</h5>"+
+                            "        <div>[[tweeted_datetime]]　RT:[[retweet_count]]　FAV:[[favolite_count]]</div>"+
+                            "        <div>[[thunbs]]</div>" +
+                            "    </div>"+
+                            "</div>";
+
+                        // メディアのサムネイル表示を作る
+                        thumbhtml = "";
+                        if(account.media_type != null){
+                            for (var i = 0; i<account.thumb_names.length; i++) {
+                                thumbhtml += "<span><a href='"+account.media_path[i]+"'><img class='mr-3' style='margin:1em;width:10em;' src='/img/thumbs/"+account.thumb_names[i]+"'></a></span>";
+                            }
+                        }
+
+                        // 一覧にHTMLを表示する
+                        $('#twlist').append(
+                            html
+                                .replace('[[thumbnail_url]]',account.thumbnail_url)
+                                .replace('[[body]]',account.body)
+                                .replace('[[tweeted_datetime]]',account.tweeted_datetime)
+                                .replace('[[retweet_count]]',account.retweet_count)
+                                .replace('[[favolite_count]]',account.favolite_count)
+                                .replace('[[thunbs]]',thumbhtml)
+                        );
+
+                    });
+
+                }).fail( (data) => {
+
+                }).always(function(){
+                    $('#body').show();
+                    $('#spinner').hide();
+                });
+
+            }
+
+        </script>
 
     </body>
 </html>

@@ -46,3 +46,8 @@ Route::post('/followcheck/accounts/del','AccountsController@del');
 Route::post('/followcheck/dlaccounts/add','DownloadAccountsController@add');
 # - アカウント削除API
 Route::post('/followcheck/dlaccounts/del','DownloadAccountsController@del');
+
+
+# ツイート一覧
+# - ツイート取得
+Route::post('/followcheck/tweets/list','TweetsController@list');
