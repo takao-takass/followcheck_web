@@ -17,6 +17,11 @@ class TweetsController extends Controller
      */
     public function index($user_id, $page=0)
     {
+        // 有効なトークンが無い場合はログイン画面に飛ばす
+        if(!$this->isValidToken()){
+            return redirect(action('LoginController@logout'));
+        }
+
         // アカウントの情報を取得
         $service_user_id = "0000000001";
 
@@ -28,7 +33,8 @@ class TweetsController extends Controller
             'media_check' => '',
         ];
 
-        return  response()->view('tweets', $param);
+        return  response()->view('tweets', $param)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
     }
 
     /**
@@ -38,6 +44,11 @@ class TweetsController extends Controller
      */
     public function list(Request $request)
     {
+        // 有効なトークンでない場合は認証エラー
+        if(!$this->isValidToken()){
+            response('Unauthorized ',401);
+        }
+
         // 入力チェックを行う
 
         // 取得条件を取り出す
@@ -109,6 +120,7 @@ class TweetsController extends Controller
             ];
         }
 
-        return response($param,200);
+        return response($param,200)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
     }
 }

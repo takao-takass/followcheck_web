@@ -18,6 +18,11 @@ class FleolistController extends Controller
      */
     public function init()
     {
+        // 有効なトークンが無い場合はログイン画面に飛ばす
+        if(!$this->isValidToken()){
+            return redirect(action('LoginController@logout'));
+        }
+
         $service_user_id = "0000000001";
 
         $userIds = DB::connection('mysql')->select(
@@ -35,7 +40,8 @@ class FleolistController extends Controller
             break;
         }
 
-        return redirect("followcheck/fleolist/".$param."/0");
+        return redirect("followcheck/fleolist/".$param."/0")
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
     }
 
     /**
@@ -45,6 +51,12 @@ class FleolistController extends Controller
      */
     public function index($user_id, $page)
     {
+        // 有効なトークンが無い場合はログイン画面に飛ばす
+        if(!$this->isValidToken()){
+            return redirect(action('LoginController@logout'));
+        }
+
+
         // アカウントの情報を取得
         $service_user_id = "0000000001";
         $accounts = DB::connection('mysql')->select(
@@ -115,7 +127,8 @@ class FleolistController extends Controller
         $param['max_page'] = ceil($recordCount / $pageRecord);
 
         return response()
-        ->view('fleolist', $param);
+        ->view('fleolist', $param)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
     }
 
     /**
@@ -125,6 +138,10 @@ class FleolistController extends Controller
      */
     public function hide(Request $request)
     {
+        // 有効なトークンでない場合は認証エラー
+        if(!$this->isValidToken()){
+            response('Unauthorized ',401);
+        }
 
         // 入力チェック
 
@@ -138,7 +155,8 @@ class FleolistController extends Controller
             " AND RM.follow_user_id = ? "
             ,[$request['user_id'],$request['follow_user_id']]);
     
-        return response('',200);
+        return response('',200)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
     }
 
 }

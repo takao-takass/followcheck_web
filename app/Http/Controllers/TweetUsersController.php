@@ -18,6 +18,11 @@ class TweetUsersController extends Controller
      */
     public function index($page = 0)
     {
+        // 有効なトークンが無い場合はログイン画面に飛ばす
+        if(!$this->isValidToken()){
+            return redirect(action('LoginController@logout'));
+        }
+
         // アカウントの情報を取得
         $service_user_id = "0000000001";
  
@@ -61,6 +66,7 @@ class TweetUsersController extends Controller
         }
 
         return  response()
-        ->view('tweetusers', $param);
+        ->view('tweetusers', $param)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
     }
 }

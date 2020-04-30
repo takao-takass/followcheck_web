@@ -33,7 +33,7 @@
                         <a class="nav-item nav-link" href="{{ action('RemlistController@init') }}">リムられリスト</a>
                         <a class="nav-item nav-link" href="{{ action('DownloadAccountsController@index') }}">ダウンロード管理</a>
                         <a class="nav-item nav-link" href="{{ action('TweetUsersController@index') }}">ツイートを見る</a>
-                        <a class="nav-item nav-link" href="#">ログアウト</a>
+                        <a class="nav-item nav-link" href="{{ action('LoginController@logout') }}">ログアウト</a>
                     </div>
                 </div>
             </div>

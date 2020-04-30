@@ -20,6 +20,11 @@ class DownloadAccountsController extends Controller
      */
     public function index()
     {
+        // 有効なトークンが無い場合はログイン画面に飛ばす
+        if(!$this->isValidToken()){
+            return redirect(action('LoginController@logout'));
+        }
+
         // アカウントの情報を取得
         $service_user_id = "0000000001";
         $param['serviceUserId'] = $service_user_id;
@@ -58,7 +63,8 @@ class DownloadAccountsController extends Controller
         }
 
         return response()
-        ->view('dlaccounts', $param);
+        ->view('dlaccounts', $param)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
     }
 
     /**
@@ -68,6 +74,10 @@ class DownloadAccountsController extends Controller
      */
     public function add(Request $request)
     {
+        // 有効なトークンでない場合は認証エラー
+        if(!$this->isValidToken()){
+            response('Unauthorized ',401);
+        }
 
         // 入力チェック
 
@@ -105,6 +115,10 @@ class DownloadAccountsController extends Controller
      */
     public function del(Request $request)
     {
+        // 有効なトークンでない場合は認証エラー
+        if(!$this->isValidToken()){
+            response('Unauthorized ',401);
+        }
 
         // 入力チェック
 
@@ -119,6 +133,7 @@ class DownloadAccountsController extends Controller
         " AND user_id = ?" 
         ,[$request['service_user_id'],$request['user_id']]);
 
-        return response('',200);
+        return response('',200)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
     }
 }

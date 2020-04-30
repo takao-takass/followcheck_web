@@ -17,6 +17,12 @@ class RemlistController extends Controller
      */
     public function init()
     {
+        // 有効なトークンが無い場合はログイン画面に飛ばす
+        if(!$this->isValidToken()){
+            return redirect(action('LoginController@logout'));
+        }
+
+
         $service_user_id = "0000000001";
 
         $userIds = DB::connection('mysql')->select(
@@ -34,7 +40,8 @@ class RemlistController extends Controller
             break;
         }
 
-        return redirect("followcheck/remlist/".$param."/0");#->action('RemlistController@index', ['user_id' => $param, 'page' => 0]);
+        return redirect("followcheck/remlist/".$param."/0")
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
     }
 
     /**
@@ -44,6 +51,11 @@ class RemlistController extends Controller
      */
     public function index($user_id, $page)
     {
+        // 有効なトークンが無い場合はログイン画面に飛ばす
+        if(!$this->isValidToken()){
+            return redirect(action('LoginController@logout'));
+        }
+
         // アカウントの情報を取得
         $service_user_id = "0000000001";
         $accounts = DB::connection('mysql')->select(
@@ -112,6 +124,7 @@ class RemlistController extends Controller
         $param['max_page'] = ceil($recordCount / $pageRecord);
 
         return response()
-        ->view('remlist', $param);
+        ->view('remlist', $param)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
     }
 }

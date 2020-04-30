@@ -12,6 +12,9 @@
     </head>
     <body>
     
+        <!-- 上に移動ボタン -->
+        <a href="#"><div class="movetop"><i data-feather="arrow-up" class="iconwhite"></i></div></a>
+
         <!-- ヘッダ  -->
         <nav class="navbar navbar-dark shadow-sm" style="background-color: #436be3;">
             <div class="container d-flex justify-content-between">
@@ -31,14 +34,11 @@
                         <a class="nav-item nav-link" href="{{ action('RemlistController@init') }}">リムられリスト</a>
                         <a class="nav-item nav-link" href="{{ action('DownloadAccountsController@index') }}">ダウンロード管理</a>
                         <a class="nav-item nav-link" href="{{ action('TweetUsersController@index') }}">ツイートを見る</a>
-                        <a class="nav-item nav-link" href="#">ログアウト</a>
+                        <a class="nav-item nav-link" href="{{ action('LoginController@logout') }}">ログアウト</a>
                     </div>
                 </div>
             </div>
         </nav>
-
-        <!-- 上に移動ボタン -->
-        <a href="#"><div class="movetop"><i data-feather="arrow-up" class="iconwhite"></i></div></a>
 
         <!-- メインコンテンツ -->
         <div class="container">
@@ -106,6 +106,10 @@
 
                 <!-- ツイート一覧 -->
                 <div class="col-md-12 contents" id="twlist">
+                </div>
+
+                <!-- ページ下部のスペーサ -->
+                <div style="margin-bottom:15em">
                 </div>
             </div>
 
@@ -178,10 +182,10 @@
 
                         // HTMLのテンプレート
                         html = 
-                            "<div class='media shadow-sm' style='margin:0.5em;width:100%' >"+
+                            "<div class='media shadow-sm' style='margin-bottom:0.5em;width:100%' >"+
                             "    <img class='usericon' style='margin:1em' src='[[thumbnail_url]]'>"+
-                            "    <div class='media-body'>"+
-                            "        <h5>[[body]]</h5>"+
+                            "    <div class='media-body' style='margin:1em 1em 1em 0em'>"+
+                            "        <h6 class='tweet-body' style='word-wrap:break-all;'>[[body]]</h6>"+
                             "        <div>[[tweeted_datetime]]　RT:[[retweet_count]]　FAV:[[favolite_count]]</div>"+
                             "        <div>[[thunbs]]</div>" +
                             "    </div>"+

@@ -74,7 +74,7 @@
                     <button class="btn btn-primary rounded-pill" id="entry-button" style="width:100%;margin-top:2em;">登録</button>
                 </div>
                 <div class="col-md-6">
-                    <button class="btn btn-secondary rounded-pill" onclick="" style="width:100%;margin-top:2em;">戻る</button>
+                <a href="{{action('LoginController@index')}}"><button class="btn btn-secondary rounded-pill" onclick="" style="width:100%;margin-top:2em;">戻る</button></a>
                 </div>
             </div>
         </div>
