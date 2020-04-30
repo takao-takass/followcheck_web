@@ -37,6 +37,10 @@
             </div>
         </nav>
 
+        <!-- 上に移動ボタン -->
+        <a href="#"><div class="movetop"><i data-feather="arrow-up" class="iconwhite"></i></div></a>
+
+        <!-- メインコンテンツ -->
         <div class="container">
 
             <div class="row" style="margin-top:2em;">
@@ -75,42 +79,33 @@
                     </div>
                 </div>
 
-            </div>
-
-            <div class="row" id="body">
-
                 <!-- ページ切り替えボタン -->
-                <div class="col-md-12">
-                    <div class="float-right">
-                        <nav aria-label="Page navigation example" style="margin-top:1em;">
-                            <ul class="pagination">
-                                <li class="page-item" id="prev">
-                                    <a class="page-link" id="prev-button" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                        <span class="sr-only">Previous</span>
-                                    </a>
-                                </li>
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#">
-                                        <span id="tweet-ct"></span>
-                                        ツイート
-                                    </a>
-                                </li>
-                                <li class="page-item" id="next">
-                                    <a class="page-link" id="next-button" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                        <span class="sr-only">Next</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                        <input type="hidden" id="page" value="{{$filter['page']}}">
-                        <input type="hidden" id="user" value="{{$filter['user_id']}}">
-                    </div>
+                <div class="col-md-12 contents">
+                    <nav style="margin-top:1em;">
+                        <ul class="pagination">
+                            <li class="page-item" id="prev">
+                                <a class="page-link" id="prev-button">
+                                    <i data-feather="arrow-left" class="iconwhite"></i>
+                                </a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link">
+                                    <span id="tweet-ct"></span>ツイート
+                                </a>
+                            </li>
+                            <li class="page-item" id="next">
+                                <a class="page-link" id="next-button">
+                                    <i data-feather="arrow-right" class="iconwhite"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <input type="hidden" id="page" value="{{$filter['page']}}">
+                    <input type="hidden" id="user" value="{{$filter['user_id']}}">
                 </div>
 
                 <!-- ツイート一覧 -->
-                <div id="twlist">
+                <div class="col-md-12 contents" id="twlist">
                 </div>
             </div>
 
@@ -121,6 +116,12 @@
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+        <!-- feather Iconfont JavaScript -->
+        <!-- icons: https://feathericons.com/ -->
+        <script src="https://unpkg.com/feather-icons"></script>
+        <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+        <script>feather.replace()</script>
 
         <!-- Business JavaScript -->
         <script type="text/javascript">
@@ -151,7 +152,7 @@
             // ツイート一覧を取得する
             function showList(){
 
-                $('#body').hide();
+                $('.contents').hide();
                 $('#spinner').show();
 
                 $.ajax({
@@ -177,10 +178,10 @@
 
                         // HTMLのテンプレート
                         html = 
-                            "<div class='media shadow-sm col-md-12' style='margin:0.5em' >"+
-                            "    <img class='mr-3 usericon' style='margin:1em' src='[[thumbnail_url]]'>"+
+                            "<div class='media shadow-sm' style='margin:0.5em;width:100%' >"+
+                            "    <img class='usericon' style='margin:1em' src='[[thumbnail_url]]'>"+
                             "    <div class='media-body'>"+
-                            "        <h5 class='mt-0'>[[body]]</h5>"+
+                            "        <h5>[[body]]</h5>"+
                             "        <div>[[tweeted_datetime]]　RT:[[retweet_count]]　FAV:[[favolite_count]]</div>"+
                             "        <div>[[thunbs]]</div>" +
                             "    </div>"+
@@ -210,7 +211,7 @@
                 }).fail( (data) => {
 
                 }).always(function(){
-                    $('#body').show();
+                    $('.contents').show();
                     $('#spinner').hide();
                 });
 
