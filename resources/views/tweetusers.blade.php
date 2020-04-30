@@ -9,7 +9,6 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
         <!-- App CSS -->
         <link rel="stylesheet" href="{{ asset('/css/common.css') }}">
-        <link rel="stylesheet" href="{{ asset('/css/remlist.css') }}">
     </head>
 
     <body>
@@ -39,6 +38,9 @@
             </div>
         </nav>
 
+        <!-- 上に移動ボタン -->
+        <a href="#"><div class="movetop"><i data-feather="arrow-up" class="iconwhite"></i></div></a>
+
         <div class="container">
 
             <!-- ページタイトル -->
@@ -47,27 +49,21 @@
                     <h2 class="text-center">
                     </h2>
                 </div>
-            </div>
-
-            <!-- ページ切り替えボタン -->
-            <div class="row text-center">
-                <div class="col-md-12">
-                </div>
-            </div>
 
             <!-- ユーザ一覧 -->
-            <div class="row">
                 @foreach($accounts as $account)
-                    <div class="card shadow-sm" style="width:13rem;margin:0.5em">
+                <div class="col-lg-3 col-md-4 col-6" style="margin-bottom:1em">
+                    <div class="card shadow-sm" style="width:100%;height:100%;">
                         <img class="card-img-top" src="{{$account['thumbnail_url']}}" style="height: 100px;object-fit: cover;*/">
                         <div class="card-body">
-                            <h5 class="card-title">{{$account['name']}}</h5>
+                            <h6 class="card-title">{{$account['name']}}</h6>
                             <h6 class="card-subtitle text-muted">＠{{$account['disp_name']}}</h6>
-                            <p class="card-text">ツイート：{{$account['tweet_ct']}}<br/>
-                            メディア：{{$account['media_ct']}}</p>
-                            <a href="{{ action('TweetsController@index',[$account['user_id']]) }}" class="card-link">Tweets</a>
+                            {{--<p class="card-text">ツイート：{{$account['tweet_ct']}}<br/>--}}
+                            {{--メディア：{{$account['media_ct']}}</p>--}}
+                            <h6 class="card-subtitle text-muted" style="margin-top:0.5em;"><a href="{{ action('TweetsController@index',[$account['user_id']]) }}" class="card-link">Tweets</a></h6>
                         </div>
                     </div>
+                </div>
                 @endforeach
             </div>
 
@@ -78,6 +74,12 @@
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+        <!-- feather Iconfont JavaScript -->
+        <!-- icons: https://feathericons.com/ -->
+        <script src="https://unpkg.com/feather-icons"></script>
+        <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+        <script>feather.replace()</script>
 
     </body>
 </html>
