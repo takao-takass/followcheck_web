@@ -66,12 +66,12 @@
                     <label>パスワード(再入力)：</label>
                 </div>
                 <div class="col-md-9">
-                    <input type="password" class="form-control rounded-pill" id="repassword" placeholder="">
+                    <input type="password" class="form-control rounded-pill" id="passwordcheck" placeholder="">
                 </div>
             </div>
             <div class="row" style="margin-top:3em;">
                 <div class="col-md-6">
-                    <button class="btn btn-primary rounded-pill" onclick="" style="width:100%;margin-top:2em;">登録</button>
+                    <button class="btn btn-primary rounded-pill" id="entry-button" style="width:100%;margin-top:2em;">登録</button>
                 </div>
                 <div class="col-md-6">
                     <button class="btn btn-secondary rounded-pill" onclick="" style="width:100%;margin-top:2em;">戻る</button>
@@ -85,6 +85,39 @@
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+        <script type="text/javascript">
+
+            // 次ページ
+            $('#entry-button').on('click',function(){
+                entry();
+            });
+
+            // ユーザ登録
+            function entry(){
+                $.ajax({
+                    url:"{{ action('SignupController@entry') }}",
+                    type:'POST',
+                    data:{
+                        email : $('#email').val(),
+                        password : $('#password').val(),
+                        passwordcheck : $('#passwordcheck').val()
+                    }
+                })
+                .done( (data) => {
+                    window.location.href = "{{ action('LoginController@index') }}";
+                })
+                .fail( (data) => {
+                        resobj = JSON.parse(data.responseText);
+                        alert(resobj.message);
+                        $('.input_error').removeClass('input_error');
+                        $.each(resobj.params, function(index, value) {
+                            $('#'+value).addClass('input_error');
+                        });
+                });
+            }
+
+        </script>
 
     </body>
 </html>
