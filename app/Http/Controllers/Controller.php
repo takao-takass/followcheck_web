@@ -28,6 +28,10 @@ class Controller extends BaseController
      */
     public function isValidToken(){
         
+        \Log::debug('トークンを認証');
+        \Log::debug('token = '. $this->sign);
+        \Log::debug('address = '. $this->ip);
+
         DB::table('token')
         ->where('expire_datetime','<', Carbon::now('Asia/Tokyo'))
         ->delete();
@@ -50,6 +54,10 @@ class Controller extends BaseController
         
         // 新しいトークンを発行
         $token = $this->createToken($this->getTokenUser()->id);
+
+        \Log::debug('トークンを発行');
+        \Log::debug('id = '. $token->user_id);
+        \Log::debug('token = '. $token->signtext);
 
         // 使ったトークンを物理削除
         DB::table('token')

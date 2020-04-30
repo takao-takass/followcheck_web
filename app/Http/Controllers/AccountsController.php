@@ -20,6 +20,8 @@ class AccountsController extends Controller
      */
     public function index()
     {
+        
+
         // 有効なトークンが無い場合はログイン画面に飛ばす
         if(!$this->isValidToken()){
             return redirect(action('LoginController@logout'));
@@ -93,7 +95,8 @@ class AccountsController extends Controller
         " VALUES (?, ?, ?, '', '', '', 0, 0, NOW(), '2000-01-01', 0)" 
         ,[$response->id_str,$response->screen_name,$response->name]);
 
-        return response('',200);
+        return response('',200)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
     }
 
     /**

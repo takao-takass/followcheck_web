@@ -77,7 +77,7 @@ class LoginController extends Controller
         $token->user_id = $userrecord->service_user_id;
         $token->ipaddress = \Request::ip();
         $token->expire_datetime = $now->addDay(1);
-        $token->signtext = password_hash($token->user_id . $token->expire_datetime, PASSWORD_ARGON2I);
+        $token->signtext = password_hash($token->user_id . $token->expire_datetime, PASSWORD_BCRYPT);
         DB::table('token')->insert(
             [
                 'sign' => $token->signtext,

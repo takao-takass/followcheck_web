@@ -80,6 +80,7 @@
                     }
                 })
                 .done( (data) => {
+                    //window.location = "{{action('AccountsController@index')}}"
                     window.location.reload();
                 })
                 .fail( (data) => {
