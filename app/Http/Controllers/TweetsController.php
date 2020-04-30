@@ -88,8 +88,8 @@ class TweetsController extends Controller
             " FROM tweets TW" .
             " LEFT JOIN (" .
             " 	SELECT tweet_id,`type` AS media_type" .
-            "       ,GROUP_CONCAT(CONCAT(REPLACE(directory_path,'/opt/followcheck/fcmedia/tweetmedia/','/img/'),file_name)) AS media_path" .
-            "       ,GROUP_CONCAT(thumb_file_name) AS thumb_names" .
+            "       ,GROUP_CONCAT(CONCAT(REPLACE(directory_path,'/opt/followcheck/fcmedia/tweetmedia/','/img/tweetmedia/'),file_name)) AS media_path" .
+            "       ,GROUP_CONCAT(CONCAT('/img/tweetmedia/thumbs/',thumb_file_name)) AS thumb_names" .
             " 	FROM tweet_medias" .
             " 	GROUP BY tweet_id,`type`" .
             " ) TM" .
