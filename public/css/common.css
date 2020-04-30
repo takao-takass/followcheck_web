@@ -61,9 +61,12 @@ ul {
     stroke-linejoin: round;
     fill: none;
     margin:15px;
-  }
+ }
 
-
+/* 入力エラーの表示 */
+ .input_error {
+    background: #f9d7d7;
+}
 
 
 
