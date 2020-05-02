@@ -31,7 +31,8 @@ class SignupController extends Controller
         $user->email = $request['email'];
         $user->password = $request['password'];
         $user->passwordcheck = $request['passwordcheck'];
-
+        $user->invitecode = $request['invitecode'];
+        
         // 入力情報のチェック
         $this->checkParam($user);
 
@@ -93,11 +94,19 @@ class SignupController extends Controller
             );
         }
 
-        // パスワードが確認用と一致しなければエラー
-        if($user->password != $user->passwordcheck){
+        // 招待コードが正しくない場合はエラー
+        if($user->invitecode != config('app.invite_code')){
             throw new ParamInvalidException(
-                'パスワードが一致しません。',
-                ['password','passwordcheck']
+                '招待コードが違います。',
+                ['invitecode']
+            );
+        }
+
+        // メールアドレスの構成が正しくない場合はエラー
+        if(preg_match("/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/i",$user->email,$matches)==0){
+            throw new ParamInvalidException(
+                'メールアドレスは正しく入力してください。',
+                ['email']
             );
         }
 
@@ -111,6 +120,15 @@ class SignupController extends Controller
                 ['email']
             );
         }
+
+        // パスワードが確認用と一致しなければエラー
+        if($user->password != $user->passwordcheck){
+            throw new ParamInvalidException(
+                'パスワードが一致しません。',
+                ['password','passwordcheck']
+            );
+        }
+
 
     }
 }

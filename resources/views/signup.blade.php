@@ -31,18 +31,10 @@
             </div>
             <div class="row" style="margin-top:2em;">
                 <div class="col-md-3">
-                    <label>招待コード</label>
+                    <label>招待コード：</label>
                 </div>
                 <div class="col-md-9">
-                    <input type="email" class="form-control rounded-pill" id="invite" aria-describedby="" placeholder="">
-                </div>
-            </div>
-            <div class="row" style="margin-top:2em;">
-                <div class="col-md-3">
-                    <label>Twitter ID(@付き)</label>
-                </div>
-                <div class="col-md-9">
-                    <input type="email" class="form-control rounded-pill" id="twitterid" aria-describedby="" placeholder="">
+                    <input type="email" class="form-control rounded-pill" id="invitecode" aria-describedby="" placeholder="">
                 </div>
             </div>
             <div class="row" style="margin-top:2em;">
@@ -101,7 +93,8 @@
                     data:{
                         email : $('#email').val(),
                         password : $('#password').val(),
-                        passwordcheck : $('#passwordcheck').val()
+                        passwordcheck : $('#passwordcheck').val(),
+                        invitecode : $('#invitecode').val()
                     }
                 })
                 .done( (data) => {
