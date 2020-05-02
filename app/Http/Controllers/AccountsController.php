@@ -28,8 +28,7 @@ class AccountsController extends Controller
         }
 
         // アカウントの情報を取得
-        $service_user_id = "0000000001";
-        $param['serviceUserId'] = $service_user_id;
+        $param['serviceUserId'] = $this->session_user->service_user_id;
         $accounts = DB::connection('mysql')->select(
             " SELECT RU.user_id,RU.name,RU.thumbnail_url" .
             " FROM service_users SU" .
@@ -37,7 +36,7 @@ class AccountsController extends Controller
             " ON SU.service_user_id = UA.service_user_id" .
             " INNER JOIN relational_users RU" .
             " ON UA.user_id = RU.user_id" .
-            " AND SU.service_user_id = '". $service_user_id ."'" .
+            " AND SU.service_user_id = '" . $this->session_user->service_user_id ."'" .
             " ORDER BY UA.create_datetime ASC"
         );
 

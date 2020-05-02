@@ -26,8 +26,7 @@ class DownloadAccountsController extends Controller
         }
 
         // アカウントの情報を取得
-        $service_user_id = "0000000001";
-        $param['serviceUserId'] = $service_user_id;
+        $param['serviceUserId'] = $this->session_user->service_user_id;
         $accounts = DB::connection('mysql')->select(
             " SELECT RU.user_id " .
             " 		,RU.name " .
@@ -47,7 +46,7 @@ class DownloadAccountsController extends Controller
             " ON TT.user_id = RU.user_id " .
             " WHERE TT.service_user_id = ?" .
             " ORDER BY TT.create_datetime desc"
-            ,[$service_user_id]
+            ,[$this->session_user->service_user_id]
         );
 
         $param['accounts'] = [];

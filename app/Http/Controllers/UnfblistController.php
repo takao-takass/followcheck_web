@@ -23,14 +23,14 @@ class UnfblistController extends Controller
             return redirect(action('LoginController@logout'));
         }
 
-        $service_user_id = "0000000001";
-
         $userIds = DB::connection('mysql')->select(
             ' SELECT UA.user_id' .
             ' FROM service_users SU' .
             ' INNER JOIN users_accounts UA' .
             ' ON SU.service_user_id = UA.service_user_id' .
+            ' WHERE SU.service_user_id = ?' .
             ' ORDER BY UA.create_datetime'
+            ,[$this->session_user->service_user_id]
         );
 
         // ユーザIDの取得
@@ -57,7 +57,6 @@ class UnfblistController extends Controller
         }
 
         // アカウントの情報を取得
-        $service_user_id = "0000000001";
         $accounts = DB::connection('mysql')->select(
             " SELECT RU.user_id,RU.name,RU.thumbnail_url" .
             " FROM service_users SU" .
@@ -65,7 +64,7 @@ class UnfblistController extends Controller
             " ON SU.service_user_id = UA.service_user_id" .
             " INNER JOIN relational_users RU" .
             " ON UA.user_id = RU.user_id" .
-            " AND SU.service_user_id = '". $service_user_id ."'" .
+            " AND SU.service_user_id = '". $this->session_user->service_user_id ."'" .
             " ORDER BY UA.create_datetime ASC"
         );
 

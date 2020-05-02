@@ -23,9 +23,6 @@ class TweetUsersController extends Controller
             return redirect(action('LoginController@logout'));
         }
 
-        // アカウントの情報を取得
-        $service_user_id = "0000000001";
- 
         // 表示するアカウントを取得する
         $accounts = DB::connection('mysql')->select(
             " SELECT RU.user_id,RU.disp_name,RU.name,RU.thumbnail_url,TWC.tweet_ct,TMC.media_ct" .
@@ -48,7 +45,7 @@ class TweetUsersController extends Controller
             " ) TMC" .
             " ON TT.user_id = TMC.user_id" .
             " AND TT.service_user_id = TMC.service_user_id" .
-            " WHERE TT.service_user_id = '". $service_user_id ."'" .
+            " WHERE TT.service_user_id = '". $this->session_user->service_user_id ."'" .
             " AND TT.`status` >= '5'" .
             " AND TT.deleted = 0" .
             " ORDER BY TT.create_datetime DESC"

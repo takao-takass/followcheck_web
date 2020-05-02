@@ -17,6 +17,7 @@ class Controller extends BaseController
     
     private $sign;
     private $ip;
+    protected $session_user;
 
     function __construct() {
         $this->sign = \Request::cookie('sign');
@@ -36,15 +37,26 @@ class Controller extends BaseController
         ->where('expire_datetime','<', Carbon::now('Asia/Tokyo'))
         ->delete();
 
-        $res = DB::table('token')
-        ->where('sign', $this->sign)
-        ->where('ipaddress',$this->ip)
-        ->count();
+        $user = DB::connection('mysql')->select(
+            " SELECT SU.service_user_id,SU.`name`,SU.mailaddress".
+            " FROM token TK".
+            " INNER JOIN service_users SU".
+            " ON TK.service_user_id = SU.service_user_id".
+            " AND SU.deleted = 0".
+            " WHERE TK.sign = '".$this->sign."'".
+            " LIMIT 1"
+        );
 
-        if($res>0){
-            return true;
+        if(count($user)==0){
+            return false;
         }
-        return false;
+
+        $this->session_user = new User;
+        $this->session_user->service_user_id = $user[0]->service_user_id;
+        $this->session_user->name = $user[0]->name;
+        $this->session_user->mailaddress = $user[0]->mailaddress;
+
+        return true;
     }
 
     /**
@@ -53,7 +65,7 @@ class Controller extends BaseController
     public function updateToken(){
         
         // 新しいトークンを発行
-        $token = $this->createToken($this->getTokenUser()->id);
+        $token = $this->createToken($this->getTokenUser()->service_user_id);
 
         \Log::debug('トークンを発行');
         \Log::debug('id = '. $token->user_id);
@@ -99,7 +111,7 @@ class Controller extends BaseController
         ->select('service_users.service_user_id','service_users.name','service_users.mailaddress')
         ->first();
         $user = new User;
-        $user->id = $tokenUser->service_user_id;
+        $user->service_user_id = $tokenUser->service_user_id;
         $user->name = $tokenUser->name;
         $user->email = $tokenUser->mailaddress;
 

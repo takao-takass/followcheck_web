@@ -22,9 +22,6 @@ class TweetsController extends Controller
             return redirect(action('LoginController@logout'));
         }
 
-        // アカウントの情報を取得
-        $service_user_id = "0000000001";
-
         // 初期検索条件を設定する
         $param['filter'] = [
             'user_id' => $user_id,
@@ -57,9 +54,6 @@ class TweetsController extends Controller
         $onreply = $request['filter-reply'];
         $onlymedia = $request['filter-media'];
         
-        // アカウントの情報を取得（仮実装）
-        $service_user_id = "0000000001";
-
         // ページ数から取得範囲の計算
         $pageRecord = 200;
         $numPage = intval($page);
@@ -68,7 +62,7 @@ class TweetsController extends Controller
         $query = 
             " SELECT COUNT(*) AS ct" .
             " FROM tweets TW" .
-            " WHERE TW.service_user_id = '".$service_user_id."'" .
+            " WHERE TW.service_user_id = '".$this->session_user->service_user_id."'" .
             " AND TW.user_id = '".$user_id."'".
             ($onreply=='' ? "" : " AND TW.replied = '0'" ).
             ($onlymedia=='' ? "" : " AND EXISTS( SELECT 1 FROM tweet_medias TM WHERE TW.tweet_id = TM.tweet_id )" );
@@ -96,7 +90,7 @@ class TweetsController extends Controller
             " ON TW.tweet_id = TM.tweet_id" .
             " INNER JOIN relational_users RU" .
             " ON TW.user_id = RU.user_id" .
-            " WHERE TW.service_user_id = '".$service_user_id."'" .
+            " WHERE TW.service_user_id = '".$this->session_user->service_user_id."'" .
             " AND TW.user_id = '".$user_id."'" .
             ($onreply=='' ? "" : " AND TW.replied = '0'" ).
             ($onlymedia=='' ? "" : " AND EXISTS( SELECT 1 FROM tweet_medias TM WHERE TW.tweet_id = TM.tweet_id )" ) .

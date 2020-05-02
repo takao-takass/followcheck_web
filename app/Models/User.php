@@ -6,8 +6,8 @@ class User
 {
     public static $requireProps = [];
     
-    public $id;
+    public $service_user_id;
     public $name;
-    public $email;
+    public $mailaddress;
 
 }
