@@ -66,27 +66,37 @@ class AccountsController extends Controller
         if(!$this->isValidToken()){
             response('Unauthorized ',401);
         }
-
-        // 入力チェック
-
-
-        
+                
         // Twitterアカウントの情報を取得
         $twitterApi = new TwitterOAuth(config('app.consumer_key'), config('app.consumer_secret'), config('app.access_token'), config('app.access_token_secret'));
-        $response = $twitterApi->get("users/show", ["screen_name" => $request['account_name']]);
+        $response = $twitterApi->get("users/show", ["screen_name" => $request['accountname']]);
 
-        // デバッグ出力
-        print_r($response);
+        // 入力チェック
+        // APIからユーザが取得できない場合はエラー
         if (!property_exists($response, 'id_str')){
-            return response('',400);
+            throw new ParamInvalidException(
+                '入力されたアカウントはTwitterに存在しません。',
+                ['accountname']
+            );
+        }
+
+        // 既に登録されているアカウントはエラー
+        $exists = DB::table('users_accounts')
+        ->where('user_id', $response->id_str)
+        ->where('service_user_id', $this->session_user->service_user_id)
+        ->count();
+        if($exists>0){
+            throw new ParamInvalidException(
+                '入力されたアカウントは既に登録されています。',
+                ['accountname']
+            );
         }
 
         // アカウントマスタに登録する
         $remusers = DB::connection('mysql')->insert(
         " INSERT INTO users_accounts (service_user_id, user_id, create_datetime, update_datetime, deleted)" .
         " VALUES (?, ?, NOW(), NOW(), 0)" 
-        ,[$request['service_user_id'],$response->id_str]);
-
+        ,[$this->session_user->service_user_id,$response->id_str]);
 
         // Twitterユーザマスタに登録する
         $remusers = DB::connection('mysql')->insert(
@@ -109,17 +119,13 @@ class AccountsController extends Controller
         if(!$this->isValidToken()){
             response('Unauthorized ',401);
         }
-
-        // 入力チェック
-
-
         
         // アカウントマスタから削除する
         $remusers = DB::connection('mysql')->delete(
         " DELETE FROM users_accounts" .
         " WHERE service_user_id = ?" .
         " AND user_id = ?" 
-        ,[$request['service_user_id'],$request['user_id']]);
+        ,[$this->session_user->service_user_id,$request['user_id']]);
 
         return response('',200)
         ->cookie('sign',$this->updateToken()->signtext,24*60);

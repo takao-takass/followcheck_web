@@ -57,7 +57,7 @@
                     <label>Twitterアカウントを追加：</label>
                 </div>
                 <div class="col-md-6 text-center">
-                    <span><input type="email" class="form-control rounded-pill" id="account-name" aria-describedby="" placeholder="アットマーク（＠）は不要"></span>
+                    <span><input type="email" class="form-control rounded-pill" id="accountname" aria-describedby="" placeholder="アットマーク（＠）は不要"></span>
                 </div>
                 <div class="col-md-2 text-center">
                     <button class="btn btn-primary rounded-pill" id="add-button" style="width:80%;" onclick="">追加</button>
@@ -125,19 +125,17 @@
                     type:'POST',
                     data:{
                         service_user_id : $('#service-user-id').val(),
-                        account_name : $('#account-name').val()
+                        accountname : $('#accountname').val()
                     }
                 }).done( (data) => {
                     location.reload();
                 }).fail( (data) => {
-                    /*
                     resobj = JSON.parse(data.responseText);
                         alert(resobj.message);
                         $('.input_error').removeClass('input_error');
                         $.each(resobj.params, function(index, value) {
                             $('#'+value).addClass('input_error');
                         });
-                        */
                 });
             });
 
@@ -154,14 +152,12 @@
                 }).done( (data) => {
                     location.reload();
                 }).fail( (data) => {
-                    /*
                     resobj = JSON.parse(data.responseText);
                         alert(resobj.message);
                         $('.input_error').removeClass('input_error');
                         $.each(resobj.params, function(index, value) {
                             $('#'+value).addClass('input_error');
                         });
-                        */
                 });
             });
         </script>

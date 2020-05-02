@@ -78,25 +78,36 @@ class DownloadAccountsController extends Controller
             response('Unauthorized ',401);
         }
 
-        // 入力チェック
-
-
-        
         // Twitterアカウントの情報を取得
         $twitterApi = new TwitterOAuth(config('app.consumer_key'), config('app.consumer_secret'), config('app.access_token'), config('app.access_token_secret'));
-        $response = $twitterApi->get("users/show", ["screen_name" => $request['account_name']]);
+        $response = $twitterApi->get("users/show", ["screen_name" => $request['accountname']]);
 
-        // デバッグ出力
-        print_r($response);
+        // 入力チェック
+        // APIからユーザが取得できない場合はエラー
         if (!property_exists($response, 'id_str')){
-            return response('',400);
+            throw new ParamInvalidException(
+                '入力されたアカウントはTwitterに存在しません。',
+                ['accountname']
+            );
+        }
+
+        // 既に登録されているアカウントはエラー
+        $exists = DB::table('tweet_take_users')
+        ->where('user_id', $response->id_str)
+        ->where('service_user_id', $this->session_user->service_user_id)
+        ->count();
+        if($exists>0){
+            throw new ParamInvalidException(
+                '入力されたアカウントは既に登録されています。',
+                ['accountname']
+            );
         }
 
         // ダウンロードアカウントマスタに登録する
         $remusers = DB::connection('mysql')->insert(
         " INSERT INTO tweet_take_users (service_user_id, user_id, status, create_datetime, update_datetime, deleted)" .
         " VALUES (?, ?, '0',NOW(), NOW(), 0)" 
-        ,[$request['service_user_id'],$response->id_str]);
+        ,[$this->session_user->service_user_id,$response->id_str]);
 
         // Twitterユーザマスタに登録する
         $remusers = DB::connection('mysql')->insert(
@@ -120,10 +131,6 @@ class DownloadAccountsController extends Controller
             response('Unauthorized ',401);
         }
 
-        // 入力チェック
-
-
-        
         // アカウントのステータスを削除予約にする
         $remusers = DB::connection('mysql')->update(
         " UPDATE tweet_take_users" .
@@ -131,7 +138,7 @@ class DownloadAccountsController extends Controller
         "    ,update_datetime = NOW() " .
         " WHERE service_user_id = ?" .
         " AND user_id = ?" 
-        ,[$request['service_user_id'],$request['user_id']]);
+        ,[$this->session_user->service_user_id,$request['user_id']]);
 
         return response('',200)
         ->cookie('sign',$this->updateToken()->signtext,24*60);
