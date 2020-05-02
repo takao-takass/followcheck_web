@@ -1,44 +1,10 @@
-<!doctype html>
-<html lang="ja">
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+@extends('layout')
 
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-        <!-- App CSS -->
-        <link rel="stylesheet" href="{{ asset('/css/common.css') }}">
+@section('style')
         <link rel="stylesheet" href="{{ asset('/css/unfblist.css') }}">
-    </head>
+@endsection
 
-    <body>
-    
-        <!-- ヘッダ  -->
-        <nav class="navbar navbar-dark shadow-sm" style="background-color: #436be3;">
-            <div class="container d-flex justify-content-between">
-                <a href="#" class="navbar-brand d-flex">
-                    <img class="titlelogo" src="{{ asset('/img/title2.png') }}">
-                </a>
-                <button class="navbar-toggler" type="button"
-                    data-toggle="collapse"
-                    data-target="#navmenu"
-                    aria-controls="navmenu"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navmenu">
-                    <div class="navbar-nav">
-                        <a class="nav-item nav-link" href="{{ action('RemlistController@init') }}">リムられリスト</a>
-                        <a class="nav-item nav-link" href="{{ action('DownloadAccountsController@index') }}">ダウンロード管理</a>
-                        <a class="nav-item nav-link" href="{{ action('TweetUsersController@index') }}">ツイートを見る</a>
-                        <a class="nav-item nav-link" href="{{ action('LoginController@logout') }}">ログアウト</a>
-                    </div>
-                </div>
-            </div>
-        </nav>
-
+@section('content')
         <div class="container">
 
             <!-- ページタイトル -->
@@ -139,9 +105,10 @@
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+@endsection
 
-        <!-- Business JavaScript -->
-        <script type="text/javascript">
+@section('script')
+<script type="text/javascript">
             
             $('.hide-button').on('click',function(){
                 var val = this.value;
@@ -155,17 +122,7 @@
                 }).done( (data) => {
                     $('#row_'+val).hide();
                 }).fail( (data) => {
-                    /*
-                    resobj = JSON.parse(data.responseText);
-                        alert(resobj.message);
-                        $('.input_error').removeClass('input_error');
-                        $.each(resobj.params, function(index, value) {
-                            $('#'+value).addClass('input_error');
-                        });
-                        */
                 });
             });
         </script>
-
-    </body>
-</html>
+@endsection
