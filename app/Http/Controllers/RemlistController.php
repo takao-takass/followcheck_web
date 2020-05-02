@@ -33,7 +33,7 @@ class RemlistController extends Controller
         );
 
         // ユーザIDの取得
-        $param = "";
+        $param = "0";
         foreach($userIds as $userId){
             $param = $userId->user_id;
             break;
