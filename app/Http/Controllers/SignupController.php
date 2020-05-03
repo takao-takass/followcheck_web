@@ -95,12 +95,21 @@ class SignupController extends Controller
         }
 
         // 招待コードが正しくない場合はエラー
-        if($user->invitecode != config('app.invite_code')){
+        // ->正しい場合は使用回数をカウントする
+        $exists = DB::table('code')
+        ->where('type', 'invite')
+        ->where('value', $user->invitecode)
+        ->count();
+        if($exists == 0){
             throw new ParamInvalidException(
                 '招待コードが違います。',
                 ['invitecode']
             );
         }
+        $exists = DB::table('code')
+        ->where('type', 'invite')
+        ->where('value', $user->invitecode)
+        ->increment('used_count');
 
         // メールアドレスの構成が正しくない場合はエラー
         if(preg_match("/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/i",$user->email,$matches)==0){
