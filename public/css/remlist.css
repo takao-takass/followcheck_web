@@ -1,50 +1,7 @@
 /* #リムられリストのスタイル */
-.remlist-table {
-    width:100%;
-}
 
-/* #1列目のスタイル */
-/*  - 列 */
-table > tbody > tr > td:nth-child(1) {
-    text-align: right;
-    width:15%
-}
-
-/* #2列目のスタイル */
-/*  - 列 */
-table > tbody > tr > td:nth-child(2) {
-    width:75%
-}
-/*  - ユーザ名ラベル */
-table > tbody > tr > td:nth-child(2) > div:nth-child(1) > span:nth-child(1) {
+/* ユーザ名ラベル */
+.name {
     font-size: 16pt;
     font-weight: bold;
-}
-/*  - ユーザIDラベル */
-table > tbody > tr > td:nth-child(2) > div:nth-child(1) >  span:nth-child(2) {
-    font-size: 14pt;
-    margin-left: 1em;
-}
-/*  - 下段 */
-table > tbody > tr > td:nth-child(2) > div:nth-child(2) {
-    margin-top: 3px;
-}
-/*  - 下段のラベル全体 */
-table > tbody > tr > td:nth-child(2) > div:nth-child(2) > span {
-    font-size: 11pt;
-}
-/*  - 下段の後続ラベル */
-table > tbody > tr > td:nth-child(2) > div:nth-child(2) > span:nth-child(n+2) {
-    margin-left: 1em;
-}
- 
-
-/* #3列目のスタイル */
-/*  - 列 */
-table > tbody > tr > td:nth-child(3) {
-    width:10%
-}
-/*  - フォローマーク */
-table > tbody > tr > td:nth-child(3) > span {
-    font-size:24pt;
 }

@@ -68,39 +68,26 @@
                 </div>
             </div>
 
+            <!-- リムられリスト -->
             <div class="row">
-                <!-- リムられリスト -->
-                <table class="table remlist-table">
-                    <tbody>
-
-                        @foreach($users as $remuser)
-                        <tr>
-                            <td>
-                                <span>
-                                    <img src="{{$remuser['thumbnail_url']}}" class="usericon">
-                                </span>
-                            </td>
-                            <td>
-                                <div>
-                                    <span><a href="https://twitter.com/{{$remuser['disp_name']}}" target="_blank" rel="noopener noreferrer">{{$remuser['name']}}</a></span>
-                                    <span><!--<a href="https://twitter.com/{{$remuser['disp_name']}}" target="_blank" rel="noopener noreferrer">{{'@'.$remuser['disp_name']}}</a>--></span>
-                                </div>
-                                <div>
-                                    <span>フォロー：{{$remuser['follow_count']}}</span>
-                                    <span>フォロワー：{{$remuser['follower_count']}}</span>
-                                    <span>{{$remuser['dayold']}}日前</span>
-                                </div>
-                            </td>
-                            <td>
-                                @if($remuser['followed'] == '1')
-                                <span>✔</span>
-                                @endif
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                @foreach($users as $remuser)
+                    <div class="media col-md-6 shadow-sm" style="margin-bottom:1em;padding:1em;">
+                        <img src="{{$remuser['thumbnail_url']}}" class="usericon mr-3">
+                        <div class="media-body">
+                            <h5 class="mt-0 name"><a href="https://twitter.com/{{$remuser['disp_name']}}" target="_blank" rel="noopener noreferrer">{{$remuser['name']}}</a></h5>
+                            <span>フォロー：{{$remuser['follow_count']}}　</span>
+                            <span>フォロワー：{{$remuser['follower_count']}}　</span>
+                            <span>{{$remuser['dayold']}}日前　</span>
+                            @if($remuser['followed'] == '1')
+                                <span>【フォロー中】</span>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
             </div>
+
+            <!-- スペーサ -->
+            <div style="margin-bottom:150px;"></div>
         </div>
 @endsection
 
