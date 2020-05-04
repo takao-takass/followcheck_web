@@ -18,14 +18,14 @@
 
     <!-- アカウント追加フォーム -->
     <div class="row text-right" style="margin-top:2em;margin-bottom:2em;">
-        <div class="col-md-3 text-left">
-            <label>Twitterアカウントを追加：</label>
-        </div>
-        <div class="col-md-6 text-center">
-            <span><input type="email" class="form-control rounded-pill" id="accountname" aria-describedby="" placeholder="アットマーク（＠）は不要"></span>
-        </div>
-        <div class="col-md-2 text-center">
-            <button class="btn btn-primary rounded-pill" id="add-button" style="width:80%;" onclick="">追加</button>
+        <div class="input-group mb-2 col-md-12">
+            <div class="input-group-prepend">
+                <span class="input-group-text">アカウント追加　＠</span>
+            </div>
+            <input type="email" class="form-control" id="accountname" >
+            <div class="input-group-append">
+                <button type="button" class="btn btn-outline-secondary" id="add-button">　　追加　　</button>
+            </div>
         </div>
     </div>
 
