@@ -47,6 +47,7 @@ class TweetUsersController extends Controller
             " AND TT.service_user_id = TMC.service_user_id" .
             " WHERE TT.service_user_id = '". $this->session_user->service_user_id ."'" .
             " AND TT.`status` >= '5'" .
+            " AND TT.`status` <> 'D'" .
             " AND TT.deleted = 0" .
             " ORDER BY TT.create_datetime DESC"
         );
