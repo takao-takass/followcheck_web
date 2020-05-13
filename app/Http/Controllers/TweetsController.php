@@ -27,6 +27,7 @@ class TweetsController extends Controller
             'user_id' => $user_id,
             'page' => $page,
             'reply_check' => '',
+            'retweet_check' => '',
             'media_check' => '',
         ];
 
@@ -52,6 +53,7 @@ class TweetsController extends Controller
         $user_id = $request['user'];
         $page = $request['page'];
         $onreply = $request['filter-reply'];
+        $onretweet = $request['filter-retweet'];
         $onlymedia = $request['filter-media'];
         
         // ページ数から取得範囲の計算
@@ -65,6 +67,7 @@ class TweetsController extends Controller
             " WHERE TW.service_user_id = '".$this->session_user->service_user_id."'" .
             " AND TW.user_id = '".$user_id."'".
             ($onreply=='' ? "" : " AND TW.replied = '0'" ).
+            ($onretweet=='' ? "" : " AND TW.retweeted = '0'" ).
             ($onlymedia=='' ? "" : " AND EXISTS( SELECT 1 FROM tweet_medias TM WHERE TW.tweet_id = TM.tweet_id )" );
         $res = DB::connection('mysql')->select($query);
         $recordCount = $res[0]->ct;
@@ -89,10 +92,11 @@ class TweetsController extends Controller
             " ) TM" .
             " ON TW.tweet_id = TM.tweet_id" .
             " INNER JOIN relational_users RU" .
-            " ON TW.user_id = RU.user_id" .
+            " ON TW.tweet_user_id = RU.user_id" .
             " WHERE TW.service_user_id = '".$this->session_user->service_user_id."'" .
             " AND TW.user_id = '".$user_id."'" .
             ($onreply=='' ? "" : " AND TW.replied = '0'" ).
+            ($onretweet=='' ? "" : " AND TW.retweeted = '0'" ).
             ($onlymedia=='' ? "" : " AND EXISTS( SELECT 1 FROM tweet_medias TM WHERE TW.tweet_id = TM.tweet_id )" ) .
             " ORDER BY TW.tweeted_datetime DESC".
             " LIMIT ". $pageRecord .

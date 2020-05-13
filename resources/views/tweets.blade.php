@@ -23,6 +23,10 @@
                     <div class="collapse" id="filter">
                         <div class="card card-body">
                             <div class="form-check" style="margin:1em;">
+                                <input class="form-check-input filter-item" type="checkbox" id="filter-retweet" {{$filter['retweet_check']}}>
+                                <label class="form-check-label" for="filter-retweet">リツイートは表示しない</label>
+                            </div>
+                            <div class="form-check" style="margin:1em;">
                                 <input class="form-check-input filter-item" type="checkbox" id="filter-reply" {{$filter['reply_check']}}>
                                 <label class="form-check-label" for="filter-reply">リプライは表示しない</label>
                             </div>
@@ -115,6 +119,7 @@
                         'user' : $('#user').val(),
                         'page' : $('#page').val(),
                         'filter-reply' : $('#filter-reply').prop('checked') ? 1:'',
+                        'filter-retweet' : $('#filter-retweet').prop('checked') ? 1:'',
                         'filter-media' : $('#filter-media').prop('checked') ? 1:'',
                     }
                 }).done( (data) => {
