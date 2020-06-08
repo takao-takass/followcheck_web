@@ -51,3 +51,7 @@ Route::post('/followcheck/dlaccounts/del','DownloadAccountsController@del');
 # ツイート一覧
 # - ツイート取得
 Route::post('/followcheck/tweets/list','TweetsController@list');
+
+# 観賞モード
+# - ツイート取得
+Route::post('/followcheck/show/list','ShowController@list');

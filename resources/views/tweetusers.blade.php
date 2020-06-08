@@ -21,7 +21,8 @@
                             <h6 class="card-subtitle text-muted" style='word-wrap:break-all;'>＠{{$account['disp_name']}}</h6>
                             {{--<p class="card-text">ツイート：{{$account['tweet_ct']}}<br/>--}}
                             {{--メディア：{{$account['media_ct']}}</p>--}}
-                            <h6 class="card-subtitle text-muted" style="margin-top:0.5em;"><a href="{{ action('TweetsController@index',[$account['user_id']]) }}" class="card-link">Tweets</a></h6>
+                            <h6 class="card-subtitle text-muted" style="margin-top:0.5em;"><a href="{{ action('TweetsController@index',[$account['user_id']]) }}" class="card-link">ツイートを見る</a></h6>
+                            <h6 class="card-subtitle text-muted" style="margin-top:0.5em;"><a href="{{ action('ShowController@index',[$account['user_id']]) }}" class="card-link">観賞モード</a></h6>
                         </div>
                     </div>
                 </div>

@@ -57,3 +57,7 @@ Route::get('/followcheck/tweetusers/{page?}','TweetUsersController@index');
 # ツイート一覧
 # - 画面表示
 Route::get('/followcheck/tweets/{user_id}/{page?}','TweetsController@index');
+
+# 観賞モード
+# - 画面表示
+Route::get('/followcheck/show/{user_id}/{page?}','ShowController@index');
