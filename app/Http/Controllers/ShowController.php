@@ -78,7 +78,7 @@ class ShowController extends Controller
 
         // ツイートを取得する
         $query = 
-            " SELECT RU.thumbnail_url,TW.tweeted_datetime,TW.body,TW.favolite_count,TW.retweet_count,TW.replied,media_type,TM.media_path,TM.thumb_names" .
+            " SELECT RU.thumbnail_url,convert_tz(TW.tweeted_datetime, '+00:00','+09:00') AS tweeted_datetime,TW.body,TW.favolite_count,TW.retweet_count,TW.replied,media_type,TM.media_path,TM.thumb_names" .
             " FROM tweets TW" .
             " LEFT JOIN (" .
             " 	SELECT tweet_id,`type` AS media_type" .
