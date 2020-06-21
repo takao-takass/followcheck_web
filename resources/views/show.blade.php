@@ -58,6 +58,19 @@
             </div>
 
         </div>
+
+        <!-- モーダルコンテンツ -->
+        <div class="modal fade" id="showmodal" tabindex="-1" role="dialog" aria-labelledby="showmodal-title" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+            <div class="modal-body">
+                <a id='originimagelink' href='' target='_blank' rel='noopener noreferrer'>
+                    <img id='originimage' class='mr-3 thumb-radius' style='width:100%;' src='' alt='新しいタブで表示する'>
+                </a>
+            </div>
+            </div>
+        </div>
+        </div>
 @endsection
 
 @section('script')
@@ -88,6 +101,13 @@
                 showList();
             });
 
+            // 画像モーダルを表示
+            showimage = function(source){
+                $('#originimagelink').attr('href',source);
+                $('#originimage').attr('src',source);
+                $('#showmodal').modal();
+            }
+
             // ツイート一覧を取得する
             function showList(){
 
@@ -114,24 +134,17 @@
                     $.each(data.accounts, function(index,account){
 
                         // HTMLのテンプレート
-                        thumbhtml = "";
                         if(account.media_type != null){
                             for (var i = 0; i<account.thumb_names.length; i++) {
-                                html = 
-                                    "<div class='col-lg-2 col-md-3 col-4' style='margin-bottom:1em;'>"+
-                                    "        <span><a href='"+account.media_path[i]+" 'target='_blank' rel='noopener noreferrer'><img class='mr-3 thumb-radius' style='width:100%;' src='"+account.thumb_names[i]+"'></a></span>" +
-                                    "</div>";
 
                                 // 一覧にHTMLを表示する
                                 $('#twlist').append(
-                                    html
-                                        .replace('[[thunbs]]',thumbhtml)
+                                    "<div class='thumb col-lg-2 col-md-3 col-4' role='button' onclick=\"showimage('"+account.media_path[i]+"');\" style='margin-bottom:1em;'>"+
+                                    "   <img class='mr-3 thumb-radius' style='width:100%;' src='"+account.thumb_names[i]+"'>"+
+                                    "</div>"
                                 );
                             }
                         }
-
-
-
                     });
 
                 }).fail( (data) => {
