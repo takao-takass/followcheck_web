@@ -1,8 +1,12 @@
 @extends('layout')
 
+@section('style')
+        <link rel="stylesheet" href="{{ asset('/css/show.css') }}">
+@endsection
+
 @section('content')
         <!-- メインコンテンツ -->
-        <div class="container">
+        <div class="container" style="">
 
             <div class="row" style="margin-top:2em;">
 
@@ -43,16 +47,17 @@
                     <input type="hidden" id="page" value="{{$filter['page']}}">
                     <input type="hidden" id="user" value="{{$filter['user_id']}}">
                 </div>
-
-                <!-- ツイート一覧 -->
-                <div class="row content" id="twlist">
-                
-                </div>
-
-                <!-- ページ下部のスペーサ -->
-                <div style="margin-bottom:15em">
-                </div>
             </div>
+            
+            <!-- ツイート一覧 -->
+            <div class="row contents" id="twlist">
+            </div>
+
+            <!-- ページ下部のスペーサ -->
+            <div style="margin-bottom:15em">
+            </div>
+
+        </div>
 @endsection
 
 @section('script')
@@ -61,6 +66,7 @@
 
             // 画面表示
             $(document).ready(function(){
+                $('body').css('background-color','#232323');
                 showList();
             });
 
@@ -112,10 +118,8 @@
                         if(account.media_type != null){
                             for (var i = 0; i<account.thumb_names.length; i++) {
                                 html = 
-                                    "<div class=`col-lg-3 col-md-4 col-6'>"+
-                                    "<div class='card shadow-sm' style='margin-bottom:0.5em;' >"+
-                                    "        <span><a href='"+account.media_path[i]+" 'target='_blank' rel='noopener noreferrer'><img class='mr-3' style='margin:1em;width:10em;' src='"+account.thumb_names[i]+"'></a></span>" +
-                                    "</div>"+
+                                    "<div class='col-lg-2 col-md-3 col-4' style='margin-bottom:1em;'>"+
+                                    "        <span><a href='"+account.media_path[i]+" 'target='_blank' rel='noopener noreferrer'><img class='mr-3 thumb-radius' style='width:100%;' src='"+account.thumb_names[i]+"'></a></span>" +
                                     "</div>";
 
                                 // 一覧にHTMLを表示する
