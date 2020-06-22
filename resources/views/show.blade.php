@@ -76,7 +76,7 @@
                     <span id="tweetbody">
                     </span>
                     <span>
-                        <a id="weblink" href="">　Twitterで見る</a>
+                        <a id="weblink" href=""　target='_blank' rel='noopener noreferrer'>　Twitterで見る</a>
                     </span>
                 </div>
             </div>
