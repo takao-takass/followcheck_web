@@ -78,7 +78,8 @@ class ShowController extends Controller
 
         // ツイートを取得する
         $query = 
-            " SELECT RU.thumbnail_url,convert_tz(TW.tweeted_datetime, '+00:00','+09:00') AS tweeted_datetime,TW.body,TW.favolite_count,TW.retweet_count,TW.replied,media_type,TM.media_path,TM.thumb_names," .
+            " SELECT RU.thumbnail_url,convert_tz(TW.tweeted_datetime, '+00:00','+09:00') AS tweeted_datetime," .
+            " REGEXP_REPLACE(TW.body, '[\r\n|\r|\n]', '') AS body,TW.favolite_count,TW.retweet_count,TW.replied,media_type,TM.media_path,TM.thumb_names," .
             " CONCAT('https://twitter.com/',RU.disp_name,'/status/',TW.tweet_id) AS weblink " .
             " FROM tweets TW" .
             " LEFT JOIN (" .
