@@ -64,9 +64,21 @@
         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
             <div class="modal-body">
-                <a id='originimagelink' href='' target='_blank' rel='noopener noreferrer'>
-                    <img id='originimage' class='mr-3 thumb-radius' style='width:100%;' src='' alt='新しいタブで表示する'>
-                </a>
+                <div>
+                    <a id='originimagelink' href='' target='_blank' rel='noopener noreferrer'>
+                        <img id='originimage' class='mr-3 thumb-radius' style='width:100%;' src='' alt='新しいタブで表示する'>
+                    </a>
+                </div>
+                <div>
+                    <span>
+                        <img src="" id="accounticon" class="twitterlinkicon">
+                    </span>
+                    <span id="tweetbody">
+                    </span>
+                    <span>
+                        <a id="weblink" href="">　Twitterで見る</a>
+                    </span>
+                </div>
             </div>
             </div>
         </div>
@@ -102,9 +114,12 @@
             });
 
             // 画像モーダルを表示
-            showimage = function(source){
+            showimage = function(source,icon,body,weblink){
                 $('#originimagelink').attr('href',source);
                 $('#originimage').attr('src',source);
+                $('#accounticon').attr('src',icon);
+                $('#weblink').attr('href',weblink);
+                $('#tweetbody').text(body);
                 $('#showmodal').modal();
             }
 
@@ -139,7 +154,7 @@
 
                                 // 一覧にHTMLを表示する
                                 $('#twlist').append(
-                                    "<div class='thumb col-lg-2 col-md-3 col-4' role='button' onclick=\"showimage('"+account.media_path[i]+"');\" style='margin-bottom:1em;'>"+
+                                    "<div class='thumb col-lg-2 col-md-3 col-4' role='button' onclick=\"showimage('"+account.media_path[i]+"','"+account.thumbnail_url+"','"+account.body+"','"+account.weblink+"');\" style='margin-bottom:1em;'>"+
                                     "   <img class='mr-3 thumb-radius' style='width:100%;' src='"+account.thumb_names[i]+"'>"+
                                     "</div>"
                                 );

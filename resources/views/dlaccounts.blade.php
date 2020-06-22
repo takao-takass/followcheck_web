@@ -20,7 +20,7 @@
     <div class="row text-right" style="margin-top:2em;margin-bottom:2em;">
         <div class="input-group mb-2 col-md-12">
             <div class="input-group-prepend">
-                <span class="input-group-text">アカウント追加　＠</span>
+                <span class="input-group-text">＠</span>
             </div>
             <input type="email" class="form-control" id="accountname" >
             <div class="input-group-append">
