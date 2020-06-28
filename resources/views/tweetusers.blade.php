@@ -90,8 +90,8 @@
     });
 
     // アカウント削除ボタン
-    $('.del-button').on('click',function(){
-        deleteUser();
+    $(document).on('click', '.del-button', function(){
+        deleteUser(this.value);
     });
 
     // ツイート一覧を取得する
@@ -137,7 +137,7 @@
 
                 // ツイート表示用リンクのHTMLを作成する
                 linkHtml = "";
-                if(account.tweet_show="1"){
+                if(account.tweet_show=="1"){
                     linkHtml = 
                         " <h6 class='card-subtitle text-muted' style='margin-top:0.5em;'><a href='{{ action('TweetsController@index',['']) }}/"+account.user_id+"' target='_blank' rel='noreferrer' class='card-link'>ツイートを見る</a></h6> "+
                         " <h6 class='card-subtitle text-muted' style='margin-top:0.5em;'><a href='{{ action('ShowController@index',['']) }}/"+account.user_id+"' target='_blank' rel='noreferrer' class='card-link'>観賞モード</a></h6> ";
@@ -166,7 +166,6 @@
 
     // アカウントを追加する
     function addUser(){
-        var val = this.value;
         $.ajax({
             url:'{{ action('TweetUsersController@add') }}',
             type:'POST',
@@ -187,14 +186,13 @@
     }
 
     // アカウントを削除する
-    function deleteUser(){
-        var val = this.value;
+    function deleteUser(userId){
         $.ajax({
             url:'{{ action('TweetUsersController@del') }}',
             type:'POST',
             data:{
                 service_user_id : $('#service-user-id').val(),
-                user_id : val
+                user_id : userId
             }
         }).done( (data) => {
             location.reload();
