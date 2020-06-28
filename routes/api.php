@@ -42,6 +42,8 @@ Route::post('/followcheck/accounts/del','AccountsController@del');
 
 
 # ツイートを見る
+# - リスト表示API
+Route::post('/followcheck/tweetusers/list','TweetUsersController@list');
 # - アカウント追加API
 Route::post('/followcheck/tweetusers/add','TweetUsersController@add');
 # - アカウント削除API

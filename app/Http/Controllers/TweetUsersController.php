@@ -27,8 +27,53 @@ class TweetUsersController extends Controller
             return redirect(action('LoginController@logout'));
         }
 
-        // 表示するアカウントを取得する
-        $accounts = DB::connection('mysql')->select(
+        // 初期検索条件を設定する
+        $param['filter'] = [
+            'page' => $page,
+        ];
+        
+        return  response()->view('tweetusers', $param)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
+    }
+
+
+    /**
+     * ツイート一覧API
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function list(Request $request)
+    {
+        // 有効なトークンでない場合は認証エラー
+        if(!$this->isValidToken()){
+            response('Unauthorized ',401);
+        }
+
+        // 入力チェックを行う
+
+        // 取得条件を取り出す
+        $page = $request['page'];
+        
+        // ページ数から取得範囲の計算
+        $pageRecord = 50;
+        $numPage = intval($page);
+
+        // アカウントの総数を取得
+        $query = 
+            " SELECT COUNT(*) AS ct" .
+            " FROM tweet_take_users TT" .
+            " WHERE TT.service_user_id = '".$this->session_user->service_user_id."'";
+        $res = DB::connection('mysql')->select($query);
+        $recordCount = $res[0]->ct;
+
+        // ページ切り替えのリンクを設定するための条件
+        $param['prev_page'] = $numPage-1;
+        $param['next_page'] = $numPage+1;
+        $param['max_page'] = ceil($recordCount / $pageRecord);
+        $param['record'] = $recordCount;
+
+        // ツイートを取得する
+        $query = 
             " SELECT RU.user_id".
             "       ,RU.disp_name".
             "       ,RU.name".
@@ -65,9 +110,11 @@ class TweetUsersController extends Controller
             "    AND TT.service_user_id = TMC.service_user_id" .
             "  WHERE TT.service_user_id = '". $this->session_user->service_user_id ."'" .
             "    AND TT.deleted = 0" .
-            "  ORDER BY TT.create_datetime DESC"
-        );
-        
+            "  ORDER BY TT.create_datetime DESC".
+            "  LIMIT ". $pageRecord .
+            " OFFSET ". $pageRecord*$numPage;
+
+        $accounts = DB::connection('mysql')->select($query);
         $param['accounts'] = [];
         foreach($accounts as $account){
             $param['accounts'][] = [
@@ -83,8 +130,7 @@ class TweetUsersController extends Controller
             ];
         }
 
-        return  response()
-        ->view('tweetusers', $param)
+        return response($param,200)
         ->cookie('sign',$this->updateToken()->signtext,24*60);
     }
 
