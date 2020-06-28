@@ -65,7 +65,7 @@
             <div class="modal-content">
             <div class="modal-body">
                 <div>
-                    <a id='originimagelink' href='' target='_blank' rel='noopener noreferrer'>
+                    <a id='originimagelink' href='' target='_blank' rel='noreferrer'>
                         <img id='originimage' class='mr-3 thumb-radius' style='width:100%;' src='' alt='新しいタブで表示する'>
                     </a>
                 </div>
@@ -76,7 +76,7 @@
                     <span id="tweetbody">
                     </span>
                     <span>
-                        <a id="weblink" href=""　target='_blank' rel='noopener noreferrer'>　Twitterで見る</a>
+                        <a id="weblink" href="" target='_blank' rel='noreferrer'>　Twitterで見る</a>
                     </span>
                 </div>
             </div>
