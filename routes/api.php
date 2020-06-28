@@ -41,11 +41,11 @@ Route::post('/followcheck/accounts/add','AccountsController@add');
 Route::post('/followcheck/accounts/del','AccountsController@del');
 
 
-# ツイートダウンロード管理
+# ツイートを見る
 # - アカウント追加API
-Route::post('/followcheck/dlaccounts/add','DownloadAccountsController@add');
+Route::post('/followcheck/tweetusers/add','TweetUsersController@add');
 # - アカウント削除API
-Route::post('/followcheck/dlaccounts/del','DownloadAccountsController@del');
+Route::post('/followcheck/tweetusers/del','TweetUsersController@del');
 
 
 # ツイート一覧
