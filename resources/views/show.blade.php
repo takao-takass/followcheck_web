@@ -46,6 +46,7 @@
                     </nav>
                     <input type="hidden" id="page" value="{{$filter['page']}}">
                     <input type="hidden" id="user" value="{{$filter['user_id']}}">
+                    <input type="hidden" id="group" value="{{$filter['group_id']}}">
                 </div>
             </div>
             
@@ -134,6 +135,7 @@
                     type:'POST',
                     data:{
                         'user' : $('#user').val(),
+                        'group' : $('#group').val(),
                         'page' : $('#page').val(),
                     }
                 }).done( (data) => {

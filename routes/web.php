@@ -51,9 +51,17 @@ Route::get('/followcheck/accounts','AccountsController@index');
 Route::get('/followcheck/tweetusers/{page?}','TweetUsersController@index');
 
 # ツイート一覧
-# - 画面表示
-Route::get('/followcheck/tweets/{user_id}/{page?}','TweetsController@index');
+# - 画面表示(ユーザ指定)
+Route::get('/followcheck/tweets/u/{user_id}/{page?}','TweetsController@index');
+# - 画面表示(グループ指定)
+Route::get('/followcheck/tweets/g/{group_id}/{page?}','TweetsController@gindex');
 
 # 観賞モード
+# - 画面表示(ユーザ指定)
+Route::get('/followcheck/show/u/{user_id}/{page?}','ShowController@index');
+# - 画面表示(グループ指定)
+Route::get('/followcheck/show/g/{group_id}/{page?}','ShowController@gindex');
+
+# グループ
 # - 画面表示
-Route::get('/followcheck/show/{user_id}/{page?}','ShowController@index');
+Route::get('/followcheck/groups','GroupsController@index');
