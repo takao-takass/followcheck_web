@@ -112,50 +112,7 @@
             (data.next_page<data.max_page) ? $('#next').show() : $('#next').hide();
             // ユーザ一覧の表示
             $.each(data.accounts, function(index,account){
-                // HTMLのテンプレート
-                html = 
-                    "<div class='col-lg-3 col-md-4 col-6' style='margin-bottom:1em'>"+
-                    "    <div class='card shadow-sm' style='width:100%;height:100%;'> "+
-                    "        <img class='card-img-top' src='[[thumbnail_url]]' style='height: 100px;object-fit: cover;*/'> "+
-                    "        <div class='card-body'> "+
-                    "        <h5 class='card-title' style='font-weight: bold;'>[[name]]</h6> "+
-                    "            <h6 class='card-subtitle text-muted' style='word-wrap:break-all;'>＠[[disp_name]]</h6> "+
-                    "            [[delbtn]]"+
-                    "            [[tweetlink]]"+
-                    "        </div> "+
-                    "    </div> "+
-                    "</div>"
-
-                // 削除ボタンのHTMLを作成する
-                delbtnHtml = "";
-                if(account.delbtn_show=="1"){
-                    delbtnHtml = 
-                        " <div class='text-right'> "+
-                        "   <button class='btn btn-secondary rounded-pill del-button' value='"+account.user_id+"' style='height:35px;font-size: 10pt;'>削除</button> "+
-                        " </div> ";
-                }
-
-                // ツイート表示用リンクのHTMLを作成する
-                linkHtml = "";
-                if(account.tweet_show=="1"){
-                    linkHtml = 
-                        " <h6 class='card-subtitle text-muted' style='margin-top:0.5em;'><a href='{{ action('TweetsController@index',['']) }}/"+account.user_id+"' target='_blank' rel='noreferrer' class='card-link'>ツイートを見る</a></h6> "+
-                        " <h6 class='card-subtitle text-muted' style='margin-top:0.5em;'><a href='{{ action('ShowController@index',['']) }}/"+account.user_id+"' target='_blank' rel='noreferrer' class='card-link'>観賞モード</a></h6> ";
-                }else{
-                    linkHtml = 
-                        " <span class='badge badge-secondary' style='margin-bottom:1em;'>"+account.status+"</span> ";
-                }
-
-                // 一覧にHTMLを表示する
-                $('#userlist').append(
-                    html
-                        .replace('[[thumbnail_url]]',account.thumbnail_url)
-                        .replace('[[name]]',account.name)
-                        .replace('[[disp_name]]',account.disp_name)
-                        .replace('[[delbtn]]',delbtnHtml)
-                        .replace('[[tweetlink]]',linkHtml)
-                );
-
+                $('#userlist').append(createUserCard(account));
             });
         }).fail( (data) => {
         }).always(function(){
@@ -176,13 +133,75 @@
         }).done( (data) => {
             location.reload();
         }).fail( (data) => {
+            // サーバメッセージの表示
             resobj = JSON.parse(data.responseText);
-                alert(resobj.message);
-                $('.input_error').removeClass('input_error');
-                $.each(resobj.params, function(index, value) {
-                    $('#'+value).addClass('input_error');
+            alert(resobj.message);
+            $('.input_error').removeClass('input_error');
+            $.each(resobj.params, function(index, value) {
+                $('#'+value).addClass('input_error');
+            });
+
+            // コンフリクトの場合
+            // 当該ユーザの情報を取得して一覧の先頭に表示する
+            if(data.status==409){
+                $.ajax({
+                    url:'{{ action('TweetUsersController@list') }}',
+                    type:'POST',
+                    data:{
+                        'user' : $('#accountname').val(),
+                        'page' : 0,
+                    }
+                }).done( (data) => {
+                    $.each(data.accounts, function(index,account){
+                        $('#userlist').prepend(createUserCard(account));
+                    });
                 });
+            }
         });
+    }
+
+    // ユーザリストのカードHTMLを作成する
+    function createUserCard(account){
+        // HTMLのテンプレート
+        html = 
+            "<div class='col-lg-3 col-md-4 col-6' style='margin-bottom:1em'>"+
+            "    <div class='card shadow-sm' style='width:100%;height:100%;'> "+
+            "        <img class='card-img-top' src='[[thumbnail_url]]' style='height: 100px;object-fit: cover;*/'> "+
+            "        <div class='card-body'> "+
+            "        <h5 class='card-title' style='font-weight: bold;'>[[name]]</h6> "+
+            "            <h6 class='card-subtitle text-muted' style='word-wrap:break-all;'>＠[[disp_name]]</h6> "+
+            "            [[delbtn]]"+
+            "            [[tweetlink]]"+
+            "        </div> "+
+            "    </div> "+
+            "</div>"
+
+        // 削除ボタンのHTMLを作成する
+        delbtnHtml = "";
+        if(account.delbtn_show=="1"){
+            delbtnHtml = 
+                " <div class='text-right'> "+
+                "   <button class='btn btn-secondary rounded-pill del-button' value='"+account.user_id+"' style='height:35px;font-size: 10pt;'>削除</button> "+
+                " </div> ";
+        }
+
+        // ツイート表示用リンクのHTMLを作成する
+        linkHtml = "";
+        if(account.tweet_show=="1"){
+            linkHtml = 
+                " <h6 class='card-subtitle text-muted' style='margin-top:0.5em;'><a href='{{ action('TweetsController@index',['']) }}/"+account.user_id+"' target='_blank' rel='noreferrer' class='card-link'>ツイートを見る</a></h6> "+
+                " <h6 class='card-subtitle text-muted' style='margin-top:0.5em;'><a href='{{ action('ShowController@index',['']) }}/"+account.user_id+"' target='_blank' rel='noreferrer' class='card-link'>観賞モード</a></h6> ";
+        }else{
+            linkHtml = 
+                " <span class='badge badge-secondary' style='margin-bottom:1em;'>"+account.status+"</span> ";
+        }
+
+        return html
+                .replace('[[thumbnail_url]]',account.thumbnail_url)
+                .replace('[[name]]',account.name)
+                .replace('[[disp_name]]',account.disp_name)
+                .replace('[[delbtn]]',delbtnHtml)
+                .replace('[[tweetlink]]',linkHtml);
     }
 
     // アカウントを削除する

@@ -6,6 +6,7 @@ use Abraham\TwitterOAuth\TwitterOAuth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Exceptions\ParamInvalidException;
+use App\Exceptions\ParamConflictException;
 use App\Models\Token;
 use Carbon\Carbon;
 
@@ -49,10 +50,11 @@ class TweetUsersController extends Controller
             response('Unauthorized ',401);
         }
 
-        // 入力チェックを行う
-
         // 取得条件を取り出す
+        $userName = $request['user'];
         $page = $request['page'];
+
+        // 入力チェックを行う
         
         // ページ数から取得範囲の計算
         $pageRecord = 50;
@@ -78,8 +80,6 @@ class TweetUsersController extends Controller
             "       ,RU.disp_name".
             "       ,RU.name".
             "       ,RU.thumbnail_url".
-            "       ,TWC.tweet_ct".
-            "       ,TMC.media_ct" .
             "       ,TT.`status` " .
             "       ,CASE TT.`status` " .
             "            WHEN '0' THEN '予約済' " .
@@ -92,23 +92,12 @@ class TweetUsersController extends Controller
             "   FROM tweet_take_users TT" .
             "  INNER JOIN relational_users RU" .
             "     ON TT.user_id = RU.user_id" .
-            "   LEFT JOIN (" .
-            "            SELECT TW.service_user_id,TW.user_id,COUNT(tweet_id) AS tweet_ct" .
-            "              FROM tweets TW" .
-            "             GROUP BY TW.service_user_id,TW.user_id" .
-            "        ) TWC" .
-            "     ON TT.user_id = TWC.user_id" .
-            "    AND TT.service_user_id = TWC.service_user_id" .
-            "   LEFT JOIN (" .
-            "            SELECT TW.service_user_id,TW.user_id,COUNT(TM.url) AS media_ct" .
-            "              FROM tweets TW" .
-            "             INNER JOIN tweet_medias TM" .
-            "                ON TW.tweet_id = TM.tweet_id" .
-            "             GROUP BY TW.service_user_id,TW.user_id" .
-            "        ) TMC" .
-            "     ON TT.user_id = TMC.user_id" .
-            "    AND TT.service_user_id = TMC.service_user_id" .
             "  WHERE TT.service_user_id = '". $this->session_user->service_user_id ."'" .
+            // ユーザ名による絞り込み
+            (
+                $userName == "" ? "" :
+                "    AND RU.disp_name = '". $userName ."'" 
+            ).
             "    AND TT.deleted = 0" .
             "  ORDER BY TT.create_datetime DESC".
             "  LIMIT ". $pageRecord .
@@ -121,8 +110,6 @@ class TweetUsersController extends Controller
                 'user_id' => $account->user_id,
                 'disp_name' => $account->disp_name,
                 'name' => $account->name,
-                'tweet_ct' => $account->tweet_ct,
-                'media_ct' => $account->media_ct,
                 'status' => $account->status_nm,
                 'tweet_show'=> in_array($account->status, array('5','6','9')) ? '1':'0',
                 'delbtn_show' => $account->status=='D' ? '0':'1',
@@ -165,7 +152,7 @@ class TweetUsersController extends Controller
         ->where('service_user_id', $this->session_user->service_user_id)
         ->count();
         if($exists>0){
-            throw new ParamInvalidException(
+            throw new ParamConflictException(
                 '入力されたアカウントは既に登録されています。',
                 ['accountname']
             );
