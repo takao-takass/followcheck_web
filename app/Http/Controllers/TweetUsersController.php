@@ -82,12 +82,12 @@ class TweetUsersController extends Controller
             "       ,RU.thumbnail_url".
             "       ,TT.`status` " .
             "       ,CASE TT.`status` " .
-            "            WHEN '0' THEN '予約済' " .
-            "            WHEN '1' THEN '処理中' " .
+            "            WHEN '0' THEN '取得中..' " .
+            "            WHEN '1' THEN '取得中..' " .
             "            WHEN '5' THEN '完了' " .
-            "            WHEN '6' THEN '最新化中' " .
+            "            WHEN '6' THEN '完了' " .
             "            WHEN '9' THEN '完了' " .
-            "            WHEN 'D' THEN '削除予約済' " .
+            "            WHEN 'D' THEN '削除中..' " .
             "        END AS status_nm" .
             "   FROM tweet_take_users TT" .
             "  INNER JOIN relational_users RU" .
@@ -166,8 +166,10 @@ class TweetUsersController extends Controller
 
         // Twitterユーザマスタに登録する
         $remusers = DB::connection('mysql')->insert(
-        " REPLACE INTO relational_users (user_id, disp_name, name, description, theme_color, follow_count, follower_count, create_datetime, update_datetime, deleted)" .
-        " VALUES (?, ?, ?, '', '', 0, 0, NOW(), '2000-01-01', 0)" 
+        " INSERT INTO relational_users (user_id, disp_name, name, description, theme_color, follow_count, follower_count, create_datetime, update_datetime, deleted)" .
+        " VALUES (?, ?, ?, '', '', 0, 0, NOW(), '2000-01-01', 0)".
+        " ON DUPLICATE KEY UPDATE ".
+        " update_datetime = NOW() /*既に登録済みの場合は更新日時のみ更新*/ "
         ,[$response->id_str,$response->screen_name,$response->name]);
 
         return response('',200)
