@@ -169,8 +169,7 @@
             "        <img class='card-img-top' src='[[thumbnail_url]]' style='height: 100px;object-fit: cover;*/'> "+
             "        <div class='card-body'> "+
             "        <h5 class='card-title' style='font-weight: bold;'>[[name]]</h6> "+
-            "            <h6 class='card-subtitle text-muted' style='word-wrap:break-all;'>＠[[disp_name]]</h6> "+
-            "            [[delbtn]]"+
+                        "            [[delbtn]]"+
             "            [[tweetlink]]"+
             "        </div> "+
             "    </div> "+
@@ -189,7 +188,7 @@
         linkHtml = "";
         if(account.tweet_show=="1"){
             linkHtml = 
-                " <h6 class='card-subtitle text-muted' style='margin-top:0.5em;'><a href='{{ action('TweetsController@index',['']) }}/"+account.user_id+"' target='_blank' rel='noreferrer' class='card-link'>ツイートを見る</a></h6> "+
+                " <h6 class='card-subtitle text-muted' style='margin-top:0.5em;'><a href='{{ action('TweetsController@index',['']) }}/"+account.user_id+"' target='_blank' rel='noreferrer' class='card-link'>ツイート</a></h6> "+
                 " <h6 class='card-subtitle text-muted' style='margin-top:0.5em;'><a href='{{ action('ShowController@index',['']) }}/"+account.user_id+"' target='_blank' rel='noreferrer' class='card-link'>観賞モード</a></h6> ";
         }else{
             linkHtml = 

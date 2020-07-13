@@ -30,7 +30,7 @@
                         <div class="text-right">
                             <button class="btn btn-secondary rounded-pill del-button" value="{{$group['group_id']}}" style="height:35px;font-size: 10pt;">削除</button>
                         </div>
-                        <h6 class='card-subtitle text-muted' style='margin-top:0.5em;'><a href='' target='_blank' rel='noreferrer' class='card-link'>ツイートを見る</a></h6>
+                        <h6 class='card-subtitle text-muted' style='margin-top:0.5em;'><a href='' target='_blank' rel='noreferrer' class='card-link'>ツイート</a></h6>
                         <h6 class='card-subtitle text-muted' style='margin-top:0.5em;'><a href='' target='_blank' rel='noreferrer' class='card-link'>観賞モード</a></h6>
                     </div>
                 </div>
