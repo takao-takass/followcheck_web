@@ -16,7 +16,7 @@
                 <img class="card-img-top" src="{{asset('./img/usericon1.jpg')}}" style="height: 100px;object-fit: cover;*/">
                 <div class="card-body">
                     <h5 class="card-title" style="font-weight: bold;">全てのユーザ</h6>
-                    <h6 class='card-subtitle text-muted' style='margin-top:0.5em;'><a href="{{ action('TweetsController@gindex',['ALL']) }}" target='_blank' rel='noreferrer' class='card-link'>ツイートを見る</a></h6>
+                    <h6 class='card-subtitle text-muted' style='margin-top:0.5em;'><a href="{{ action('TweetsController@gindex',['ALL']) }}" target='_blank' rel='noreferrer' class='card-link'>ツイート</a></h6>
                     <h6 class='card-subtitle text-muted' style='margin-top:0.5em;'><a href="{{ action('ShowController@gindex',['ALL']) }}" target='_blank' rel='noreferrer' class='card-link'>観賞モード</a></h6>
                 </div>
             </div>
