@@ -1,0 +1,13 @@
+/* ツイート一覧のスタイル */
+
+/* サムネイル画像 */
+.thumb-radius {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.thumb {
+    cursor: pointer;
+}

@@ -1,5 +1,9 @@
 @extends('layout')
 
+@section('style')
+        <link rel="stylesheet" href="{{ asset('/css/tweets.css') }}">
+@endsection
+
 @section('content')
         <!-- メインコンテンツ -->
         <div class="container">
@@ -142,7 +146,7 @@
                             "    <img class='usericon' style='margin:1em' src='[[thumbnail_url]]'>"+
                             "    <div class='media-body' style='margin:1em 1em 1em 0em'>"+
                             "        <h6 class='tweet-body' style='word-wrap:break-all;'>[[body]]</h6>"+
-                            "        <div>[[thunbs]]</div>" +
+                            "        <div class='row contents'>[[thunbs]]</div>" +
                             "        <div>[[tweeted_datetime]]　↻ [[retweet_count]]　♥ [[favolite_count]]</div>"+
                             "        <div><a href='[[weblink]]' target='_blank' rel='noopener noreferrer'>Twitterで見る</a></div>"+
                             "    </div>"+
