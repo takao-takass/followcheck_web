@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Exceptions\ParamInvalidException;
 use App\Models\Token;
@@ -77,8 +78,9 @@ class ShowController extends Controller
         $onlymedia = '1';
 
         // 入力チェックを行う
-
-
+        if($group_id=="ALL"){
+            $group_id = "";
+        }
         
         // ページ数から取得範囲の計算
         $pageRecord = 500;
@@ -124,6 +126,8 @@ class ShowController extends Controller
                 $onlymedia=='' ? "" :
                 " AND EXISTS( SELECT 1 FROM tweet_medias TM WHERE TW.tweet_id = TM.tweet_id )"
             );
+            
+        Log::debug($query);
         $res = DB::connection('mysql')->select($query);
         $recordCount = $res[0]->ct;
 
@@ -136,62 +140,81 @@ class ShowController extends Controller
         $param['record'] = $recordCount;
 
         // ツイートを取得する
-        $query = 
-            " SELECT RU.thumbnail_url,convert_tz(TW.tweeted_datetime, '+00:00','+09:00') AS tweeted_datetime," .
-            " REGEXP_REPLACE(TW.body, '[\r\n|\r|\n]', '') AS body,TW.favolite_count,TW.retweet_count,TW.replied,media_type,TM.media_path,TM.thumb_names," .
-            " CONCAT('https://twitter.com/',RU.disp_name,'/status/',TW.tweet_id) AS weblink " .
-            " FROM tweets TW" .
-            " LEFT JOIN (" .
-            " 	SELECT tweet_id,`type` AS media_type" .
-            "       ,GROUP_CONCAT(CONCAT(REPLACE(directory_path,'/opt/followcheck/fcmedia/tweetmedia/','/img/tweetmedia/'),file_name)) AS media_path" .
-            "       ,GROUP_CONCAT(CONCAT(REPLACE(thumb_directory_path,'/opt/followcheck/fcmedia/tweetmedia/','/img/tweetmedia/'),thumb_file_name)) AS thumb_names" .
-            " 	FROM tweet_medias" .
-            " 	GROUP BY tweet_id,`type`" .
-            " ) TM" .
-            " ON TW.tweet_id = TM.tweet_id" .
-            " INNER JOIN relational_users RU" .
-            " ON TW.tweet_user_id = RU.user_id" .
-            " WHERE TW.service_user_id = '".$this->session_user->service_user_id."'" .
-            // ユーザIDで取得
-            (
-                $user_id=='' ? "" :
-                " AND TW.user_id = '".$user_id."'"
-            ).
-            // グループIDで取得
-            (
-                $group_id=='' ? "" :
-                " AND ( ".
-                "          TW.user_id IN ( ".
-                "               SELECT GU.user_id ".
-                "                 FROM `groups` GP ".
-                "                INNER JOIN group_users GU".
-                "                   ON GP.group_id = GU.group_id".
-                "                WHERE GP.service_user_id = '".$this->session_user->service_user_id."'" .
-                "                  AND GP.group_id = '".$group_id."'".
-                "           ) ".
-                "        OR 'ALL' = '".$group_id."'".
-                "     ) "
-            ).
-            // リプライを除く
-            (
-                $onreply=='' ? "" :
-                " AND TW.replied = '0'"
-            ).
-            // リツイートを除く
-            (
-                $onretweet=='' ? "" :
-                " AND TW.retweeted = '0'"
-            ).
-            // メディア添付のみに絞る
-            (
-                $onlymedia=='' ? "" :
-                " AND EXISTS( SELECT 1 FROM tweet_medias TM WHERE TW.tweet_id = TM.tweet_id )"
-            ).
-            " ORDER BY TW.tweeted_datetime DESC".
-            " LIMIT ". $pageRecord .
-            " OFFSET ". $pageRecord*$numPage;
+        $queryList = 
+        " SELECT TW.tweet_id".
+        "       ,TW.thumbnail_url".
+        "       ,TW.tweeted_datetime".
+        "       ,TW.body".
+        "       ,TW.favolite_count".
+        "       ,TW.retweet_count".
+        "       ,TW.replied".
+        "       ,TW.weblink".
+        "       ,TM.`type`".
+        "       ,GROUP_CONCAT(CONCAT(REPLACE(TM.directory_path,'/opt/followcheck/fcmedia/tweetmedia/','/img/tweetmedia/'),TM.file_name)) AS media_path".
+        "       ,GROUP_CONCAT(CONCAT(REPLACE(TM.thumb_directory_path,'/opt/followcheck/fcmedia/tweetmedia/','/img/tweetmedia/'),TM.thumb_file_name)) AS thumb_names".
+        "   FROM (".
+        "            SELECT TW.tweet_id".
+        "                  ,RU.thumbnail_url".
+        "                  ,convert_tz(TW.tweeted_datetime, '+00:00','+09:00') AS tweeted_datetime".
+        "                  ,REGEXP_REPLACE(TW.body, '[\r\n|\r|\n]', '') AS body".
+        "                  ,TW.favolite_count".
+        "                  ,TW.retweet_count".
+        "                  ,TW.replied".
+        "                  ,CONCAT('https://twitter.com/',RU.disp_name,'/status/',TW.tweet_id) AS weblink".
+        "              FROM tweets TW".
+        "             INNER JOIN relational_users RU ".
+        "                ON TW.tweet_user_id = RU.user_id ".
+        // グループIDで取得
+        (
+            $group_id=='' ? "" :
+                    " INNER JOIN group_users GU".
+                    "    ON TW.user_id = GU.user_id".
+                    " INNER JOIN `groups` GP".
+                    "    ON GP.group_id = GU.group_id".
+                    "   AND GP.service_user_id = '".$this->session_user->service_user_id."'" .
+                    "   AND GP.group_id = '".$group_id."'"
+        ).
+        "             WHERE TW.service_user_id = '".$this->session_user->service_user_id."' ".
+        // ユーザIDで取得
+        (
+            $user_id=='' ? "" :
+                    "   AND TW.user_id = '".$user_id."'"
+        ).
+        // リプライを除く
+        (
+            $onreply=='' ? "" :
+                    "   AND TW.replied = '0'"
+        ).
+        // リツイートを除く
+        (
+            $onretweet=='' ? "" :
+                    "   AND TW.retweeted = '0'"
+        ).
+        // メディア添付のみに絞る
+        (
+            $onlymedia=='' ? "" :
+                    "   AND EXISTS( SELECT 1 FROM tweet_medias TM WHERE TW.tweet_id = TM.tweet_id )"
+        ).
+        "             ORDER BY TW.tweeted_datetime DESC ".
+        "             LIMIT ". $pageRecord .
+        "            OFFSET ". $pageRecord*$numPage .
+        "        ) TW".
+        "  LEFT JOIN tweet_medias TM".
+        "    ON TW.tweet_id = TM.tweet_id".
+        "  GROUP BY TW.tweet_id".
+        "          ,TW.thumbnail_url".
+        "          ,TW.tweeted_datetime".
+        "          ,TW.body".
+        "          ,TW.favolite_count".
+        "          ,TW.retweet_count".
+        "          ,TW.replied".
+        "          ,TW.weblink".
+        "          ,TM.`type`".
+        "  ORDER BY TW.tweeted_datetime DESC ";
 
-        $accounts = DB::connection('mysql')->select($query);
+            
+        Log::debug($queryList);
+        $accounts = DB::connection('mysql')->select($queryList);
         $param['accounts'] = [];
         foreach($accounts as $account){
             $param['accounts'][] = [
@@ -200,7 +223,7 @@ class ShowController extends Controller
                 'favolite_count' => $account->favolite_count,
                 'retweet_count' => $account->retweet_count,
                 'replied' => $account->replied,
-                'media_type' => $account->media_type,
+                'media_type' => $account->type,
                 'media_path' => explode(',',$account->media_path),
                 'thumb_names' => explode(',',$account->thumb_names),
                 'thumbnail_url'=> $account->thumbnail_url=='' ? asset('./img/usericon1.jpg'):$account->thumbnail_url,
