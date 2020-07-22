@@ -65,3 +65,7 @@ Route::get('/followcheck/show/g/{group_id}/{page?}','ShowController@gindex');
 # グループ
 # - 画面表示
 Route::get('/followcheck/groups','GroupsController@index');
+
+# ユーザ
+# - 画面表示
+Route::get('/followcheck/user/{user_id}','UserController@index');
