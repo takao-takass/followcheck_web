@@ -142,8 +142,9 @@
                             "    <img class='usericon' style='margin:1em' src='[[thumbnail_url]]'>"+
                             "    <div class='media-body' style='margin:1em 1em 1em 0em'>"+
                             "        <h6 class='tweet-body' style='word-wrap:break-all;'>[[body]]</h6>"+
-                            "        <div>[[tweeted_datetime]]　RT:[[retweet_count]]　FAV:[[favolite_count]]</div>"+
                             "        <div>[[thunbs]]</div>" +
+                            "        <div>[[tweeted_datetime]]　↻ [[retweet_count]]　♥ [[favolite_count]]</div>"+
+                            "        <div><a href='[[weblink]]' target='_blank' rel='noopener noreferrer'>Twitterで見る</a></div>"+
                             "    </div>"+
                             "</div>";
 
@@ -151,7 +152,12 @@
                         thumbhtml = "";
                         if(account.media_type != null){
                             for (var i = 0; i<account.thumb_names.length; i++) {
-                                thumbhtml += "<span><a href='"+account.media_path[i]+" 'target='_blank' rel='noopener noreferrer'><img class='mr-3' style='margin:1em;width:10em;' src='"+account.thumb_names[i]+"'></a></span>";
+                                thumbhtml +=
+                                    "<div class='thumb col-lg-2 col-md-3 col-4' style='margin-bottom:1em;'>"+
+                                    "    <a href='"+account.media_path[i]+" 'target='_blank' rel='noopener noreferrer'>"+
+                                    "       <img class='mr-3 thumb-radius' style='width:100%;' src='"+account.thumb_names[i]+"'>"+
+                                    "    </a>"+
+                                    "</div>";
                             }
                         }
 
@@ -163,6 +169,7 @@
                                 .replace('[[tweeted_datetime]]',account.tweeted_datetime)
                                 .replace('[[retweet_count]]',account.retweet_count)
                                 .replace('[[favolite_count]]',account.favolite_count)
+                                .replace('[[weblink]]',account.weblink)
                                 .replace('[[thunbs]]',thumbhtml)
                         );
 
