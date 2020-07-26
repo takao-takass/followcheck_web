@@ -71,7 +71,7 @@
         <div class="row">
             @foreach($users as $unfbuser)
                 <div class="media col-md-6 shadow-sm" style="margin-bottom:1em;padding:1em;">
-                    <img src="{{$unfbuser['thumbnail_url']}}" class="usericon mr-3">
+                    <a href="{{ action('UserController@index',[''])}}/{{$unfbuser['user_id']}}"><img src="{{$unfbuser['thumbnail_url']}}" class="usericon mr-3"></a>
                     <div class="media-body">
                         <h5 class="mt-0 name"><a href="https://twitter.com/{{$unfbuser['disp_name']}}" target="_blank" rel="noopener noreferrer">{{$unfbuser['name']}}</a></h5>
                         <span>フォロー：{{$unfbuser['follow_count']}}　</span>

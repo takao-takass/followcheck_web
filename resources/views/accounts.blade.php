@@ -34,7 +34,7 @@
         @foreach($accounts as $account)
             <div class="col-lg-3 col-md-4 col-6" style="margin-bottom:1em" id="row_{{$account['user_id']}}">
                 <div class="card shadow-sm" style="width:100%;height:100%;">
-                    <img class="card-img-top" src="{{$account['thumbnail_url']}}" style="height: 100px;object-fit: cover;*/">
+                    <a href="{{ action('UserController@index',[''])}}/{{$account['user_id']}}"><img class="card-img-top" src="{{$account['thumbnail_url']}}" style="height: 100px;object-fit: cover;*/"></a>
                     <div class="card-body">
                         <h5 class="card-title" style="font-weight: bold;">{{$account['name']}}</h6>
                         <div class="text-right">

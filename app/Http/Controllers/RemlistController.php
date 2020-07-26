@@ -92,7 +92,7 @@ class RemlistController extends Controller
 
         // リムられリストを取得
         $remusers = DB::connection('mysql')->select(
-            " SELECT RL.name, RL.disp_name, RL.thumbnail_url, RL.follow_count, RL.follower_count, RM.followed, DATEDIFF(NOW(), RM.create_datetime) AS dayold" .
+            " SELECT RL.user_id,RL.name, RL.disp_name, RL.thumbnail_url, RL.follow_count, RL.follower_count, RM.followed, DATEDIFF(NOW(), RM.create_datetime) AS dayold" .
             " FROM remove_users RM" .
             " LEFT JOIN relational_users RL" .
             " ON RM.remove_user_id = RL.user_id" .
@@ -105,6 +105,7 @@ class RemlistController extends Controller
         $param['users'] = [];
         foreach($remusers as $user){
             $param['users'][] = [
+                'user_id' => $user->user_id,
                 'name' => $user->name,
                 'disp_name' => $user->disp_name,
                 'thumbnail_url'=> $user->thumbnail_url=='' ? asset('./img/usericon1.jpg'):$user->thumbnail_url,

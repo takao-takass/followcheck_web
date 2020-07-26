@@ -72,7 +72,7 @@
     <div class="row">
         @foreach($users as $fleouser)
             <div class="media col-md-6 shadow-sm" style="margin-bottom:1em;padding:1em;">
-                <img src="{{$fleouser['thumbnail_url']}}" class="usericon mr-3">
+                <a href="{{ action('UserController@index',[''])}}/{{$fleouser['user_id']}}"><img src="{{$fleouser['thumbnail_url']}}" class="usericon mr-3"></a>
                 <div class="media-body">
                     <h5 class="mt-0 name"><a href="https://twitter.com/{{$fleouser['disp_name']}}" target="_blank" rel="noopener noreferrer">{{$fleouser['name']}}</a></h5>
                     <span>フォロー：{{$fleouser['follow_count']}}　</span>

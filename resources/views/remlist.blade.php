@@ -72,7 +72,7 @@
             <div class="row">
                 @foreach($users as $remuser)
                     <div class="media col-md-6 shadow-sm" style="margin-bottom:1em;padding:1em;">
-                        <img src="{{$remuser['thumbnail_url']}}" class="usericon mr-3">
+                        <a href="{{ action('UserController@index',[''])}}/{{$remuser['user_id']}}"><img src="{{$remuser['thumbnail_url']}}" class="usericon mr-3"></a>
                         <div class="media-body">
                             <h5 class="mt-0 name"><a href="https://twitter.com/{{$remuser['disp_name']}}" target="_blank" rel="noopener noreferrer">{{$remuser['name']}}</a></h5>
                             <span>フォロー：{{$remuser['follow_count']}}　</span>
