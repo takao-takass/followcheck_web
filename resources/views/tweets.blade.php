@@ -146,7 +146,7 @@
                             "    <img class='usericon' style='margin:1em' src='[[thumbnail_url]]'>"+
                             "    <div class='media-body' style='margin:1em 1em 1em 0em'>"+
                             "        <h6 class='tweet-body' style='word-wrap:break-all;'>[[body]]</h6>"+
-                            "        [[thunbs]]" +
+                            "        <div class='row contents'>[[thunbs]]</div>" +
                             "        <div>[[tweeted_datetime]]　<a href='[[weblink]]' target='_blank' rel='noopener noreferrer'>Twitterで見る</a></div>"+
                             "    </div>"+
                             "</div>";
@@ -156,7 +156,7 @@
                         if(account.media_type != null){
                             for (var i = 0; i<account.thumb_names.length; i++) {
                                 thumbhtml +=
-                                    "<div class='thumb' style='margin-bottom:1em;'>"+
+                                    "<div class='thumb col-lg-3' style='margin-bottom:1em;'>"+
                                     "    <a href='"+account.media_path[i]+" 'target='_blank' rel='noopener noreferrer'>"+
                                     "       <img class='mr-3 thumb-radius' style='width:100%;' src='"+account.thumb_names[i]+"'>"+
                                     "    </a>"+
