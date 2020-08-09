@@ -89,7 +89,7 @@ class TweetsController extends Controller
         }
         
         // ページ数から取得範囲の計算
-        $pageRecord = 200;
+        $pageRecord = 50;
         $numPage = intval($page);
 
         // ツイートの総数を取得
@@ -154,6 +154,7 @@ class TweetsController extends Controller
         "       ,TW.retweet_count".
         "       ,TW.replied".
         "       ,TW.weblink".
+        "       ,TW.user_id".
         "       ,TM.`type`".
         "       ,GROUP_CONCAT(CONCAT(REPLACE(TM.directory_path,'/opt/followcheck/fcmedia/tweetmedia/','/img/tweetmedia/'),TM.file_name)) AS media_path".
         "       ,GROUP_CONCAT(CONCAT(REPLACE(TM.thumb_directory_path,'/opt/followcheck/fcmedia/tweetmedia/','/img/tweetmedia/'),TM.thumb_file_name)) AS thumb_names".
@@ -166,6 +167,7 @@ class TweetsController extends Controller
         "                  ,TW.retweet_count".
         "                  ,TW.replied".
         "                  ,CONCAT('https://twitter.com/',RU.disp_name,'/status/',TW.tweet_id) AS weblink".
+        "                  ,TW.tweet_user_id AS user_id".
         "              FROM tweets TW".
         "             INNER JOIN relational_users RU ".
         "                ON TW.tweet_user_id = RU.user_id ".
@@ -231,7 +233,8 @@ class TweetsController extends Controller
                 'media_path' => explode(',',$account->media_path),
                 'thumb_names' => explode(',',$account->thumb_names),
                 'thumbnail_url'=> $account->thumbnail_url=='' ? asset('./img/usericon1.jpg'):$account->thumbnail_url,
-                'weblink'=>$account->weblink
+                'weblink'=>$account->weblink,
+                'user_id'=>$account->user_id
             ];
         }
 

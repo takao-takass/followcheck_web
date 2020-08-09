@@ -143,7 +143,7 @@
                         // HTMLのテンプレート
                         html = 
                             "<div class='media shadow-sm' style='margin-bottom:0.5em;width:100%' >"+
-                            "    <img class='usericon' style='margin:1em' src='[[thumbnail_url]]'>"+
+                            "    <a href='{{ action('UserController@index',['']) }}/[[user_id]]' target='_blank' rel='noopener noreferrer'><img class='usericon' style='margin:1em' src='[[thumbnail_url]]'></a>"+
                             "    <div class='media-body' style='margin:1em 1em 1em 0em'>"+
                             "        <h6 class='tweet-body' style='word-wrap:break-all;'>[[body]]</h6>"+
                             "        <div class='row contents'>[[thunbs]]</div>" +
@@ -168,6 +168,7 @@
                         $('#twlist').append(
                             html
                                 .replace('[[thumbnail_url]]',account.thumbnail_url)
+                                .replace('[[user_id]]',account.user_id)
                                 .replace('[[body]]',account.body)
                                 .replace('[[tweeted_datetime]]',account.tweeted_datetime)
                                 .replace('[[retweet_count]]',account.retweet_count)
