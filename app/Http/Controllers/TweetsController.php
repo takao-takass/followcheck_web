@@ -216,6 +216,7 @@ class TweetsController extends Controller
         "          ,TW.retweet_count".
         "          ,TW.replied".
         "          ,TW.weblink".
+        "          ,TW.user_id".
         "          ,TM.`type`".
         "  ORDER BY TW.tweeted_datetime DESC ";
 
