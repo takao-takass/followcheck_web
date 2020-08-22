@@ -38,6 +38,10 @@
                                 <input class="form-check-input filter-item" type="checkbox" id="filter-media" {{$filter['media_check']}}>
                                 <label class="form-check-label" for="filter-media">メディアのみ表示する</label>
                             </div>
+                            <div class="form-check" style="margin:1em;">
+                                <input class="form-check-input filter-item" type="checkbox" id="filter-keep" {{$filter['keep_check']}}>
+                                <label class="form-check-label" for="filter-keep">KEEPのみ表示する</label>
+                            </div>
                     </div>
                 </div>
 
@@ -104,6 +108,17 @@
                 $('#page').val(Number($('#page').val())+1);
                 showList();
             });
+
+            // キープ
+            $(document).on('click','.keep',function(obj){
+                if($(this).attr('value')=='0'){
+                    // キープする
+                    setKeep($(this));
+                }else{
+                    // キープを解除
+                    unsetKeep($(this));
+                }
+            });
             
             // 検索条件の変更
             $('.filter-item').on('change',function(){
@@ -127,6 +142,7 @@
                         'filter-reply' : $('#filter-reply').prop('checked') ? 1:'',
                         'filter-retweet' : $('#filter-retweet').prop('checked') ? 1:'',
                         'filter-media' : $('#filter-media').prop('checked') ? 1:'',
+                        'filter-keep' : $('#filter-keep').prop('checked') ? 1:'',
                     }
                 }).done( (data) => {
 
@@ -147,6 +163,7 @@
                             "    <div class='media-body' style='margin:1em 1em 1em 0em'>"+
                             "        <h6 class='tweet-body' style='word-wrap:break-all;'>[[body]]</h6>"+
                             "        <div class='row contents'>[[thunbs]]</div>" +
+                            "        <div><span class='keep [[keep_style]]' id='[[tweet_id]]' value='[[kept]]'>KEEP</span></div>"+
                             "        <div>[[tweeted_datetime]]　<a href='[[weblink]]' target='_blank' rel='noopener noreferrer'>Twitterで見る</a></div>"+
                             "    </div>"+
                             "</div>";
@@ -175,6 +192,9 @@
                                 .replace('[[favolite_count]]',account.favolite_count)
                                 .replace('[[weblink]]',account.weblink)
                                 .replace('[[thunbs]]',thumbhtml)
+                                .replace('[[keep_style]]', (account.kept == '0' ? 'keepoff' : 'keepon') )
+                                .replace('[[tweet_id]]',account.tweet_id)
+                                .replace('[[kept]]',account.kept)
                         );
 
                     });
@@ -184,6 +204,40 @@
                 }).always(function(){
                     $('.contents').show();
                     $('#spinner').hide();
+                });
+
+            }
+
+            // ツイートをキープする
+            function setKeep($evobj){
+
+                $.ajax({
+                    url:'{{ action('TweetsController@keep') }}',
+                    type:'POST',
+                    data:{
+                        'tweetid' : $evobj.attr('id'),
+                    }
+                }).done( (data) => {
+                    $evobj.attr('value','1');
+                    $evobj.addClass('keepon');
+                    $evobj.removeClass('keepoff');
+                });
+
+            }
+
+            // ツイートをキープから外す
+            function unsetKeep($evobj){
+
+                $.ajax({
+                    url:'{{ action('TweetsController@unkeep') }}',
+                    type:'POST',
+                    data:{
+                        'tweetid' : $evobj.attr('id'),
+                    }
+                }).done( (data) => {
+                    $evobj.attr('value','0');
+                    $evobj.addClass('keepoff');
+                    $evobj.removeClass('keepon');
                 });
 
             }

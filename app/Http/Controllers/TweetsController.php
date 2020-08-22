@@ -31,6 +31,7 @@ class TweetsController extends Controller
             'reply_check' => '',
             'retweet_check' => '',
             'media_check' => '',
+            'keep_check' => ''
         ];
 
         return  response()->view('tweets', $param)
@@ -57,6 +58,7 @@ class TweetsController extends Controller
             'reply_check' => '',
             'retweet_check' => '',
             'media_check' => '',
+            'keep_check' => ''
         ];
 
         return  response()->view('tweets', $param)
@@ -82,6 +84,7 @@ class TweetsController extends Controller
         $onreply = $request['filter-reply'];
         $onretweet = $request['filter-retweet'];
         $onlymedia = $request['filter-media'];
+        $onkeep = $request['filter-keep'];
         
         // 入力チェックを行う
         if($group_id=="ALL"){
@@ -131,6 +134,11 @@ class TweetsController extends Controller
             (
                 $onlymedia=='' ? "" :
                 " AND EXISTS( SELECT 1 FROM tweet_medias TM WHERE TW.tweet_id = TM.tweet_id )"
+            ).
+            // メディア添付のみに絞る
+            (
+                $onkeep=='' ? "" :
+                " AND EXISTS( SELECT 1 FROM keep_tweets KT WHERE TW.service_user_id = KT.service_user_id AND TW.tweet_id = KT.tweet_id )"
             );
         Log::info($queryCnt);
         $res = DB::connection('mysql')->select($queryCnt);
@@ -156,6 +164,7 @@ class TweetsController extends Controller
         "       ,TW.weblink".
         "       ,TW.user_id".
         "       ,TM.`type`".
+        "       ,CASE WHEN KT.tweet_id IS NULL THEN '0' ELSE '1' END AS kept".
         "       ,GROUP_CONCAT(CONCAT(REPLACE(TM.directory_path,'/opt/followcheck/fcmedia/tweetmedia/','/img/tweetmedia/'),TM.file_name)) AS media_path".
         "       ,GROUP_CONCAT(CONCAT(REPLACE(TM.thumb_directory_path,'/opt/followcheck/fcmedia/tweetmedia/','/img/tweetmedia/'),TM.thumb_file_name)) AS thumb_names".
         "   FROM (".
@@ -168,6 +177,7 @@ class TweetsController extends Controller
         "                  ,TW.replied".
         "                  ,CONCAT('https://twitter.com/',RU.disp_name,'/status/',TW.tweet_id) AS weblink".
         "                  ,TW.tweet_user_id AS user_id".
+        "                  ,TW.service_user_id".
         "              FROM tweets TW".
         "             INNER JOIN relational_users RU ".
         "                ON TW.tweet_user_id = RU.user_id ".
@@ -202,12 +212,20 @@ class TweetsController extends Controller
             $onlymedia=='' ? "" :
                     "   AND EXISTS( SELECT 1 FROM tweet_medias TM WHERE TW.tweet_id = TM.tweet_id )"
         ).
+        // メディア添付のみに絞る
+        (
+            $onkeep=='' ? "" :
+            " AND EXISTS( SELECT 1 FROM keep_tweets KT WHERE TW.service_user_id = KT.service_user_id AND TW.tweet_id = KT.tweet_id )"
+        ).
         "             ORDER BY TW.tweeted_datetime DESC ".
         "             LIMIT ". $pageRecord .
         "            OFFSET ". $pageRecord*$numPage .
         "        ) TW".
         "  LEFT JOIN tweet_medias TM".
         "    ON TW.tweet_id = TM.tweet_id".
+        "  LEFT JOIN keep_tweets KT ".
+        "    ON TW.service_user_id = KT.service_user_id".
+        "   AND TW.tweet_id = KT.tweet_id".
         "  GROUP BY TW.tweet_id".
         "          ,TW.thumbnail_url".
         "          ,TW.tweeted_datetime".
@@ -218,28 +236,112 @@ class TweetsController extends Controller
         "          ,TW.weblink".
         "          ,TW.user_id".
         "          ,TM.`type`".
+        "          ,CASE WHEN KT.tweet_id IS NULL THEN '0' ELSE '1' END".
         "  ORDER BY TW.tweeted_datetime DESC ";
 
         Log::info($queryList);
-        $accounts = DB::connection('mysql')->select($queryList);
+        $tweets = DB::connection('mysql')->select($queryList);
         $param['accounts'] = [];
-        foreach($accounts as $account){
+        foreach($tweets as $tweet){
             $param['accounts'][] = [
-                'tweeted_datetime' => $account->tweeted_datetime,
-                'body' => $account->body,
-                'favolite_count' => $account->favolite_count,
-                'retweet_count' => $account->retweet_count,
-                'replied' => $account->replied,
-                'media_type' => $account->type,
-                'media_path' => explode(',',$account->media_path),
-                'thumb_names' => explode(',',$account->thumb_names),
-                'thumbnail_url'=> $account->thumbnail_url=='' ? asset('./img/usericon1.jpg'):$account->thumbnail_url,
-                'weblink'=>$account->weblink,
-                'user_id'=>$account->user_id
+                'tweeted_datetime' => $tweet->tweeted_datetime,
+                'body' => $tweet->body,
+                'favolite_count' => $tweet->favolite_count,
+                'retweet_count' => $tweet->retweet_count,
+                'replied' => $tweet->replied,
+                'media_type' => $tweet->type,
+                'media_path' => explode(',',$tweet->media_path),
+                'thumb_names' => explode(',',$tweet->thumb_names),
+                'thumbnail_url'=> $tweet->thumbnail_url=='' ? asset('./img/usericon1.jpg'):$tweet->thumbnail_url,
+                'weblink'=>$tweet->weblink,
+                'user_id'=>$tweet->user_id,
+                'kept'=>$tweet->kept,
+                'tweet_id'=>$tweet->tweet_id
             ];
         }
 
         return response($param,200)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
+    }
+
+    /**
+     * ツイートをキープする
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function keep(Request $request)
+    {
+        // 有効なトークンでない場合は認証エラー
+        if(!$this->isValidToken()){
+            response('Unauthorized ',401);
+        }
+
+        // 入力チェック
+        // APIからユーザが取得できない場合はエラー
+        if (!isset($request['tweetid'])){
+            throw new ParamInvalidException(
+                'プロパティが設定されていません。',
+                ['tweetid']
+            );
+        }
+
+        // キープテーブルに存在するかチェックする
+        // 無ければ登録する
+        $exists = DB::table('keep_tweets')
+        ->where('service_user_id', $this->session_user->service_user_id)
+        ->where('tweet_id', $request->tweetid)
+        ->count();
+
+        if($exists==0){
+            DB::table('keep_tweets')
+            ->insert(
+                [
+                    'service_user_id'=>$this->session_user->service_user_id,
+                    'tweet_id'=>$request->tweetid
+                ]
+            );
+        }
+
+        return response('',200)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
+    }
+
+    /**
+     * ツイートをキープから外す
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function unkeep(Request $request)
+    {
+        // 有効なトークンでない場合は認証エラー
+        if(!$this->isValidToken()){
+            response('Unauthorized ',401);
+        }
+
+        // 入力チェック
+        // APIからユーザが取得できない場合はエラー
+        if (!isset($request['tweetid'])){
+            throw new ParamInvalidException(
+                'プロパティが設定されていません。',
+                ['tweetid']
+            );
+        }
+
+        // キープテーブルに登録されているか確認する
+        // 登録されていれば削除する
+        $exists = DB::table('keep_tweets')
+        ->where('service_user_id', $this->session_user->service_user_id)
+        ->where('tweet_id', $request->tweetid)
+        ->count();
+
+        if($exists>0){
+            DB::table('keep_tweets')
+            ->where('service_user_id', $this->session_user->service_user_id)
+            ->where('tweet_id', $request->tweetid)
+            ->delete();
+        }
+
+        return response('',200)
         ->cookie('sign',$this->updateToken()->signtext,24*60);
     }
 }

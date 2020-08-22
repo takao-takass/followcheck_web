@@ -11,3 +11,12 @@
 .thumb {
     cursor: pointer;
 }
+
+.keepoff{
+    color:dimgray;
+}
+
+.keepon{
+    color:maroon;
+    font-weight: bold;
+}

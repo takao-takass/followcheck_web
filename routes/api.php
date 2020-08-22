@@ -53,6 +53,10 @@ Route::post('/followcheck/tweetusers/del','TweetUsersController@del');
 # ツイート一覧
 # - ツイート取得
 Route::post('/followcheck/tweets/list','TweetsController@list');
+# - KEEP登録
+Route::post('/followcheck/tweets/keep','TweetsController@keep');
+# - KEEP解除
+Route::post('/followcheck/tweets/unkeep','TweetsController@unkeep');
 
 # 観賞モード
 # - ツイート取得
