@@ -13,10 +13,22 @@
 }
 
 .keepoff{
-    color:dimgray;
+    color:white;
+    background-color: gray;
+    padding: 0.2em;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
 }
 
 .keepon{
-    color:maroon;
+    color:white;
     font-weight: bold;
+    background-color: crimson;
+    padding: 0.2em;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
 }
