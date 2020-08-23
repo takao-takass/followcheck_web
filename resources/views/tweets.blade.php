@@ -164,7 +164,7 @@
                             "        <h6 class='tweet-body' style='word-wrap:break-all;'>[[body]]</h6>"+
                             "        <div class='row contents'>[[thunbs]]</div>" +
                             "        <div>[[tweeted_datetime]]　<a href='[[weblink]]' target='_blank' rel='noopener noreferrer'>Twitterで見る</a></div>"+
-                            "        <div><span class='keep [[keep_style]]' id='[[tweet_id]]' value='[[kept]]'>　KEEP　</span></div>"+
+                            "        <div class='keepbutton'><span class='keep [[keep_style]]' id='[[tweet_id]]' value='[[kept]]'>　KEEP　</span></div>"+
                             "    </div>"+
                             "</div>";
 

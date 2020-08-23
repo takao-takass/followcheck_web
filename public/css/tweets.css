@@ -12,6 +12,10 @@
     cursor: pointer;
 }
 
+.keepbutton{
+    margin-top:0.5em;
+}
+
 .keepoff{
     color:white;
     background-color: gray;

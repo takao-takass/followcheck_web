@@ -61,3 +61,7 @@ Route::post('/followcheck/tweets/unkeep','TweetsController@unkeep');
 # 観賞モード
 # - ツイート取得
 Route::post('/followcheck/show/list','ShowController@list');
+
+# 削除対象ツイート一覧
+# - ツイート取得
+Route::post('/followcheck/oldtweets/list','OldTweetsController@list');

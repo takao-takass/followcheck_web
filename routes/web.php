@@ -62,6 +62,10 @@ Route::get('/followcheck/show/u/{user_id}/{page?}','ShowController@index');
 # - 画面表示(グループ指定)
 Route::get('/followcheck/show/g/{group_id}/{page?}','ShowController@gindex');
 
+# 削除対象ツイート一覧
+# - 画面表示
+Route::get('/followcheck/oldtweets/{page?}','OldTweetsController@index');
+
 # グループ
 # - 画面表示
 Route::get('/followcheck/groups','GroupsController@index');
