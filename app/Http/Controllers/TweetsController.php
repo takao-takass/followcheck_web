@@ -95,7 +95,7 @@ class TweetsController extends Controller
         }
         
         // ページ数から取得範囲の計算
-        $pageRecord = 50;
+        $pageRecord = 200;
         $numPage = intval($page);
 
         // ツイートの総数を取得
