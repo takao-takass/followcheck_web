@@ -135,11 +135,15 @@
         }).fail( (data) => {
             // サーバメッセージの表示
             resobj = JSON.parse(data.responseText);
-            alert(resobj.message);
-            $('.input_error').removeClass('input_error');
-            $.each(resobj.params, function(index, value) {
-                $('#'+value).addClass('input_error');
-            });
+
+            // コンフリクト以外の場合、エラーメッセージを表示
+            if(data.status!=409){
+                alert(resobj.message);
+                $('.input_error').removeClass('input_error');
+                $.each(resobj.params, function(index, value) {
+                    $('#'+value).addClass('input_error');
+                });
+            }
 
             // コンフリクトの場合
             // 当該ユーザの情報を取得して一覧の先頭に表示する

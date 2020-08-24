@@ -57,7 +57,7 @@ class TweetUsersController extends Controller
         // 入力チェックを行う
         
         // ページ数から取得範囲の計算
-        $pageRecord = 50;
+        $pageRecord = 100;
         $numPage = intval($page);
 
         // アカウントの総数を取得
@@ -92,6 +92,16 @@ class TweetUsersController extends Controller
             "   FROM tweet_take_users TT" .
             "  INNER JOIN relational_users RU" .
             "     ON TT.user_id = RU.user_id" .
+            "   LEFT JOIN (".
+            "            SELECT service_user_id".
+            "                  ,user_id".
+            "                  ,MAX(tweeted_datetime) AS tweeted_datetime".
+            "              FROM tweets".
+            "             GROUP BY service_user_id".
+            "                      ,user_id".
+            "        ) SA".
+            "     ON TT.service_user_id = SA.service_user_id".
+            "    AND TT.user_id = SA.user_id".
             "  WHERE TT.service_user_id = '". $this->session_user->service_user_id ."'" .
             // ユーザ名による絞り込み
             (
@@ -99,7 +109,7 @@ class TweetUsersController extends Controller
                 "    AND RU.disp_name = '". $userName ."'" 
             ).
             "    AND TT.deleted = 0" .
-            "  ORDER BY TT.create_datetime DESC".
+            "  ORDER BY SA.tweeted_datetime DESC".
             "  LIMIT ". $pageRecord .
             " OFFSET ". $pageRecord*$numPage;
 
