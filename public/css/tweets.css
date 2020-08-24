@@ -13,13 +13,14 @@
 }
 
 .keepbutton{
-    margin-top:0.5em;
+    margin-top:1.0em;
+    text-align: right;
 }
 
 .keepoff{
     color:white;
     background-color: gray;
-    padding: 0.2em;
+    padding: 0.4em;
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
     border-top-left-radius: 3px;
@@ -30,7 +31,7 @@
     color:white;
     font-weight: bold;
     background-color: crimson;
-    padding: 0.2em;
+    padding: 0.4em;
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
     border-top-left-radius: 3px;

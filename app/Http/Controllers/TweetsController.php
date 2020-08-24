@@ -31,7 +31,8 @@ class TweetsController extends Controller
             'reply_check' => '',
             'retweet_check' => '',
             'media_check' => '',
-            'keep_check' => ''
+            'keep_check' => '',
+            'unkeep_check' => ''
         ];
 
         return  response()->view('tweets', $param)
@@ -58,7 +59,8 @@ class TweetsController extends Controller
             'reply_check' => '',
             'retweet_check' => '',
             'media_check' => '',
-            'keep_check' => ''
+            'keep_check' => '',
+            'unkeep_check' => ''
         ];
 
         return  response()->view('tweets', $param)
@@ -85,6 +87,7 @@ class TweetsController extends Controller
         $onretweet = $request['filter-retweet'];
         $onlymedia = $request['filter-media'];
         $onkeep = $request['filter-keep'];
+        $onunkeep = $request['filter-unkeep'];
         
         // 入力チェックを行う
         if($group_id=="ALL"){
@@ -135,10 +138,15 @@ class TweetsController extends Controller
                 $onlymedia=='' ? "" :
                 " AND EXISTS( SELECT 1 FROM tweet_medias TM WHERE TW.tweet_id = TM.tweet_id )"
             ).
-            // メディア添付のみに絞る
+            // キープしているものに絞る
             (
                 $onkeep=='' ? "" :
                 " AND EXISTS( SELECT 1 FROM keep_tweets KT WHERE TW.service_user_id = KT.service_user_id AND TW.tweet_id = KT.tweet_id )"
+            ).
+            // キープしていないものに絞る
+            (
+                $onunkeep=='' ? "" :
+                " AND NOT EXISTS( SELECT 1 FROM keep_tweets KT WHERE TW.service_user_id = KT.service_user_id AND TW.tweet_id = KT.tweet_id )"
             );
         Log::info($queryCnt);
         $res = DB::connection('mysql')->select($queryCnt);
@@ -212,10 +220,15 @@ class TweetsController extends Controller
             $onlymedia=='' ? "" :
                     "   AND EXISTS( SELECT 1 FROM tweet_medias TM WHERE TW.tweet_id = TM.tweet_id )"
         ).
-        // メディア添付のみに絞る
+        // キープしているものに絞る
         (
             $onkeep=='' ? "" :
             " AND EXISTS( SELECT 1 FROM keep_tweets KT WHERE TW.service_user_id = KT.service_user_id AND TW.tweet_id = KT.tweet_id )"
+        ).
+        // キープしていないものに絞る
+        (
+            $onunkeep=='' ? "" :
+            " AND NOT EXISTS( SELECT 1 FROM keep_tweets KT WHERE TW.service_user_id = KT.service_user_id AND TW.tweet_id = KT.tweet_id )"
         ).
         "             ORDER BY TW.tweeted_datetime DESC ".
         "             LIMIT ". $pageRecord .

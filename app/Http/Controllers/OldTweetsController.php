@@ -63,6 +63,7 @@ class OldTweetsController extends Controller
             " FROM queue_delete_tweets DT " .
             " INNER JOIN tweets TW".
             " ON DT.service_user_id = TW.service_user_id".
+            " AND DT.user_id = TW.user_id".
             " AND DT.tweet_id = TW.tweet_id".
             " WHERE DT.service_user_id = '".$this->session_user->service_user_id."'" .
             // リプライを除く
@@ -115,6 +116,7 @@ class OldTweetsController extends Controller
         "              FROM queue_delete_tweets DT".
         "             INNER JOIN tweets TW".
         "                ON DT.service_user_id = TW.service_user_id".
+        "               AND DT.user_id = TW.user_id".
         "               AND DT.tweet_id = TW.tweet_id".
         "             INNER JOIN relational_users RU ".
         "                ON TW.tweet_user_id = RU.user_id ".

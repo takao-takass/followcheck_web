@@ -42,6 +42,10 @@
                                 <input class="form-check-input filter-item" type="checkbox" id="filter-keep" {{$filter['keep_check']}}>
                                 <label class="form-check-label" for="filter-keep">KEEPのみ表示する</label>
                             </div>
+                            <div class="form-check" style="margin:1em;">
+                                <input class="form-check-input filter-item" type="checkbox" id="filter-unkeep" {{$filter['unkeep_check']}}>
+                                <label class="form-check-label" for="filter-unkeep">KEEP以外のみ表示する</label>
+                            </div>
                     </div>
                 </div>
 
@@ -143,6 +147,7 @@
                         'filter-retweet' : $('#filter-retweet').prop('checked') ? 1:'',
                         'filter-media' : $('#filter-media').prop('checked') ? 1:'',
                         'filter-keep' : $('#filter-keep').prop('checked') ? 1:'',
+                        'filter-unkeep' : $('#filter-unkeep').prop('checked') ? 1:'',
                     }
                 }).done( (data) => {
 
@@ -164,7 +169,7 @@
                             "        <h6 class='tweet-body' style='word-wrap:break-all;'>[[body]]</h6>"+
                             "        <div class='row contents'>[[thunbs]]</div>" +
                             "        <div>[[tweeted_datetime]]　<a href='[[weblink]]' target='_blank' rel='noopener noreferrer'>Twitterで見る</a></div>"+
-                            "        <div class='keepbutton'><span class='keep [[keep_style]]' id='[[tweet_id]]' value='[[kept]]'>　KEEP　</span></div>"+
+                            "        <div class='keepbutton'><span class='keep [[keep_style]]' id='[[tweet_id]]' value='[[kept]]'>　　KEEP　　</span></div>"+
                             "    </div>"+
                             "</div>";
 
