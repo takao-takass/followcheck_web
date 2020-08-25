@@ -67,27 +67,32 @@
 
         <!-- モーダルコンテンツ -->
         <div class="modal fade" id="showmodal" tabindex="-1" role="dialog" aria-labelledby="showmodal-title" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-            <div class="modal-content">
-            <div class="modal-body">
-                <div>
-                    <a id='originimagelink' href='' target='_blank' rel='noreferrer'>
-                        <img id='originimage' class='mr-3 thumb-radius' style='width:100%;' src='' alt='新しいタブで表示する'>
-                    </a>
-                </div>
-                <div>
-                    <span>
-                        <img src="" id="accounticon" class="twitterlinkicon">
-                    </span>
-                    <span id="tweetbody">
-                    </span>
-                    <span>
-                        <a id="weblink" href="" target='_blank' rel='noreferrer'>　Twitterで見る</a>
-                    </span>
+            <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">
+                            <span>
+                                <img src="" id="accounticon" class="twitterlinkicon">
+                            </span>
+                            <span id="tweetbody">
+                            </span>
+                            <span>
+                                <a id="weblink" href="" target='_blank' rel='noreferrer'>　Twitterで見る</a>
+                            </span>
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <a id='originimagelink' href='' target='_blank' rel='noreferrer'>
+                                <img id='originimage' class='mr-3 thumb-radius' style='width:100%;' src='' alt='新しいタブで表示する'>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            </div>
-        </div>
         </div>
 @endsection
 
