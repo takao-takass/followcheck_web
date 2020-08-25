@@ -32,7 +32,8 @@ class TweetsController extends Controller
             'retweet_check' => '',
             'media_check' => '',
             'keep_check' => '',
-            'unkeep_check' => ''
+            'unkeep_check' => '',
+            'unchecked_check' => 'checked'
         ];
 
         return  response()->view('tweets', $param)
@@ -60,7 +61,8 @@ class TweetsController extends Controller
             'retweet_check' => '',
             'media_check' => '',
             'keep_check' => '',
-            'unkeep_check' => ''
+            'unkeep_check' => '',
+            'unchecked_check' => 'checked'
         ];
 
         return  response()->view('tweets', $param)
@@ -88,6 +90,7 @@ class TweetsController extends Controller
         $onlymedia = $request['filter-media'];
         $onkeep = $request['filter-keep'];
         $onunkeep = $request['filter-unkeep'];
+        $onunchecked = $request['filter-unchecked'];
         
         // 入力チェックを行う
         if($group_id=="ALL"){
@@ -95,7 +98,7 @@ class TweetsController extends Controller
         }
         
         // ページ数から取得範囲の計算
-        $pageRecord = 200;
+        $pageRecord = 100;
         $numPage = intval($page);
 
         // ツイートの総数を取得
@@ -147,6 +150,11 @@ class TweetsController extends Controller
             (
                 $onunkeep=='' ? "" :
                 " AND NOT EXISTS( SELECT 1 FROM keep_tweets KT WHERE TW.service_user_id = KT.service_user_id AND TW.tweet_id = KT.tweet_id )"
+            ).
+            // 既読でないものに絞る
+            (
+                $onunchecked=='' ? "" :
+                " AND NOT EXISTS( SELECT 1 FROM checked_tweets CT WHERE TW.service_user_id = CT.service_user_id AND TW.tweet_id = CT.tweet_id )"
             );
         Log::info($queryCnt);
         $res = DB::connection('mysql')->select($queryCnt);
@@ -229,6 +237,11 @@ class TweetsController extends Controller
         (
             $onunkeep=='' ? "" :
             " AND NOT EXISTS( SELECT 1 FROM keep_tweets KT WHERE TW.service_user_id = KT.service_user_id AND TW.tweet_id = KT.tweet_id )"
+        ).
+        // 既読でないものに絞る
+        (
+            $onunchecked=='' ? "" :
+            " AND NOT EXISTS( SELECT 1 FROM checked_tweets CT WHERE TW.service_user_id = CT.service_user_id AND TW.tweet_id = CT.tweet_id )"
         ).
         "             ORDER BY TW.tweeted_datetime DESC ".
         "             LIMIT ". $pageRecord .
@@ -357,4 +370,54 @@ class TweetsController extends Controller
         return response('',200)
         ->cookie('sign',$this->updateToken()->signtext,24*60);
     }
+
+
+    /**
+     * ツイートを既読する
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function checked(Request $request)
+    {
+        // 有効なトークンでない場合は認証エラー
+        if(!$this->isValidToken()){
+            response('Unauthorized ',401);
+        }
+
+        // 入力チェック
+        // APIからユーザが取得できない場合はエラー
+        if (!isset($request['tweetid'])){
+            throw new ParamInvalidException(
+                'プロパティが設定されていません。',
+                ['tweetid']
+            );
+        }
+
+        // 既読テーブルに存在するかチェックする
+        // 無ければ登録する
+        $tweetIdList = explode(",",$request['tweetid']);
+        foreach($tweetIdList as $tweetId){
+
+            $exists = DB::table('checked_tweets')
+            ->where('service_user_id', $this->session_user->service_user_id)
+            ->where('tweet_id', $tweetId)
+            ->count();
+    
+            if($exists==0){
+                DB::table('checked_tweets')
+                ->insert(
+                    [
+                        'service_user_id'=>$this->session_user->service_user_id,
+                        'tweet_id'=>$tweetId
+                    ]
+                );
+            }
+
+        }
+
+        return response('',200)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
+    }
+
+
 }

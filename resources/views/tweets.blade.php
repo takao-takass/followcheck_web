@@ -46,6 +46,10 @@
                                 <input class="form-check-input filter-item" type="checkbox" id="filter-unkeep" {{$filter['unkeep_check']}}>
                                 <label class="form-check-label" for="filter-unkeep">KEEP以外のみ表示する</label>
                             </div>
+                            <div class="form-check" style="margin:1em;">
+                                <input class="form-check-input filter-item" type="checkbox" id="filter-unchecked" {{$filter['unchecked_check']}}>
+                                <label class="form-check-label" for="filter-unchecked">既読は非表示</label>
+                            </div>
                     </div>
                 </div>
 
@@ -84,6 +88,10 @@
 
                 <!-- ツイート一覧 -->
                 <div class="col-md-12 contents" id="twlist">
+                </div>
+
+                <div class="col-md-12 contents">
+                    <button class="btn btn-primary rounded-pill" id="checked-button" style="width:100%;margin-top:2em;">表示中のツイートを既読にする</button>
                 </div>
 
                 <!-- ページ下部のスペーサ -->
@@ -130,6 +138,15 @@
                 showList();
             });
 
+            // 既読
+            $('#checked-button').on('click',function(){
+                var idList = []
+                $(".tweet-id").each(function(i, idobj) {
+                    idList.push($(idobj).val());
+                });
+                checked(idList.join(','));
+            });
+
             // ツイート一覧を取得する
             function showList(){
 
@@ -148,6 +165,7 @@
                         'filter-media' : $('#filter-media').prop('checked') ? 1:'',
                         'filter-keep' : $('#filter-keep').prop('checked') ? 1:'',
                         'filter-unkeep' : $('#filter-unkeep').prop('checked') ? 1:'',
+                        'filter-unchecked' : $('#filter-unchecked').prop('checked') ? 1:'',
                     }
                 }).done( (data) => {
 
@@ -170,6 +188,7 @@
                             "        <div class='row contents'>[[thunbs]]</div>" +
                             "        <div>[[tweeted_datetime]]　<a href='[[weblink]]' target='_blank' rel='noopener noreferrer'>Twitterで見る</a></div>"+
                             "        <div class='keepbutton'><span class='keep [[keep_style]]' id='[[tweet_id]]' value='[[kept]]'>　　KEEP　　</span></div>"+
+                            "        <input type='hidden' class='tweet-id' value='[[tweet_id_hidden]]'>"+
                             "    </div>"+
                             "</div>";
 
@@ -199,6 +218,7 @@
                                 .replace('[[thunbs]]',thumbhtml)
                                 .replace('[[keep_style]]', (account.kept == '0' ? 'keepoff' : 'keepon') )
                                 .replace('[[tweet_id]]',account.tweet_id)
+                                .replace('[[tweet_id_hidden]]',account.tweet_id)
                                 .replace('[[kept]]',account.kept)
                         );
 
@@ -243,6 +263,22 @@
                     $evobj.attr('value','0');
                     $evobj.addClass('keepoff');
                     $evobj.removeClass('keepon');
+                });
+
+            }
+
+            
+            // ツイートを既読する
+            function checked(joinedId){
+
+                $.ajax({
+                    url:'{{ action('TweetsController@checked') }}',
+                    type:'POST',
+                    data:{
+                        'tweetid' : joinedId,
+                    }
+                }).done( (data) => {
+                    alert('既読にしました');
                 });
 
             }
