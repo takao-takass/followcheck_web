@@ -25,6 +25,7 @@ class ShowController extends Controller
 
         // 初期検索条件を設定する
         $param['filter'] = [
+            'retweet_check' => '',
             'user_id' => $user_id,
             'group_id' => '',
             'page' => $page
@@ -48,6 +49,7 @@ class ShowController extends Controller
 
         // 初期検索条件を設定する
         $param['filter'] = [
+            'retweet_check' => '',
             'user_id' => '',
             'group_id' => $group_id,
             'page' => $page
@@ -70,11 +72,11 @@ class ShowController extends Controller
         }
 
         // 取得条件を取り出す
+        $onretweet = $request['filter-retweet'];
         $user_id = $request['user'];
         $group_id = $request['group'];
         $page = $request['page'];
         $onreply = '1';
-        $onretweet = '1';
         $onlymedia = '1';
 
         // 入力チェックを行う

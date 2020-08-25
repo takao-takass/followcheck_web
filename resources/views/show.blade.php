@@ -16,6 +16,11 @@
                     </h2>
                 </div>
 
+                <div class="form-check" style="margin:1em;">
+                    <input class="form-check-input filter-item" type="checkbox" id="filter-retweet" {{$filter['retweet_check']}}>
+                    <label class="form-check-label" for="filter-retweet" style="color:white;">リツイートは表示しない</label>
+                </div>
+
                 <!-- 読み込み中表示 -->
                 <div class="col-md-12" style="text-align:center;margin-top:1em;" id="spinner">
                     <div class="spinner-grow text-primary" role="status">
@@ -137,6 +142,7 @@
                         'user' : $('#user').val(),
                         'group' : $('#group').val(),
                         'page' : $('#page').val(),
+                        'filter-retweet' : $('#filter-retweet').prop('checked') ? 1:'',
                     }
                 }).done( (data) => {
 
