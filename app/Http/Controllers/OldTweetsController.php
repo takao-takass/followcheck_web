@@ -28,7 +28,8 @@ class OldTweetsController extends Controller
             'page' => $page,
             'reply_check' => '',
             'retweet_check' => '',
-            'media_check' => ''
+            'media_check' => '',
+            'unchecked_check' => 'checked'
         ];
 
         return  response()->view('oldtweets', $param)
@@ -52,9 +53,10 @@ class OldTweetsController extends Controller
         $onreply = $request['filter-reply'];
         $onretweet = $request['filter-retweet'];
         $onlymedia = $request['filter-media'];
+        $onunchecked = $request['filter-unchecked'];
 
         // ページ数から取得範囲の計算
-        $pageRecord = 200;
+        $pageRecord = 100;
         $numPage = intval($page);
 
         // ツイートの総数を取得
@@ -80,6 +82,11 @@ class OldTweetsController extends Controller
             (
                 $onlymedia=='' ? "" :
                 " AND EXISTS( SELECT 1 FROM tweet_medias TM WHERE DT.tweet_id = TM.tweet_id )"
+            ).
+            // 既読でないものに絞る
+            (
+                $onunchecked=='' ? "" :
+                " AND NOT EXISTS( SELECT 1 FROM checked_tweets CT WHERE TW.service_user_id = CT.service_user_id AND TW.tweet_id = CT.tweet_id )"
             );
         Log::info($queryCnt);
         $res = DB::connection('mysql')->select($queryCnt);
@@ -135,6 +142,11 @@ class OldTweetsController extends Controller
         (
             $onlymedia=='' ? "" :
                     "   AND EXISTS( SELECT 1 FROM tweet_medias TM WHERE DT.tweet_id = TM.tweet_id )"
+        ).
+        // 既読でないものに絞る
+        (
+            $onunchecked=='' ? "" :
+            " AND NOT EXISTS( SELECT 1 FROM checked_tweets CT WHERE TW.service_user_id = CT.service_user_id AND TW.tweet_id = CT.tweet_id )"
         ).
         "             ORDER BY TW.tweeted_datetime ".
         "             LIMIT ". $pageRecord .
