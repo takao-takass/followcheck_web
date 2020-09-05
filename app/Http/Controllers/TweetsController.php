@@ -313,19 +313,23 @@ class TweetsController extends Controller
 
         // キープテーブルに存在するかチェックする
         // 無ければ登録する
-        $exists = DB::table('keep_tweets')
-        ->where('service_user_id', $this->session_user->service_user_id)
-        ->where('tweet_id', $request->tweetid)
-        ->count();
+        $tweetIdList = explode(",",$request['tweetid']);
+        foreach($tweetIdList as $tweetId){
 
-        if($exists==0){
-            DB::table('keep_tweets')
-            ->insert(
-                [
-                    'service_user_id'=>$this->session_user->service_user_id,
-                    'tweet_id'=>$request->tweetid
-                ]
-            );
+            $exists = DB::table('keep_tweets')
+            ->where('service_user_id', $this->session_user->service_user_id)
+            ->where('tweet_id', $tweetid)
+            ->count();
+    
+            if($exists==0){
+                DB::table('keep_tweets')
+                ->insert(
+                    [
+                        'service_user_id'=>$this->session_user->service_user_id,
+                        'tweet_id'=>$tweetid
+                    ]
+                );
+            }
         }
 
         return response('',200)
@@ -352,19 +356,24 @@ class TweetsController extends Controller
                 ['tweetid']
             );
         }
-
+        
         // キープテーブルに登録されているか確認する
         // 登録されていれば削除する
-        $exists = DB::table('keep_tweets')
-        ->where('service_user_id', $this->session_user->service_user_id)
-        ->where('tweet_id', $request->tweetid)
-        ->count();
+        $tweetIdList = explode(",",$request['tweetid']);
+        foreach($tweetIdList as $tweetId){
 
-        if($exists>0){
-            DB::table('keep_tweets')
+            $exists = DB::table('keep_tweets')
             ->where('service_user_id', $this->session_user->service_user_id)
-            ->where('tweet_id', $request->tweetid)
-            ->delete();
+            ->where('tweet_id', $tweetId)
+            ->count();
+    
+            if($exists>0){
+                DB::table('keep_tweets')
+                ->where('service_user_id', $this->session_user->service_user_id)
+                ->where('tweet_id', $tweetId)
+                ->delete();
+            }
+
         }
 
         return response('',200)

@@ -90,8 +90,12 @@
                 <div class="col-md-12 contents" id="twlist">
                 </div>
 
-                <div class="col-md-12 contents">
+                <div class="col-md-12 contents" style="margin-bottom:1em">
                     <button class="btn btn-primary rounded-pill" id="checked-button" style="width:100%;margin-top:2em;">表示中のツイートを既読にする</button>
+                </div>
+
+                <div class="col-md-12 contents" style="margin-bottom:1em">
+                    <button class="btn btn-primary rounded-pill" id="allkeep-button" style="width:100%;margin-top:2em;">表示中のツイートをKEEPする</button>
                 </div>
 
                 <!-- ページ下部のスペーサ -->
@@ -145,6 +149,15 @@
                     idList.push($(idobj).val());
                 });
                 checked(idList.join(','));
+            });
+
+            // 全てKEEP
+            $('#allkeep-button').on('click',function(){
+                var idList = []
+                $(".tweet-id").each(function(i, idobj) {
+                    idList.push($(idobj).val());
+                });
+                setAllKeep(idList.join(','));
             });
 
             // ツイート一覧を取得する
@@ -267,7 +280,21 @@
 
             }
 
-            
+            // ツイートを全てキープする
+            function setKeep(tweetId){
+
+                $.ajax({
+                    url:'{{ action('TweetsController@keep') }}',
+                    type:'POST',
+                    data:{
+                        'tweetid' : tweetId,
+                    }
+                }).done( (data) => {
+                    showList();
+                });
+
+            }
+
             // ツイートを既読する
             function checked(joinedId){
 
@@ -279,6 +306,7 @@
                     }
                 }).done( (data) => {
                     alert('既読にしました');
+                    showList();
                 });
 
             }
