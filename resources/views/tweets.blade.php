@@ -281,7 +281,7 @@
             }
 
             // ツイートを全てキープする
-            function setKeep(tweetId){
+            function setAllKeep(tweetId){
 
                 $.ajax({
                     url:'{{ action('TweetsController@keep') }}',

@@ -318,7 +318,7 @@ class TweetsController extends Controller
 
             $exists = DB::table('keep_tweets')
             ->where('service_user_id', $this->session_user->service_user_id)
-            ->where('tweet_id', $tweetid)
+            ->where('tweet_id', $tweetId)
             ->count();
     
             if($exists==0){
@@ -326,7 +326,7 @@ class TweetsController extends Controller
                 ->insert(
                     [
                         'service_user_id'=>$this->session_user->service_user_id,
-                        'tweet_id'=>$tweetid
+                        'tweet_id'=>$tweetId
                     ]
                 );
             }

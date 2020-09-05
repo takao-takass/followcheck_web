@@ -133,7 +133,7 @@
 
                 if($('#filter-keepmode').prop('checked')){
 
-                    if($(this).children('span').hasClass('keepoff')){
+                    if($(this).children('div').children('span').hasClass('keepoff')){
                         // KEEPされていない場合はKEEPする
                         setKeep($(this).data('tweetid'));
                     }else{
@@ -195,7 +195,7 @@
 
                                 var html = 
                                     "<div class='thumb col-lg-2 col-md-3 col-4' role='button' style='margin-bottom:1em;' data-tweetid='"+account.tweet_id+"' data-mediapath='"+account.media_path[i]+"' data-thumbnailurl='"+account.thumbnail_url[i]+"' data-body='"+account.body+"' data-weblink='"+account.weblink+"'>"+
-                                    "   <span class='thumb-keep-label [[keepclass]]'>K</span>" +
+                                    "   <div><span class='thumb-keep-label [[keepclass]]'>　KEEP　</span></div>" +
                                     "   <img class='mr-3 thumb-radius thumb-back' style='width:100%;' src='"+account.thumb_names[i]+"'>"+
                                     "</div>";
 
@@ -230,7 +230,7 @@
                         'tweetid' : tweetid
                     }
                 }).done( (data) => {
-                    $("div[data-tweetid='"+tweetid+"']").children('span').removeClass('keepoff');
+                    $("div[data-tweetid='"+tweetid+"']").children('div').children('span').removeClass('keepoff');
                 });
 
             }
@@ -245,7 +245,7 @@
                         'tweetid' : tweetid
                     }
                 }).done( (data) => {
-                    $("div[data-tweetid='"+tweetid+"']").children('span').addClass('keepoff');
+                    $("div[data-tweetid='"+tweetid+"']").children('div').children('span').addClass('keepoff');
                 });
 
             }
