@@ -11,3 +11,25 @@
 .thumb {
     cursor: pointer;
 }
+
+.thumb-back{
+    position:absolute;
+    z-index: 1; 
+}
+
+.thumb-keep-label{
+    position:absolute;
+    z-index: 2; 
+    color:white;
+    font-weight: bold;
+    background-color: crimson;
+    padding: 0.4em;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.keepoff{
+    display: none;
+}

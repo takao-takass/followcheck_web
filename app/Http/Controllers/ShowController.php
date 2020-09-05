@@ -152,6 +152,7 @@ class ShowController extends Controller
         "       ,TW.replied".
         "       ,TW.weblink".
         "       ,TM.`type`".
+        "       ,CASE WHEN KT.tweet_id IS NULL THEN '0' ELSE '1' END AS kept".
         "       ,GROUP_CONCAT(CONCAT(REPLACE(TM.directory_path,'/opt/followcheck/fcmedia/tweetmedia/','/img/tweetmedia/'),TM.file_name)) AS media_path".
         "       ,GROUP_CONCAT(CONCAT(REPLACE(TM.thumb_directory_path,'/opt/followcheck/fcmedia/tweetmedia/','/img/tweetmedia/'),TM.thumb_file_name)) AS thumb_names".
         "   FROM (".
@@ -162,6 +163,7 @@ class ShowController extends Controller
         "                  ,TW.favolite_count".
         "                  ,TW.retweet_count".
         "                  ,TW.replied".
+        "                  ,TW.service_user_id".
         "                  ,CONCAT('https://twitter.com/',RU.disp_name,'/status/',TW.tweet_id) AS weblink".
         "              FROM tweets TW".
         "             INNER JOIN relational_users RU ".
@@ -203,6 +205,9 @@ class ShowController extends Controller
         "        ) TW".
         "  LEFT JOIN tweet_medias TM".
         "    ON TW.tweet_id = TM.tweet_id".
+        "  LEFT JOIN keep_tweets KT ".
+        "    ON TW.service_user_id = KT.service_user_id".
+        "   AND TW.tweet_id = KT.tweet_id".
         "  GROUP BY TW.tweet_id".
         "          ,TW.thumbnail_url".
         "          ,TW.tweeted_datetime".
@@ -220,6 +225,7 @@ class ShowController extends Controller
         $param['accounts'] = [];
         foreach($accounts as $account){
             $param['accounts'][] = [
+                'tweet_id' => $account->tweet_id,
                 'tweeted_datetime' => $account->tweeted_datetime,
                 'body' => $account->body,
                 'favolite_count' => $account->favolite_count,
@@ -229,6 +235,7 @@ class ShowController extends Controller
                 'media_path' => explode(',',$account->media_path),
                 'thumb_names' => explode(',',$account->thumb_names),
                 'thumbnail_url'=> $account->thumbnail_url=='' ? asset('./img/usericon1.jpg'):$account->thumbnail_url,
+                'kept'=>$account->kept,
                 'weblink'=>$account->weblink
             ];
         }

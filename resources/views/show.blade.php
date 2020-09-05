@@ -20,6 +20,10 @@
                     <input class="form-check-input filter-item" type="checkbox" id="filter-retweet" {{$filter['retweet_check']}}>
                     <label class="form-check-label" for="filter-retweet" style="color:white;">リツイートは表示しない</label>
                 </div>
+                <div class="form-check" style="margin:1em;">
+                    <input class="form-check-input" type="checkbox" id="filter-keepmode">
+                    <label class="form-check-label" for="filter-keepmode" style="color:white;">KEEPモード</label>
+                </div>
 
                 <!-- 読み込み中表示 -->
                 <div class="col-md-12" style="text-align:center;margin-top:1em;" id="spinner">
@@ -124,6 +128,30 @@
                 showList();
             });
 
+            // サムネイルクリック
+            $(document).on('click','.thumb',function(){
+
+                if($('#filter-keepmode').prop('checked')){
+
+                    if($(this).children('span').hasClass('keepoff')){
+                        // KEEPされていない場合はKEEPする
+                        setKeep($(this).data('tweetid'));
+                    }else{
+                        // KEEPされている場合はKEEPから外す
+                        unsetKeep($(this).data('tweetid'));
+                    }
+
+                }else{
+                    showimage(
+                        $(this).data('mediapath'),
+                        $(this).data('thumbnailurl'),
+                        $(this).data('body'),
+                        $(this).data('weblink')
+                    );
+                }
+
+            });
+
             // 画像モーダルを表示
             showimage = function(source,icon,body,weblink){
                 $('#originimagelink').attr('href',source);
@@ -165,12 +193,20 @@
                         if(account.media_type != null){
                             for (var i = 0; i<account.thumb_names.length; i++) {
 
+                                var html = 
+                                    "<div class='thumb col-lg-2 col-md-3 col-4' role='button' style='margin-bottom:1em;' data-tweetid='"+account.tweet_id+"' data-mediapath='"+account.media_path[i]+"' data-thumbnailurl='"+account.thumbnail_url[i]+"' data-body='"+account.body+"' data-weblink='"+account.weblink+"'>"+
+                                    "   <span class='thumb-keep-label [[keepclass]]'>K</span>" +
+                                    "   <img class='mr-3 thumb-radius thumb-back' style='width:100%;' src='"+account.thumb_names[i]+"'>"+
+                                    "</div>";
+
+                                if(account.kept=='0'){
+                                    html = html.replace('[[keepclass]]','keepoff');
+                                }else{
+                                    html = html.replace('[[keepclass]]','');
+                                }
+
                                 // 一覧にHTMLを表示する
-                                $('#twlist').append(
-                                    "<div class='thumb col-lg-2 col-md-3 col-4' role='button' onclick=\"showimage('"+account.media_path[i]+"','"+account.thumbnail_url+"','"+account.body+"','"+account.weblink+"');\" style='margin-bottom:1em;'>"+
-                                    "   <img class='mr-3 thumb-radius' style='width:100%;' src='"+account.thumb_names[i]+"'>"+
-                                    "</div>"
-                                );
+                                $('#twlist').append(html);
                             }
                         }
                     });
@@ -180,6 +216,36 @@
                 }).always(function(){
                     $('.contents').show();
                     $('#spinner').hide();
+                });
+
+            }
+
+            // ツイートをキープする
+            function setKeep(tweetid){
+
+                $.ajax({
+                    url:'{{ action('TweetsController@keep') }}',
+                    type:'POST',
+                    data:{
+                        'tweetid' : tweetid
+                    }
+                }).done( (data) => {
+                    $("div[data-tweetid='"+tweetid+"']").children('span').removeClass('keepoff');
+                });
+
+            }
+
+            // ツイートをキープから外す
+            function unsetKeep(tweetid){
+
+                $.ajax({
+                    url:'{{ action('TweetsController@unkeep') }}',
+                    type:'POST',
+                    data:{
+                        'tweetid' : tweetid
+                    }
+                }).done( (data) => {
+                    $("div[data-tweetid='"+tweetid+"']").children('span').addClass('keepoff');
                 });
 
             }
