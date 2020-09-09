@@ -12,11 +12,11 @@ use Carbon\Carbon;
 
 class TweetsController extends Controller
 {
-	// 検索方法の区分値
-	const SEARCH_TYPE_BYUSER = 1;
-	const SEARCH_TYPE_BUGROUP = 2;
-	const SEARCH_TYPE_BYOLD = 3;
-	
+    // 検索方法の区分値
+    const SEARCH_TYPE_BYUSER = 1;
+    const SEARCH_TYPE_BUGROUP = 2;
+    const SEARCH_TYPE_BYOLD = 3;
+    
     /**
      * 画面表示(ユーザID)
      *
@@ -88,61 +88,61 @@ class TweetsController extends Controller
         }
 
         // 取得条件を取り出す
-		$filters = new TweetListFilter(
-			$this->session_user->service_user_id,
-			$request['user'],
-			$request['group'],
-			intval($request['page']),
-			$request['filter-reply'],
-			$request['filter-retweet'],
-			$request['filter-media'],
-			$request['filter-keep'],
-			$request['filter-unchecked']
-		);
+        $filters = new TweetListFilter(
+            $this->session_user->service_user_id,
+            $request['user'],
+            $request['group'],
+            intval($request['page']),
+            $request['filter-reply'],
+            $request['filter-retweet'],
+            $request['filter-media'],
+            $request['filter-keep'],
+            $request['filter-unchecked']
+        );
         
         // 入力チェックを行う
 
 
 
-		// 検索方法の決定
-		// グループIDが設定されていない：BY USER
-		// グループIDが"ALL"：BY USER （ユーザ指定なし）
-		// グループIDが"OLD"：OLD
-		// グループIDが指定されている：BY GROUP
-		var $searchType;
-		switch ($filters->group_id) {
-			case "":
-				$searchType = self::SEARCH_TYPE_BYUSER;
-				break;
-			case "ALL":
-				$searchType = self::SEARCH_TYPE_BYUSER;
-				$filters->user_id = "";
-				$filters->group_id = "";
-				break;
-			case "OLD":
-				$searchType = self::SEARCH_TYPE_BYOLD;
-				break;
-			default :
-				$searchType = self::SEARCH_TYPE_BYGROUP;
-				break;
-		}
+        // 検索方法の決定
+        // グループIDが設定されていない：BY USER
+        // グループIDが"ALL"：BY USER （ユーザ指定なし）
+        // グループIDが"OLD"：OLD
+        // グループIDが指定されている：BY GROUP
+        var $searchType;
+        switch ($filters->group_id) {
+            case "":
+                $searchType = self::SEARCH_TYPE_BYUSER;
+                break;
+            case "ALL":
+                $searchType = self::SEARCH_TYPE_BYUSER;
+                $filters->user_id = "";
+                $filters->group_id = "";
+                break;
+            case "OLD":
+                $searchType = self::SEARCH_TYPE_BYOLD;
+                break;
+            default :
+                $searchType = self::SEARCH_TYPE_BYGROUP;
+                break;
+        }
 
-		// クエリの準備
-		$tweetList = new TweetList($filters);
+        // クエリの準備
+        $tweetList = new TweetList($filters);
 
         // ツイートの総数を取得
-		var $tweetCount = 0;
-		switch ($searchType) {
-			case self::SEARCH_TYPE_BYUSER:
-				$tweetCount = $tweetList->CountByUser();
-				break;
-			case self::SEARCH_TYPE_BYOLD:
-				//$queryCnt = ;
-				break;
-			case self::SEARCH_TYPE_BYGROUP:
-				$tweetCount = $tweetList->CountByGroup();
-				break;
-		}
+        var $tweetCount = 0;
+        switch ($searchType) {
+            case self::SEARCH_TYPE_BYUSER:
+                $tweetCount = $tweetList->CountByUser();
+                break;
+            case self::SEARCH_TYPE_BYOLD:
+                //$queryCnt = ;
+                break;
+            case self::SEARCH_TYPE_BYGROUP:
+                $tweetCount = $tweetList->CountByGroup();
+                break;
+        }
 
         // ページ切り替えのリンクを設定するための条件
         $param['uesr_id'] = $user_id;
@@ -153,17 +153,17 @@ class TweetsController extends Controller
         $param['record'] = $tweetCount;
 
         // ツイートの一覧を取得
-		switch ($searchType) {
-			case self::SEARCH_TYPE_BYUSER:
-				$param['accounts'] = $tweetList->ListByUser();
-				break;
-			case self::SEARCH_TYPE_BYOLD:
-				//$queryCnt = ;
-				break;
-			case self::SEARCH_TYPE_BYGROUP:
-				$param['accounts'] = $tweetList->ListByGroup();
-				break;
-		}
+        switch ($searchType) {
+            case self::SEARCH_TYPE_BYUSER:
+                $param['accounts'] = $tweetList->ListByUser();
+                break;
+            case self::SEARCH_TYPE_BYOLD:
+                //$queryCnt = ;
+                break;
+            case self::SEARCH_TYPE_BYGROUP:
+                $param['accounts'] = $tweetList->ListByGroup();
+                break;
+        }
 
         return response($param,200)
         ->cookie('sign',$this->updateToken()->signtext,24*60);
