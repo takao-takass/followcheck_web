@@ -7,10 +7,16 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Exceptions\ParamInvalidException;
 use App\Models\Token;
+use App\Models\TweetFilter;
 use Carbon\Carbon;
 
 class TweetsController extends Controller
 {
+	// 検索方法の区分値
+	const SEARCH_TYPE_BYUSER = 1;
+	const SEARCH_TYPE_BUGROUP = 2;
+	const SEARCH_TYPE_BYOLD = 3;
+	
     /**
      * 画面表示(ユーザID)
      *
@@ -82,209 +88,82 @@ class TweetsController extends Controller
         }
 
         // 取得条件を取り出す
-        $user_id = $request['user'];
-        $group_id = $request['group'];
-        $page = $request['page'];
-        $onreply = $request['filter-reply'];
-        $onretweet = $request['filter-retweet'];
-        $onlymedia = $request['filter-media'];
-        $onkeep = $request['filter-keep'];
-        $onunkeep = $request['filter-unkeep'];
-        $onunchecked = $request['filter-unchecked'];
+		$filters = new TweetListFilter(
+			$this->session_user->service_user_id,
+			$request['user'],
+			$request['group'],
+			intval($request['page']),
+			$request['filter-reply'],
+			$request['filter-retweet'],
+			$request['filter-media'],
+			$request['filter-keep'],
+			$request['filter-unchecked']
+		);
         
         // 入力チェックを行う
-        if($group_id=="ALL"){
-            $group_id = "";
-        }
-        
-        // ページ数から取得範囲の計算
-        $pageRecord = 100;
-        $numPage = intval($page);
+
+
+
+		// 検索方法の決定
+		// グループIDが設定されていない：BY USER
+		// グループIDが"ALL"：BY USER （ユーザ指定なし）
+		// グループIDが"OLD"：OLD
+		// グループIDが指定されている：BY GROUP
+		var $searchType;
+		switch ($filters->group_id) {
+			case "":
+				$searchType = self::SEARCH_TYPE_BYUSER;
+				break;
+			case "ALL":
+				$searchType = self::SEARCH_TYPE_BYUSER;
+				$filters->user_id = "";
+				$filters->group_id = "";
+				break;
+			case "OLD":
+				$searchType = self::SEARCH_TYPE_BYOLD;
+				break;
+			default :
+				$searchType = self::SEARCH_TYPE_BYGROUP;
+				break;
+		}
+
+		// クエリの準備
+		$tweetList = new TweetList($filters);
 
         // ツイートの総数を取得
-        $queryCnt = 
-            " SELECT COUNT(*) AS ct" .
-            " FROM tweets TW" .
-            " WHERE TW.service_user_id = '".$this->session_user->service_user_id."'" .
-            // ユーザIDで絞り込む
-            (
-                $user_id=='' ? "" :
-                " AND TW.user_id = '".$user_id."'"
-            ).
-            // グループIDで絞り込む
-            (
-                $group_id=='' ? "" :
-                " AND ( ".
-                "          TW.user_id IN ( ".
-                "               SELECT GU.user_id ".
-                "                 FROM `groups` GP ".
-                "                INNER JOIN group_users GU".
-                "                   ON GP.group_id = GU.group_id".
-                "                WHERE GP.service_user_id = '".$this->session_user->service_user_id."'" .
-                "                  AND GP.group_id = '".$group_id."'".
-                "           ) ".
-                "        OR 'ALL' = '".$group_id."'".
-                "     ) "
-            ).
-            // リプライを除く
-            (
-                $onreply=='' ? "" :
-                " AND TW.replied = '0'"
-            ).
-            // リツイートを除く
-            (
-                $onretweet=='' ? "" :
-                " AND TW.retweeted = '0'"
-            ).
-            // メディア添付のみに絞る
-            (
-                $onlymedia=='' ? "" :
-                " AND EXISTS( SELECT 1 FROM tweet_medias TM WHERE TW.tweet_id = TM.tweet_id )"
-            ).
-            // キープしているものに絞る
-            (
-                $onkeep=='' ? "" :
-                " AND EXISTS( SELECT 1 FROM keep_tweets KT WHERE TW.service_user_id = KT.service_user_id AND TW.tweet_id = KT.tweet_id )"
-            ).
-            // キープしていないものに絞る
-            (
-                $onunkeep=='' ? "" :
-                " AND NOT EXISTS( SELECT 1 FROM keep_tweets KT WHERE TW.service_user_id = KT.service_user_id AND TW.tweet_id = KT.tweet_id )"
-            ).
-            // 既読でないものに絞る
-            (
-                $onunchecked=='' ? "" :
-                " AND NOT EXISTS( SELECT 1 FROM checked_tweets CT WHERE TW.service_user_id = CT.service_user_id AND TW.tweet_id = CT.tweet_id )"
-            );
-        Log::info($queryCnt);
-        $res = DB::connection('mysql')->select($queryCnt);
-        $recordCount = $res[0]->ct;
+		var $tweetCount = 0;
+		switch ($searchType) {
+			case self::SEARCH_TYPE_BYUSER:
+				$tweetCount = $tweetList->CountByUser();
+				break;
+			case self::SEARCH_TYPE_BYOLD:
+				//$queryCnt = ;
+				break;
+			case self::SEARCH_TYPE_BYGROUP:
+				$tweetCount = $tweetList->CountByGroup();
+				break;
+		}
 
         // ページ切り替えのリンクを設定するための条件
         $param['uesr_id'] = $user_id;
         $param['group_id'] = $group_id;
         $param['prev_page'] = $numPage-1;
         $param['next_page'] = $numPage+1;
-        $param['max_page'] = ceil($recordCount / $pageRecord);
-        $param['record'] = $recordCount;
+        $param['max_page'] = ceil($tweetCount / 100);
+        $param['record'] = $tweetCount;
 
-        // ツイートを取得する
-        $queryList = 
-        " SELECT TW.tweet_id".
-        "       ,TW.thumbnail_url".
-        "       ,TW.tweeted_datetime".
-        "       ,TW.body".
-        "       ,TW.favolite_count".
-        "       ,TW.retweet_count".
-        "       ,TW.replied".
-        "       ,TW.weblink".
-        "       ,TW.user_id".
-        "       ,TM.`type`".
-        "       ,CASE WHEN KT.tweet_id IS NULL THEN '0' ELSE '1' END AS kept".
-        "       ,GROUP_CONCAT(CONCAT(REPLACE(TM.directory_path,'/opt/followcheck/fcmedia/tweetmedia/','/img/tweetmedia/'),TM.file_name)) AS media_path".
-        "       ,GROUP_CONCAT(CONCAT(REPLACE(TM.thumb_directory_path,'/opt/followcheck/fcmedia/tweetmedia/','/img/tweetmedia/'),TM.thumb_file_name)) AS thumb_names".
-        "   FROM (".
-        "            SELECT TW.tweet_id".
-        "                  ,RU.thumbnail_url".
-        "                  ,convert_tz(TW.tweeted_datetime, '+00:00','+09:00') AS tweeted_datetime".
-        "                  ,TW.body".
-        "                  ,TW.favolite_count".
-        "                  ,TW.retweet_count".
-        "                  ,TW.replied".
-        "                  ,CONCAT('https://twitter.com/',RU.disp_name,'/status/',TW.tweet_id) AS weblink".
-        "                  ,TW.tweet_user_id AS user_id".
-        "                  ,TW.service_user_id".
-        "              FROM tweets TW".
-        "             INNER JOIN relational_users RU ".
-        "                ON TW.tweet_user_id = RU.user_id ".
-        // グループIDで取得
-        (
-            $group_id=='' ? "" :
-                    " INNER JOIN group_users GU".
-                    "    ON TW.user_id = GU.user_id".
-                    " INNER JOIN `groups` GP".
-                    "    ON GP.group_id = GU.group_id".
-                    "   AND GP.service_user_id = '".$this->session_user->service_user_id."'" .
-                    "   AND GP.group_id = '".$group_id."'"
-        ).
-        "             WHERE TW.service_user_id = '".$this->session_user->service_user_id."' ".
-        // ユーザIDで取得
-        (
-            $user_id=='' ? "" :
-                    "   AND TW.user_id = '".$user_id."'"
-        ).
-        // リプライを除く
-        (
-            $onreply=='' ? "" :
-                    "   AND TW.replied = '0'"
-        ).
-        // リツイートを除く
-        (
-            $onretweet=='' ? "" :
-                    "   AND TW.retweeted = '0'"
-        ).
-        // メディア添付のみに絞る
-        (
-            $onlymedia=='' ? "" :
-                    "   AND EXISTS( SELECT 1 FROM tweet_medias TM WHERE TW.tweet_id = TM.tweet_id )"
-        ).
-        // キープしているものに絞る
-        (
-            $onkeep=='' ? "" :
-            " AND EXISTS( SELECT 1 FROM keep_tweets KT WHERE TW.service_user_id = KT.service_user_id AND TW.tweet_id = KT.tweet_id )"
-        ).
-        // キープしていないものに絞る
-        (
-            $onunkeep=='' ? "" :
-            " AND NOT EXISTS( SELECT 1 FROM keep_tweets KT WHERE TW.service_user_id = KT.service_user_id AND TW.tweet_id = KT.tweet_id )"
-        ).
-        // 既読でないものに絞る
-        (
-            $onunchecked=='' ? "" :
-            " AND NOT EXISTS( SELECT 1 FROM checked_tweets CT WHERE TW.service_user_id = CT.service_user_id AND TW.tweet_id = CT.tweet_id )"
-        ).
-        "             ORDER BY TW.tweeted_datetime DESC ".
-        "             LIMIT ". $pageRecord .
-        "            OFFSET ". $pageRecord*$numPage .
-        "        ) TW".
-        "  LEFT JOIN tweet_medias TM".
-        "    ON TW.tweet_id = TM.tweet_id".
-        "  LEFT JOIN keep_tweets KT ".
-        "    ON TW.service_user_id = KT.service_user_id".
-        "   AND TW.tweet_id = KT.tweet_id".
-        "  GROUP BY TW.tweet_id".
-        "          ,TW.thumbnail_url".
-        "          ,TW.tweeted_datetime".
-        "          ,TW.body".
-        "          ,TW.favolite_count".
-        "          ,TW.retweet_count".
-        "          ,TW.replied".
-        "          ,TW.weblink".
-        "          ,TW.user_id".
-        "          ,TM.`type`".
-        "          ,CASE WHEN KT.tweet_id IS NULL THEN '0' ELSE '1' END".
-        "  ORDER BY TW.tweeted_datetime DESC ";
-
-        Log::info($queryList);
-        $tweets = DB::connection('mysql')->select($queryList);
-        $param['accounts'] = [];
-        foreach($tweets as $tweet){
-            $param['accounts'][] = [
-                'tweeted_datetime' => $tweet->tweeted_datetime,
-                'body' => $tweet->body,
-                'favolite_count' => $tweet->favolite_count,
-                'retweet_count' => $tweet->retweet_count,
-                'replied' => $tweet->replied,
-                'media_type' => $tweet->type,
-                'media_path' => explode(',',$tweet->media_path),
-                'thumb_names' => explode(',',$tweet->thumb_names),
-                'thumbnail_url'=> $tweet->thumbnail_url=='' ? asset('./img/usericon1.jpg'):$tweet->thumbnail_url,
-                'weblink'=>$tweet->weblink,
-                'user_id'=>$tweet->user_id,
-                'kept'=>$tweet->kept,
-                'tweet_id'=>$tweet->tweet_id
-            ];
-        }
+        // ツイートの一覧を取得
+		switch ($searchType) {
+			case self::SEARCH_TYPE_BYUSER:
+				$param['accounts'] = $tweetList->ListByUser();
+				break;
+			case self::SEARCH_TYPE_BYOLD:
+				//$queryCnt = ;
+				break;
+			case self::SEARCH_TYPE_BYGROUP:
+				$param['accounts'] = $tweetList->ListByGroup();
+				break;
+		}
 
         return response($param,200)
         ->cookie('sign',$this->updateToken()->signtext,24*60);
