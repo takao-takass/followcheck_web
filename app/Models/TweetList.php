@@ -513,7 +513,7 @@ class TweetList
                 $this->filters->onunchecked=='' ? "" :
                 " AND NOT EXISTS( SELECT 1 FROM checked_tweets CT WHERE TW.service_user_id = CT.service_user_id AND TW.tweet_id = CT.tweet_id )"
             ).
-            "             ORDER BY TW.tweeted_datetime DESC ".
+            "             ORDER BY TW.tweeted_datetime ".
             "             LIMIT ? " .
             "            OFFSET ? " .
             "        ) TW".
@@ -531,7 +531,7 @@ class TweetList
             "          ,TW.user_id".
             "          ,TM.`type`".
             "          ,CASE WHEN KT.tweet_id IS NULL THEN '0' ELSE '1' END".
-            "  ORDER BY TW.tweeted_datetime DESC ";
+            "  ORDER BY TW.tweeted_datetime ";
             
         // 絞込みパラメータを設定
         $filterParam = [];
