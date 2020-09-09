@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Exceptions\ParamInvalidException;
 use App\Models\Token;
-use App\Models\TweetFilter;
+use App\Models\TweetListFilter;
+use App\Models\TweetList;
 use Carbon\Carbon;
 
 class TweetsController extends Controller
@@ -97,6 +98,7 @@ class TweetsController extends Controller
             $request['filter-retweet'],
             $request['filter-media'],
             $request['filter-keep'],
+            $request['filter-unkeep'],
             $request['filter-unchecked']
         );
         
@@ -109,7 +111,7 @@ class TweetsController extends Controller
         // グループIDが"ALL"：BY USER （ユーザ指定なし）
         // グループIDが"OLD"：OLD
         // グループIDが指定されている：BY GROUP
-        var $searchType;
+        $searchType = self::SEARCH_TYPE_BYUSER;;
         switch ($filters->group_id) {
             case "":
                 $searchType = self::SEARCH_TYPE_BYUSER;
@@ -131,13 +133,13 @@ class TweetsController extends Controller
         $tweetList = new TweetList($filters);
 
         // ツイートの総数を取得
-        var $tweetCount = 0;
+        $tweetCount = 0;
         switch ($searchType) {
             case self::SEARCH_TYPE_BYUSER:
                 $tweetCount = $tweetList->CountByUser();
                 break;
             case self::SEARCH_TYPE_BYOLD:
-                //$queryCnt = ;
+                $tweetCount = $tweetList->CountByOld();
                 break;
             case self::SEARCH_TYPE_BYGROUP:
                 $tweetCount = $tweetList->CountByGroup();
@@ -145,10 +147,10 @@ class TweetsController extends Controller
         }
 
         // ページ切り替えのリンクを設定するための条件
-        $param['uesr_id'] = $user_id;
-        $param['group_id'] = $group_id;
-        $param['prev_page'] = $numPage-1;
-        $param['next_page'] = $numPage+1;
+        $param['uesr_id'] = $filters->user_id;
+        $param['group_id'] = $filters->group_id;
+        $param['prev_page'] = $filters->page-1;
+        $param['next_page'] = $filters->page+1;
         $param['max_page'] = ceil($tweetCount / 100);
         $param['record'] = $tweetCount;
 
@@ -158,7 +160,7 @@ class TweetsController extends Controller
                 $param['accounts'] = $tweetList->ListByUser();
                 break;
             case self::SEARCH_TYPE_BYOLD:
-                //$queryCnt = ;
+                $param['accounts'] = $tweetList->ListByOld();
                 break;
             case self::SEARCH_TYPE_BYGROUP:
                 $param['accounts'] = $tweetList->ListByGroup();

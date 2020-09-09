@@ -9,44 +9,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
- * ツイートリストの条件モデル
- */
-class TweetListFilter
-{
-    // 特定条件
-    public $service_user_id;
-    public $user_id;
-    public $group_id;
-
-    // 絞り込み条件
-    public　$onreply;
-    public $onretweet;
-    public $onlymedia;
-    public $onkeep;
-    public $onunkeep;
-    public $onunchecked;
-
-    // ページング条件
-    public $page;
-
-    // コンストラクタ
-    function __construct(
-        $service_user_id, $user_id, $group_id,
-        $onreply, $onretweet, $onlymedia, $onkeep, $onunkeep, $onunchecked)
-    {
-        $this->service_user_id = $service_user_id;
-        $this->user_id = $user_id;
-        $this->group_id = $group_id;
-        $this->onreply = $onreply;
-        $this->onretweet = $onretweet;
-        $this->onlymedia = $onlymedia;
-        $this->onkeep = $onkeep;
-        $this->onunkeep = $onunkeep;
-        $this->onunchecked = $onunchecked;
-    }
-}
-
-/**
  * ツイートリストの検索を行う
  */
 class TweetList
@@ -62,7 +24,7 @@ class TweetList
      */
     public function CountByUser(){
         
-        var $query = 
+        $query = 
             " SELECT COUNT(*) AS ct" .
             " FROM tweets TW" .
             " WHERE TW.service_user_id = ?" .
@@ -103,9 +65,9 @@ class TweetList
             );
             
         // 絞込みパラメータを設定
-        var $filterParam = [];
+        $filterParam = [];
         array_push($filterParam, $this->filters->service_user_id);
-        array_push($filterParam, $this->filters->user_id);
+        if($this->filters->user_id!='')array_push($filterParam, $this->filters->user_id);
 
         // SQLを発行
         Log::info($query);
@@ -119,7 +81,7 @@ class TweetList
     /* ユーザ指定によるリスト取得 */
     public function ListByUser(){
 
-        var $query = 
+        $query = 
             " SELECT TW.tweet_id".
             "       ,TW.thumbnail_url".
             "       ,TW.tweeted_datetime".
@@ -194,8 +156,6 @@ class TweetList
             "          ,TW.thumbnail_url".
             "          ,TW.tweeted_datetime".
             "          ,TW.body".
-            "          ,0".
-            "          ,0".
             "          ,TW.replied".
             "          ,TW.weblink".
             "          ,TW.user_id".
@@ -204,21 +164,21 @@ class TweetList
             "  ORDER BY TW.tweeted_datetime DESC ";
             
         // 絞込みパラメータを設定
-        var $filterParam = [];
+        $filterParam = [];
         array_push($filterParam, $this->filters->service_user_id);
-        array_push($filterParam, $this->filters->user_id);
+        if($this->filters->user_id!='')array_push($filterParam, $this->filters->user_id);
         array_push($filterParam, 100);
         array_push($filterParam, 100 * $this->filters->page);
 
         // SQLを発行
         Log::info($query);
         Log::info($filterParam);
-        $results = DB::connection('mysql')->select($queryList);
+        $results = DB::connection('mysql')->select($query,$filterParam);
 
         // 結果を整形
         $tweets = [];
         foreach($results as $result){
-            $tweets = [
+            array_push($tweets,[
                 'tweeted_datetime' => $result->tweeted_datetime,
                 'body' => $result->body,
                 'favolite_count' => $result->favolite_count,
@@ -232,7 +192,7 @@ class TweetList
                 'user_id'=>$result->user_id,
                 'kept'=>$result->kept,
                 'tweet_id'=>$result->tweet_id
-            ];
+            ]);
         }
 
         return $tweets;
@@ -241,15 +201,10 @@ class TweetList
     /* グループ指定による件数取得 */
     public function CountByGroup(){
                 
-        var $query = 
+        $query = 
             " SELECT COUNT(*) AS ct" .
             " FROM tweets TW" .
             " WHERE TW.service_user_id = ?" .
-            (
-                // ユーザIDで絞り込む
-                $this->filters->user_id=='' ? "" :
-                " AND TW.user_id = ?"
-            ).
             // グループIDで絞り込む
             (
                 $this->filters->group_id=='' ? "" :
@@ -296,9 +251,8 @@ class TweetList
             );
             
         // 絞込みパラメータを設定
-        var $filterParam = [];
+        $filterParam = [];
         array_push($filterParam, $this->filters->service_user_id);
-        array_push($filterParam, $this->filters->user_id);
         array_push($filterParam, $this->filters->service_user_id);
         array_push($filterParam, $this->filters->group_id);
 
@@ -314,7 +268,7 @@ class TweetList
     /* グループ指定によるリスト取得 */
     public function ListByGroup(){
 
-        var $query = 
+        $query = 
             " SELECT TW.tweet_id".
             "       ,TW.thumbnail_url".
             "       ,TW.tweeted_datetime".
@@ -399,8 +353,6 @@ class TweetList
             "          ,TW.thumbnail_url".
             "          ,TW.tweeted_datetime".
             "          ,TW.body".
-            "          ,0".
-            "          ,0".
             "          ,TW.replied".
             "          ,TW.weblink".
             "          ,TW.user_id".
@@ -409,23 +361,22 @@ class TweetList
             "  ORDER BY TW.tweeted_datetime DESC ";
             
         // 絞込みパラメータを設定
-        var $filterParam = [];
+        $filterParam = [];
         array_push($filterParam, $this->filters->service_user_id);
         array_push($filterParam, $this->filters->group_id);
         array_push($filterParam, $this->filters->service_user_id);
-        array_push($filterParam, $this->filters->user_id);
         array_push($filterParam, 100);
         array_push($filterParam, 100 * $this->filters->page);
 
         // SQLを発行
         Log::info($query);
         Log::info($filterParam);
-        $results = DB::connection('mysql')->select($queryList);
+        $results = DB::connection('mysql')->select($query,$filterParam);
 
         // 結果を整形
         $tweets = [];
         foreach($results as $result){
-            $tweets = [
+            array_push($tweets,[
                 'tweeted_datetime' => $result->tweeted_datetime,
                 'body' => $result->body,
                 'favolite_count' => $result->favolite_count,
@@ -439,16 +390,16 @@ class TweetList
                 'user_id'=>$result->user_id,
                 'kept'=>$result->kept,
                 'tweet_id'=>$result->tweet_id
-            ];
+            ]);
         }
 
         return $tweets;
     }
 
     /* 削除リストによる件数取得 */
-    public function CountByOldQuery(){
+    public function CountByOld(){
 
-        var $query = 
+        $query = 
             " SELECT COUNT(*) AS ct" .
             " FROM queue_delete_tweets DT " .
             " INNER JOIN tweets TW".
@@ -488,7 +439,7 @@ class TweetList
             );
             
         // 絞込みパラメータを設定
-        var $filterParam = [];
+        $filterParam = [];
         array_push($filterParam, $this->filters->service_user_id);
 
         // SQLを発行
@@ -501,9 +452,9 @@ class TweetList
     }
 
     /* 削除リストによるリスト取得 */
-    public function ListByOldQuery(){
+    public function ListByOld(){
 
-        var $query = 
+        $query = 
             " SELECT TW.tweet_id".
             "       ,TW.thumbnail_url".
             "       ,TW.tweeted_datetime".
@@ -583,7 +534,7 @@ class TweetList
             "  ORDER BY TW.tweeted_datetime DESC ";
             
         // 絞込みパラメータを設定
-        var $filterParam = [];
+        $filterParam = [];
         array_push($filterParam, $this->filters->service_user_id);
         array_push($filterParam, 100);
         array_push($filterParam, 100 * $this->filters->page);
@@ -591,12 +542,12 @@ class TweetList
         // SQLを発行
         Log::info($query);
         Log::info($filterParam);
-        $results = DB::connection('mysql')->select($queryList);
+        $results = DB::connection('mysql')->select($query,$filterParam);
 
         // 結果を整形
         $tweets = [];
         foreach($results as $result){
-            $tweets = [
+            array_push($tweets,[
                 'tweeted_datetime' => $result->tweeted_datetime,
                 'body' => $result->body,
                 'replied' => $result->replied,
@@ -608,7 +559,7 @@ class TweetList
                 'user_id'=>$result->user_id,
                 'kept'=>$result->kept,
                 'tweet_id'=>$result->tweet_id
-            ];
+            ]);
         }
 
         return $tweets;
