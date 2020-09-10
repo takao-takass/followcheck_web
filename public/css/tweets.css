@@ -18,6 +18,7 @@
 }
 
 .keepoff{
+    cursor: pointer;
     color:white;
     background-color: gray;
     padding: 0.4em;
@@ -28,6 +29,7 @@
 }
 
 .keepon{
+    cursor: pointer;
     color:white;
     font-weight: bold;
     background-color: crimson;

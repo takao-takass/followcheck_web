@@ -7,7 +7,7 @@
 @section('content')
 
         <!-- KEEPボタン -->
-        <div id="keepbutton" class="float-gray"><i data-feather="check-circle" class="iconwhite"></i></div>
+        <div id="keepbutton" class="float-gray" role="button"><i data-feather="check-circle" class="iconwhite"></i></div>
 		<input class="form-check-input" type="checkbox" id="filter-keepmode" style="display:none;">
 
         <!-- メインコンテンツ -->
@@ -137,10 +137,10 @@
 				// 付いていない場合は灰色に切り替える
                 if($('#filter-keepmode').prop('checked')){
 					$('#keepbutton').removeClass('float-gray');
-					$('#keepbutton').removeClass('float-blue');
+					$('#keepbutton').addClass('float-blue');
 				}else{
 					$('#keepbutton').removeClass('float-blue');
-					$('#keepbutton').removeClass('float-gray');
+					$('#keepbutton').addClass('float-gray');
 				}
             });
 

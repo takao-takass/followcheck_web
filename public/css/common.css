@@ -72,6 +72,7 @@ ul {
 
 /* フローティングボタン：グレー */
 .float-gray {
+    cursor: pointer;
 	width: 70px;
 	height: 70px;
     border-radius: 50%;
@@ -80,7 +81,7 @@ ul {
     right: 0;
     bottom: 0;
     margin-right:3em;
-    margin-bottom:6em;
+    margin-bottom:9em;
     z-index: 999;
 }
 .float-gray > .feather {
@@ -96,15 +97,16 @@ ul {
 
 /* フローティングボタン：ブルー */
 .float-blue {
+    cursor: pointer;
 	width: 70px;
 	height: 70px;
     border-radius: 50%;
-    background: #436be3;
+    background: #ad1e42;
     position: fixed;
     right: 0;
     bottom: 0;
     margin-right:3em;
-    margin-bottom:6em;
+    margin-bottom:9em;
     z-index: 999;
 }
 .float-blue > .feather {

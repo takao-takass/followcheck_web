@@ -11,14 +11,14 @@ class AboutNum
     }
     
     /**
-     * 数値を荒い表記にする
+     * 数値を粗い表記にする
      */
     public function GetAboutNum(){
         
-		$aboutnum = number_format($this->num);
-		if($this->num > 9999){
-			$aboutnum = ($this->num/1000).'万'
-		}
+        $aboutnum = number_format($this->num);
+        if($this->num > 9999){
+            $aboutnum = (floor($this->num/1000)/10).'万';
+        }
 
         return $aboutnum;
     }
