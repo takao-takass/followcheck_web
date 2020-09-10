@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Exceptions\ParamInvalidException;
 use App\Models\Token;
+use App\Styles\AboutNum;
 use Carbon\Carbon;
 
 class FleolistController extends Controller
@@ -114,8 +115,8 @@ class FleolistController extends Controller
                 'disp_name' => $user->disp_name,
                 'thumbnail_url'=> $user->thumbnail_url=='' ? asset('./img/usericon1.jpg'):$user->thumbnail_url,
                 'description'=> $user->description,
-                'follow_count' => number_format($user->follow_count),
-                'follower_count' => number_format($user->follower_count),
+                'follow_count' => (new AboutNum($user->follow_count))->GetAboutNum(),
+                'follower_count' => (new AboutNum($user->follower_count))->GetAboutNum(),
                 'dayold' => $user->dayold,
             ];
         }
