@@ -33,3 +33,27 @@
 .keepoff{
     display: none;
 }
+
+/* KEEPボタン */
+.movetop {
+	width: 70px;
+	height: 70px;
+    border-radius: 50%;
+    background: #436be3;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    margin-right:3em;
+    margin-bottom:3em;
+    z-index: 999;
+}
+.movetop > span {
+    width: 40px;
+    height: 40px;
+    stroke: white;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    margin:15px;
+ }

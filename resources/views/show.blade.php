@@ -5,6 +5,11 @@
 @endsection
 
 @section('content')
+
+        <!-- KEEPボタン -->
+        <div id="keepbutton" class="float-gray"><i data-feather="check-circle" class="iconwhite"></i></div>
+		<input class="form-check-input" type="checkbox" id="filter-keepmode" style="display:none;">
+
         <!-- メインコンテンツ -->
         <div class="container" style="">
 
@@ -19,10 +24,6 @@
                 <div class="form-check" style="margin:1em;">
                     <input class="form-check-input filter-item" type="checkbox" id="filter-retweet" {{$filter['retweet_check']}}>
                     <label class="form-check-label" for="filter-retweet" style="color:white;">リツイートは表示しない</label>
-                </div>
-                <div class="form-check" style="margin:1em;">
-                    <input class="form-check-input" type="checkbox" id="filter-keepmode">
-                    <label class="form-check-label" for="filter-keepmode" style="color:white;">KEEPモード</label>
                 </div>
 
                 <!-- 読み込み中表示 -->
@@ -126,6 +127,21 @@
             $('.filter-item').on('change',function(){
                 $('#page').val(0);
                 showList();
+            });
+
+			// KEEPフロートボタン
+			$('#keepbutton').on('click',function(){
+				// チェックボックスをクリックする
+                $('#filter-keepmode').trigger('click');
+				// チェックが付いている場合はKEEPフロートボタンを青色、
+				// 付いていない場合は灰色に切り替える
+                if($('#filter-keepmode').prop('checked')){
+					$('#keepbutton').removeClass('float-gray');
+					$('#keepbutton').removeClass('float-blue');
+				}else{
+					$('#keepbutton').removeClass('float-blue');
+					$('#keepbutton').removeClass('float-gray');
+				}
             });
 
             // サムネイルクリック
