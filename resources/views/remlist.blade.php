@@ -75,12 +75,14 @@
                         <a href="{{ action('UserController@index',[''])}}/{{$remuser['user_id']}}"><img src="{{$remuser['thumbnail_url']}}" class="usericon mr-3"></a>
                         <div class="media-body">
                             <h5 class="mt-0 name"><a href="https://twitter.com/{{$remuser['disp_name']}}" target="_blank" rel="noopener noreferrer">{{$remuser['name']}}</a></h5>
-                            <span>フォロー：{{$remuser['follow_count']}}　</span>
-                            <span>フォロワー：{{$remuser['follower_count']}}　</span>
-                            <span>{{$remuser['dayold']}}日前　</span>
-                            @if($remuser['followed'] == '1')
+                            <label>{{$remuser['description']}}<label>
+                            <label>フォロー：{{$remuser['follow_count']}}　フォロワー：{{$remuser['follower_count']}}</label>
+                            <label>
+                                <span>{{$remuser['dayold']}}日前　</span>
+                                @if($remuser['followed'] == '1')
                                 <span>【フォロー中】</span>
-                            @endif
+                                @endif
+                            </label>
                         </div>
                     </div>
                 @endforeach

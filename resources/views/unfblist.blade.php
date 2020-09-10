@@ -74,9 +74,9 @@
                     <a href="{{ action('UserController@index',[''])}}/{{$unfbuser['user_id']}}"><img src="{{$unfbuser['thumbnail_url']}}" class="usericon mr-3"></a>
                     <div class="media-body">
                         <h5 class="mt-0 name"><a href="https://twitter.com/{{$unfbuser['disp_name']}}" target="_blank" rel="noopener noreferrer">{{$unfbuser['name']}}</a></h5>
-                        <span>フォロー：{{$unfbuser['follow_count']}}　</span>
-                        <span>フォロワー：{{$unfbuser['follower_count']}}　</span>
-                        <span>{{$unfbuser['dayold']}}日前　</span>
+                        <label>{{$remuser['description']}}<label>
+                        <label>フォロー：{{$unfbuser['follow_count']}}　フォロワー：{{$unfbuser['follower_count']}}</label>
+                        <label>{{$unfbuser['dayold']}}日前　</label>
                     </div>
                 </div>
             @endforeach

@@ -74,10 +74,10 @@
             <div class="media col-md-6 shadow-sm" style="margin-bottom:1em;padding:1em;">
                 <a href="{{ action('UserController@index',[''])}}/{{$fleouser['user_id']}}"><img src="{{$fleouser['thumbnail_url']}}" class="usericon mr-3"></a>
                 <div class="media-body">
-                    <h5 class="mt-0 name"><a href="https://twitter.com/{{$fleouser['disp_name']}}" target="_blank" rel="noopener noreferrer">{{$fleouser['name']}}</a></h5>
-                    <span>フォロー：{{$fleouser['follow_count']}}　</span>
-                    <span>フォロワー：{{$fleouser['follower_count']}}　</span>
-                    <span>{{$fleouser['dayold']}}日前　</span>
+                    <h5 class="mt-0 name"><a href="https://twitter.com/{{$fleouser['isp_name']}}" target="_blank" rel="noopener noreferrer">{{$fleouser['name']}}</a></h5>
+                    <label>{{$fleouser['description']}}<label>
+                    <label>フォロー：{{$fleouser['follow_count']}}　フォロワー：{{$fleouser['follower_count']}}</label>
+                    <label>{{$fleouser['dayold']}}日前　</label>
                 </div>
             </div>
         @endforeach
