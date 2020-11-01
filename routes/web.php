@@ -73,3 +73,8 @@ Route::get('/followcheck/groups','GroupsController@index');
 # ユーザ
 # - 画面表示
 Route::get('/followcheck/user/{user_id}','UserController@index');
+
+
+# キーワード検索
+# - キーワード一覧
+Route::get('/followcheck/keywords/{page?}','KeywordsController@index')
