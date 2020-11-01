@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Exceptions\ParamInvalidException;
 use App\Exceptions\ParamConflictException;
 use App\Models\Token;
+use App\Models\TweetTakeUser;
 use Carbon\Carbon;
 
 set_include_path(config('app.vendor_path'));
@@ -15,7 +16,6 @@ require "vendor/autoload.php";
 
 class TweetUsersController extends Controller
 {
-
     /**
      * 画面表示
      *
@@ -36,7 +36,6 @@ class TweetUsersController extends Controller
         return  response()->view('tweetusers', $param)
         ->cookie('sign',$this->updateToken()->signtext,24*60);
     }
-
 
     /**
      * ツイート一覧API

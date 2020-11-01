@@ -77,4 +77,10 @@ Route::get('/followcheck/user/{user_id}','UserController@index');
 
 # キーワード検索
 # - キーワード一覧
-Route::get('/followcheck/keywords/{page?}','KeywordsController@index')
+Route::get('/followcheck/keywords/{page?}','KeywordsController@index');
+
+
+
+
+
+Route::get('/followcheck/tweetusers2/{page?}','TweetUsers2Controller@index');
