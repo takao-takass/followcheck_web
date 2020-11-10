@@ -1,19 +1,23 @@
 <?php
+
 namespace App\Http\Controllers;
+
+use Abraham\TwitterOAuth\TwitterOAuth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use App\Exceptions\ParamInvalidException;
+use App\Exceptions\ParamConflictException;
+use App\Models\Token;
+use App\Models\TweetTakeUser;
+use App\ViewModels\TweetUsersViewModel;
+use Carbon\Carbon;
+
 
 set_include_path(config('app.vendor_path'));
 require "vendor/autoload.php";
 
 class TweetUsers2Controller extends Controller
 {
-
-    const USERS_COUNT_BY_PAGE = 50;
-
-    const ERROR_USER_NOT_FOUND = 'user_not_found';
-
-    const ERROR_REQUIRE_INPUT = 'require';
-
-    const ERROR_USER_DUPLICATED = 'duplicated';
 
     /**
      * 画面表示
@@ -27,20 +31,19 @@ class TweetUsers2Controller extends Controller
             return redirect()->route('login.logout');
         }
 
-        if (! property_exists($response, 'error')) {
-            switch ($response[error]) {
-                case ERROR_USER_NOT_FOUND:
-                    $param['Error'] = 'Twitterに登録されていないユーザです。';
+        if (property_exists($request, 'error')) {
+            switch ($request['error']) {
+                case "user_not_found":
+                    $param['ErrorMessage'] = 'Twitterに登録されていないユーザです。';
                     break;
-                case ERROR_REQUIRE_INPUT:
-                    $param['Error'] = 'ユーザ名を入力してください。';
+                case "require":
+                    $param['ErrorMessage'] = 'ユーザ名を入力してください。';
                     break;
-                case ERROR_USER_DUPLICATED:
-                    $param['Error'] = '既に登録されているユーザです。';
+                case "duplicated":
+                    $param['ErrorMessage'] = '既に登録されているユーザです。';
                     break;
             }
         }
-
         $page = $request->input('page');
 
         $viewModel = new TweetUsersViewModel();
@@ -88,7 +91,7 @@ class TweetUsers2Controller extends Controller
 
         $user_id = $request['user_id'];
         if (empty($user_id)) {
-            $param['error'] = ERROR_REQUIRE_INPUT;
+            $param['error'] = 'require';
             return redirect()->route('tweetuser.index', $param)->cookie('sign', $this->updateToken()->signtext, 24 * 60);
         }
 
@@ -101,7 +104,7 @@ class TweetUsers2Controller extends Controller
         // 入力チェック
         // APIからユーザが取得できない場合はエラー
         if (! property_exists($response, 'id_str')) {
-            $param['error'] = ERROR_USER_NOT_FOUND;
+            $param['error'] = 'user_not_found';
             return redirect()->route('tweetuser.index', $param)->cookie('sign', $this->updateToken()->signtext, 24 * 60);
         }
 
@@ -110,7 +113,7 @@ class TweetUsers2Controller extends Controller
             ->where('service_user_id', $this->session_user->service_user_id)
             ->count();
         if ($exists > 0) {
-            $param['error'] = ERROR_USER_DUPLICATED;
+            $param['error'] = 'duplicated';
             return redirect()->route('tweetuser.index', $param)->cookie('sign', $this->updateToken()->signtext, 24 * 60);
         }
 

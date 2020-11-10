@@ -15,10 +15,14 @@
                         <div class="input-group-append">
                             <button type="submit" class="btn btn-outline-secondary" id="add-button">　　追　加　　</button>
                         </div>
-                        <span style="color:red;">{{ empty($Error) ? '':$Error }}</span>
                     </div>
                 </form>
             </div>
+            @if (!empty($ErrorMessage))
+                <div class="col-md-12">
+                <span style="color:red;">{{ $ErrorMessage }}</span>
+            </div>
+            @endif
         </div>
 
         <!-- ページ切り替えフォーム -->
