@@ -21,7 +21,7 @@ Route::redirect('/fc', '/followcheck/login');
 Route::redirect('/followcheck', '/followcheck/login');
 Route::get('/followcheck/login','LoginController@index');
 # - ログアウト処理
-Route::get('/followcheck/logout','LoginController@logout');
+Route::get('/followcheck/logout','LoginController@logout')->name('login.logout');
 
 # サインアップ
 # - 画面表示
@@ -83,4 +83,5 @@ Route::get('/followcheck/keywords/{page?}','KeywordsController@index');
 
 
 
-Route::get('/followcheck/tweetusers2/{page?}','TweetUsers2Controller@index');
+Route::get('/followcheck/tweetusers2','TweetUsers2Controller@index')->name('tweetuser.index');
+Route::post('/followcheck/tweetusers2/add','TweetUsers2Controller@add');

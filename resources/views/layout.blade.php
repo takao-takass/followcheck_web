@@ -37,6 +37,7 @@
                     <div class="navbar-nav">
                         <a class="nav-item nav-link" href="{{ action('RemlistController@init') }}">リムられリスト</a>
                         <a class="nav-item nav-link" href="{{ action('TweetUsersController@index') }}">ツイートを見る</a>
+                        <a class="nav-item nav-link" href="{{ action('TweetUsers2Controller@index') }}">ツイートを見る(改善版)</a>
                         <a class="nav-item nav-link" href="{{ action('GroupsController@index') }}">グループ</a>
                         <a class="nav-item nav-link" href="{{ action('OldTweetsController@index') }}">まもなく削除されるツイート</a>
                         <a class="nav-item nav-link" href="{{ action('LoginController@logout') }}">ログアウト</a>
@@ -58,6 +59,10 @@
         <script src="https://unpkg.com/feather-icons"></script>
         <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
         <script>feather.replace()</script>
+
+        <!-- Common Logic -->
+        
+        <script src="{{ asset('/js/app.js') }}"></script>
 
         <!-- Business JavaScript -->
         @yield('script')
