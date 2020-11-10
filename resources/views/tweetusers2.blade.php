@@ -2,7 +2,6 @@
 
 @section('content')
     <div class="container">
-
         <!-- アカウント追加フォーム -->
         <div class="row" style="margin-top:2em;">
             <div class="col-md-12">
@@ -16,6 +15,7 @@
                         <div class="input-group-append">
                             <button type="submit" class="btn btn-outline-secondary" id="add-button">　　追　加　　</button>
                         </div>
+                        <span style="color:red;">{{ empty($Error) ? '':$Error }}</span>
                     </div>
                 </form>
             </div>
@@ -66,10 +66,10 @@
 
             @foreach ($Users->TweetTakeUsers as $tweetTakeUser)
             <div class='col-lg-3 col-md-4 col-6' style='margin-bottom:1em'>
-                <div class='card shadow-sm' style='width:100%;height:100%;'> 
+                <div class='card shadow-sm' style='width:100%;height:100%;'>
                     <a href=''><img class='card-img-top' src='{{$tweetTakeUser->ThumbnailUrl}}' style='height: 100px;object-fit: cover;'></a>
-                    <div class='card-body'> 
-                        <h5 class='card-title' style='font-weight: bold;'>{{$tweetTakeUser->Name}}</h6> 
+                    <div class='card-body'>
+                        <h5 class='card-title' style='font-weight: bold;'>{{$tweetTakeUser->Name}}</h6>
                         @if ($tweetTakeUser->Status != 'D')
                         <div class='text-right'>
                             <button class='btn btn-secondary rounded-pill del-button' style="height:35px;font-size:10pt;">削除</button>
@@ -86,8 +86,8 @@
                             <h6 class='card-subtitle text-muted' style="margin-top:0.5em;">削除中...</h6>
                         </div>
                         @endif
-                    </div> 
-                </div> 
+                    </div>
+                </div>
             </div>
             @endforeach
 
@@ -95,6 +95,9 @@
 
         <!-- スペーサ -->
         <div style="margin-bottom:300px"></div>
+
+
+
 
     </div>
 @endsection
