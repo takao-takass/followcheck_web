@@ -70,8 +70,8 @@ class ShowByUserController extends Controller
             array_push($viewModel->show_thumbnails,
                 new ShowThumbnail(
                     $tweet_media->tweet_id,
-                    '/img/tweetmedia/' . $split_thumb_path[4] . '/' . $tweet_media->thumb_file_name,
-                    '/img/tweetmedia/' . $split_thumb_path[5] . '/' . $tweet_media->file_name,
+                    '/img/tweetmedia/' . $split_thumb_path[5] . '/' . $tweet_media->thumb_file_name,
+                    '/img/tweetmedia/' . $split_thumb_path[6] . '/' . $tweet_media->file_name,
                     $tweet_media->type
                 )
             );
