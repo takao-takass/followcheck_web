@@ -44,9 +44,10 @@
             <div class="row contents">
                 @foreach ( $Thumbnails->show_thumbnails as $show_thumbnail )
 
-                <div class='thumb col-lg-2 col-md-3 col-4 mb-1'>
-                    <a href="{{$show_thumbnail->media_url}}"></a>
-                    <img class='mr-3 thumb-radius thumb-back' style='width:100%;' src='{{$show_thumbnail->thumbnail_url}}'>
+                <div class='col-lg-2 col-md-3 col-4 mb-1'>
+                    <a href="{{$show_thumbnail->media_url}}">
+                        <img class='mr-3 thumb-radius thumb-back' style='width:100%;' src='{{$show_thumbnail->thumbnail_url}}'>
+                    </a>
                 </div>
                 @endforeach
             </div>
