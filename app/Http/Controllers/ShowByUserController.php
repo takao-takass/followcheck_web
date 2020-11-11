@@ -28,13 +28,14 @@ class ShowByUserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($user_id, $page=0)
+    public function index($user_id, Request $request)
     {
         // 有効なトークンが無い場合はログイン画面に飛ばす
         if(!$this->isValidToken()){
             return redirect(action('LoginController@logout'));
         }
 
+        $page = $request->input('page');
         $viewModel = new ShowThumbnailViewModel();
         $viewModel->user_id = $user_id;
         $viewModel->Page = $page == null ? 0 : $page;
@@ -65,13 +66,16 @@ class ShowByUserController extends Controller
         $viewModel->show_thumbnails = [];
         foreach ($tweet_medias as $tweet_media) {
 
+            if(empty($tweet_media->thumb_directory_path) || empty($tweet_media->directory_path)){
+                continue;
+            }
             $split_thumb_path = explode("/", $tweet_media->thumb_directory_path);
             $split_media_path = explode("/", $tweet_media->directory_path);
             array_push($viewModel->show_thumbnails,
                 new ShowThumbnail(
                     $tweet_media->tweet_id,
                     '/img/tweetmedia/' . $split_thumb_path[5] . '/' . $tweet_media->thumb_file_name,
-                    '/img/tweetmedia/' . $split_thumb_path[6] . '/' . $tweet_media->file_name,
+                    '/img/tweetmedia/' . $split_media_path[6] . '/' . $tweet_media->file_name,
                     $tweet_media->type
                 )
             );
