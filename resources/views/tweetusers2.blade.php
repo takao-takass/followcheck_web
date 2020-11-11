@@ -55,14 +55,10 @@
                     <input type="hidden" name="page" id="pageNumber" value="{{$Users->Page}}">
                     <button type="submit" id="searchSubmit" style="display:none;">
 
-
                 </form>
-
-
             </div>
 
         </div>
-
 
 
         <!-- ユーザ一覧 -->
@@ -73,7 +69,7 @@
                 <div class='card shadow-sm' style='width:100%;height:100%;'>
                     <a href=''><img class='card-img-top' src='{{$tweetTakeUser->ThumbnailUrl}}' style='height: 100px;object-fit: cover;'></a>
                     <div class='card-body'>
-                        <h5 class='card-title' style='font-weight: bold;'>{{$tweetTakeUser->Name}}</h6>
+                        <h5 class='card-title' style='font-weight: bold;'>{{$tweetTakeUser->Name}}</h5>
                         @if ($tweetTakeUser->Status != 'D')
                         <div class='text-right'>
                             <button class='btn btn-secondary rounded-pill del-button' style="height:35px;font-size:10pt;">削除</button>
@@ -84,6 +80,7 @@
                         <div>
                             <h6 class='card-subtitle text-muted' style="margin-top:0.5em;"><a href="{{ action('TweetsController@index',[$tweetTakeUser->UserId]) }}" target='_blank' rel='noreferrer' class='card-link'>ツイート</a></h6>
                             <h6 class='card-subtitle text-muted' style="margin-top:0.5em;"><a href="{{ action('ShowController@index',[$tweetTakeUser->UserId]) }}" target='_blank' rel='noreferrer' class='card-link'>観賞モード</a></h6>
+                            <h6 class='card-subtitle text-muted' style="margin-top:0.5em;"><a href="{{ route('show_user.index', ['user_id' => $tweetTakeUser->UserId]) }}" target='_blank' rel='noreferrer' class='card-link'>観賞モード2</a></h6>
                         </div>
                         @else
                         <div>

@@ -49,6 +49,136 @@ class UserController extends Controller
     }
 
     /**
+     * ユーザ画面が所属しているグループを取得する
+     */
+    public function groupList(Request $request)
+    {
+        // 有効なトークンでない場合は認証エラー
+        if(!$this->isValidToken()){
+            response('Unauthorized ',401);
+        }
+        
+        // 取得条件を取り出す
+        $user_id = $request['user'];
+
+        // 入力チェックを行う
+        if ($user_id == ''){
+            throw new ParamInvalidException(
+                'パラメータが指定されていません。',
+                ['user']
+            );
+        }
+
+        // グループの一覧を取得するSQL
+        $query = 
+            " SELECT GP.group_id" .
+            "       ,GP.group_name" .
+            "       ,CASE WHEN GU.group_id IS NULL THEN '0' ELSE '1' END AS member" .
+            "   FROM `groups` GP" .
+            "   LEFT JOIN group_users GU" .
+            "     ON GP.group_id = GU.group_id" .
+            "    AND GU.user_id = ?" .
+            "  WHERE GP.service_user_id = ?".
+            "  ORDER BY GP.create_datetime DESC";
+
+        Log::info($query);
+        $groups = DB::connection('mysql')->select($query,[$user_id,$this->session_user->service_user_id]);
+        $param['groups'] = [];
+        foreach($groups as $group){
+            $param['groups'][] = [
+                'group_id' => $group->group_id,
+                'group_name' => $group->group_name,
+                'member' => $group->member
+            ];
+        }
+
+        return response($param,200)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
+    }
+
+
+    /**
+     * ユーザの所属グループを更新する
+     */
+    public function updateUserGroup(Request $request)
+    {
+        // 有効なトークンでない場合は認証エラー
+        if(!$this->isValidToken()){
+            response('Unauthorized ',401);
+        }
+        
+        // 取得条件を取り出す
+        $user_id = $request['user_id'];
+        $group_id_list = explode(',',$request['group_id']);
+
+        // 入力チェックを行う
+
+        // ユーザに紐づくグループを全て削除する
+        $query = "";
+        Log::info($query);
+
+
+        // ユーザに紐づくグループを登録する
+        $query = "";
+        Log::info($query);
+
+
+        return response('',200)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
+    }
+
+
+
+    /**
+     * 新しいグループを登録する
+     */
+    public function addGroup(Request $request)
+    {
+        // 有効なトークンでない場合は認証エラー
+        if(!$this->isValidToken()){
+            response('Unauthorized ',401);
+        }
+        
+        // 取得条件を取り出す
+        $group_name = $request['groupname'];
+
+        // 入力チェックを行う
+        if ($group_name == ''){
+            throw new ParamInvalidException(
+                'パラメータが指定されていません。',
+                ['groupname']
+            );
+        }
+
+        // グループIDを発番する
+        $query = "";
+        Log::info($query);
+
+
+        // グループIDを取得する
+        $query = "";
+        Log::info($query);
+
+
+        // グループを登録する
+        $query = "";
+        Log::info($query);
+
+
+        return response('',200)
+        ->cookie('sign',$this->updateToken()->signtext,24*60);
+    }
+
+
+
+
+
+
+
+
+
+
+    /**
      * ユーザを追加する
      *
      * @return \Illuminate\Http\Response

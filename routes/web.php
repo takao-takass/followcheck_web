@@ -85,3 +85,6 @@ Route::get('/followcheck/keywords/{page?}','KeywordsController@index');
 
 Route::get('/followcheck/tweetusers2','TweetUsers2Controller@index')->name('tweetuser.index');
 Route::post('/followcheck/tweetusers2/add','TweetUsers2Controller@add');
+
+# New 観賞モード（ユーザ）
+Route::get('/followcheck/show_user/{user_id}','ShowByUserController@index')->name('show_user.index');
