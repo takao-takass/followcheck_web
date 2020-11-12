@@ -7,22 +7,22 @@
 @section('content')
 
     <!-- メインコンテンツ -->
-    <div class="container">
+    <div class="container-fluid">
 
         <div class="row">
             <div class="col">
-                <a href="{{ $Media->path }}"><img src="{{ $Media->path }}"></a>
+                <a href="{{ $Media->path }}"><img src="{{ $Media->path }}" style="width:99vw;" /></a>
             </div>
         </div>
         <div class="row mt-3">
             <div class="col-3">
-                <img src="{{ $Media->user_thumbnail_path }}">
+                <img class="usericon" src="{{ $Media->user_thumbnail_path }}" />
             </div>
             <div class="col-9">
                 <label style="color:white;">{{ $Media->tweet_body }}</label>
             </div>
         </div>
-        <div class="row mt-3">
+        <div class="row mt-3 mb-3">
             <div class="col">
                 <a href="{{ $Media->twitter_url }}"><input type="button" class="btn btn-secondary form-control" value="Twitterで見る" /></a>
             </div>
