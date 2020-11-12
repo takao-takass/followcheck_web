@@ -38,7 +38,7 @@
                             <li class="page-item disabled"><a class="page-link" href="#">&lt;&lt;</a></li>
                             <li class="page-item disabled"><a class="page-link" href="#">&lt; 前</a></li>
                         @endif
-                        @for ($i = ($Users->Page-3 < 0 ? 0 : $Users->Page-3); $i <= ($Users->Page+3 > $Users->MaxPage ? $Users->MaxPage : $Users->Page+3); $i++)
+                        @for ($i = ($Users->Page-5 < 0 ? 0 : $Users->Page-5); $i <= ($Users->Page+5 > $Users->MaxPage ? $Users->MaxPage : $Users->Page+5); $i++)
                             @if($i == $Users->Page)
                                 <li class="page-item active"><a class="page-link" href="#" onclick="page({{ $i }});">{{ $i+1 }}</a></li>
                             @else
@@ -46,15 +46,17 @@
                             @endif
                         @endfor
                         @if($Users->Page == $Users->MaxPage)
-                            <li class="page-item"><a class="page-link" href="#" onclick="page({{ $Users->Page + 1 }});">次 &gt;</a></li>
-                            <li class="page-item"><a class="page-link" href="#" onclick="page({{ $Users->MaxPage }});">&gt;&gt;</a></li>
-                        @else
                             <li class="page-item disabled"><a class="page-link" href="#">次 &gt;</a></li>
                             <li class="page-item disabled"><a class="page-link" href="#">&gt;&gt;</a></li>
+                        @else
+                            <li class="page-item"><a class="page-link" href="#" onclick="page({{ $Users->Page + 1 }});">次 &gt;</a></li>
+                            <li class="page-item"><a class="page-link" href="#" onclick="page({{ $Users->MaxPage }});">&gt;&gt;</a></li>
                         @endif
                     </ul>
                 </nav>
             </div>
+            <input type="hidden" name="page" id="pageNumber" value="{{$Users->Page}}">
+            <button type="submit" id="searchSubmit" style="display:none;">
         </form>
 
         <!-- ユーザ一覧 -->
