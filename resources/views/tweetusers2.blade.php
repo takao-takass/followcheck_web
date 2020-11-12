@@ -31,23 +31,23 @@
             <div class="row d-flex justify-content-center">
                 <nav aria-label="Page navigation">
                     <ul class="pagination justify-content-end">
-                        @if($User->Page > 0)
+                        @if($Users->Page > 0)
                             <li class="page-item"><a class="page-link" href="#" onclick="page(0);">&lt;&lt;</a></li>
-                            <li class="page-item"><a class="page-link" href="#" onclick="page({{$User->Page - 1}});">&lt; 前</a></li>
+                            <li class="page-item"><a class="page-link" href="#" onclick="page({{$Users->Page - 1}});">&lt; 前</a></li>
                         @else
                             <li class="page-item disabled"><a class="page-link" href="#">&lt;&lt;</a></li>
                             <li class="page-item disabled"><a class="page-link" href="#">&lt; 前</a></li>
                         @endif
-                        @for ($i = ($User->Page-3 < 0 ? 0 : $User->Page-3); $i <= ($User->Page+3 > $User->MaxPage ? $User->MaxPage : $User->Page+3); $i++)
-                            @if($i == $User->Page)
+                        @for ($i = ($Users->Page-3 < 0 ? 0 : $Users->Page-3); $i <= ($Users->Page+3 > $Users->MaxPage ? $Users->MaxPage : $Users->Page+3); $i++)
+                            @if($i == $Users->Page)
                                 <li class="page-item active"><a class="page-link" href="#" onclick="page({{ $i }});">{{ $i+1 }}</a></li>
                             @else
                                 <li class="page-item"><a class="page-link" href="#" onclick="page({{ $i }});">{{ $i+1 }}</a></li>
                             @endif
                         @endfor
-                        @if($User->Page == $User->MaxPage)
-                            <li class="page-item"><a class="page-link" href="#" onclick="page({{ $User->Page + 1 }});">次 &gt;</a></li>
-                            <li class="page-item"><a class="page-link" href="#" onclick="page({{ $User->MaxPage }});">&gt;&gt;</a></li>
+                        @if($Users->Page == $Users->MaxPage)
+                            <li class="page-item"><a class="page-link" href="#" onclick="page({{ $Users->Page + 1 }});">次 &gt;</a></li>
+                            <li class="page-item"><a class="page-link" href="#" onclick="page({{ $Users->MaxPage }});">&gt;&gt;</a></li>
                         @else
                             <li class="page-item disabled"><a class="page-link" href="#">次 &gt;</a></li>
                             <li class="page-item disabled"><a class="page-link" href="#">&gt;&gt;</a></li>
