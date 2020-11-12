@@ -9,35 +9,42 @@
         <!-- メインコンテンツ -->
         <div class="container" style="">
 
+            <!-- ページ切り替えフォーム -->
             <div class="row" style="margin-top:2em;">
-
-                <!-- ページ切り替えボタン -->
-                <form action="{{ route('show_user.index', ['user_id' => $Thumbnails->user_id] ) }}" method="get">
-                    @csrf
-
-                    <nav style="margin-top:1em;">
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link" onclick="page({{ ($Thumbnails->Page)-1 }});">
-                                    <i data-feather="arrow-left" class="iconwhite"></i>
-                                </a>
-                            </li>
-                            <li class="page-item disabled">
-                                <a class="page-link">
-                                    <span id="tweet-ct"></span>ユーザ
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" onclick="page({{ ($Thumbnails->Page)+1 }});">
-                                    <i data-feather="arrow-right" class="iconwhite"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                    <input type="hidden" name="page" id="pageNumber" value="{{$Thumbnails->Page}}">
-                    <button type="submit" id="searchSubmit" style="display:none;">
-
-                </form>
+                <div class="col">
+                    <form action="{{ route('show_user.index', ['user_id' => $Thumbnails->user_id] ) }}" method="get">
+                        @csrf
+                        <div class="d-flex justify-content-center">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-end">
+                                    @if($Thumbnails->Page > 0)
+                                        <li class="page-item"><a class="page-link" href="#" onclick="page(0);">&lt;&lt;</a></li>
+                                        <li class="page-item"><a class="page-link" href="#" onclick="page({{$Thumbnails->Page - 1}});">&lt; 前</a></li>
+                                    @else
+                                        <li class="page-item disabled"><a class="page-link" href="#">&lt;&lt;</a></li>
+                                        <li class="page-item disabled"><a class="page-link" href="#">&lt; 前</a></li>
+                                    @endif
+                                    @for ($i = ($Thumbnails->Page-2 < 0 ? 0 : $Thumbnails->Page-2); $i <= ($Thumbnails->Page+2 > $Thumbnails->MaxPage ? $Thumbnails->MaxPage : $Thumbnails->Page+2); $i++)
+                                        @if($i == $Thumbnails->Page)
+                                            <li class="page-item active"><a class="page-link" href="#" onclick="page({{ $i }});">{{ $i+1 }}</a></li>
+                                        @else
+                                            <li class="page-item"><a class="page-link" href="#" onclick="page({{ $i }});">{{ $i+1 }}</a></li>
+                                        @endif
+                                    @endfor
+                                    @if($Thumbnails->Page == $Thumbnails->MaxPage)
+                                        <li class="page-item disabled"><a class="page-link" href="#">次 &gt;</a></li>
+                                        <li class="page-item disabled"><a class="page-link" href="#">&gt;&gt;</a></li>
+                                    @else
+                                        <li class="page-item"><a class="page-link" href="#" onclick="page({{ $Thumbnails->Page + 1 }});">次 &gt;</a></li>
+                                        <li class="page-item"><a class="page-link" href="#" onclick="page({{ $Thumbnails->MaxPage }});">&gt;&gt;</a></li>
+                                    @endif
+                                </ul>
+                            </nav>
+                        </div>
+                        <input type="hidden" name="page" id="pageNumber" value="{{$Thumbnails->Page}}">
+                        <button type="submit" id="searchSubmit" style="display:none;">
+                    </form>
+                </div>
             </div>
 
             <!-- ツイート一覧 -->

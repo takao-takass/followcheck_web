@@ -8,6 +8,8 @@ class ShowThumbnailViewModel
 {
     public int $Page;
 
+    public int $MaxPage;
+
     public int $Count;
 
     public string $user_id;

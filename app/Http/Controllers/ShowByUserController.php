@@ -44,13 +44,14 @@ class ShowByUserController extends Controller
             ->Where('service_user_id', '=', $this->session_user->service_user_id)
             ->Where('user_id','=',$user_id)
             ->Count();
+        $viewModel->MaxPage = ceil($viewModel->Count/200);
 
         $tweets = DB::table('tweets')
             ->Where('service_user_id', '=', $this->session_user->service_user_id)
             ->Where('user_id','=',$user_id)
             ->orderByDesc('tweeted_datetime')
-            ->skip($page * 50)
-            ->take(50)
+            ->skip($page * 200)
+            ->take(200)
             ->get();
 
         $tweet_ids = [];

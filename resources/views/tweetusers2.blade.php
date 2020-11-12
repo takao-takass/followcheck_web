@@ -104,8 +104,11 @@
 
 @section('script')
 
-<script type="text/javascript">
-
+<script>
+    // 画面表示
+    $(document).ready(function(){
+        $('body').css('background-color','#232323');
+    });
 </script>
 
 @endsection
