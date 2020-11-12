@@ -48,7 +48,10 @@ class TweetUsers2Controller extends Controller
 
         $viewModel = new TweetUsersViewModel();
         $viewModel->Page = $page == null ? 0 : $page;
-        $viewModel->Count = DB::table('tweet_take_users')->Where('service_user_id', '=', $this->session_user->service_user_id)->Count();
+        $viewModel->Count = DB::table('tweet_take_users')
+            ->Where('service_user_id', '=', $this->session_user->service_user_id)
+            ->Count();
+        $viewModel->MaxPage = ceil($viewModel->Count / 50);
 
         $tweetTakeUsers = DB::table('tweet_take_users')->select('user_id', 'status')
             ->where('service_user_id', '=', $this->session_user->service_user_id)

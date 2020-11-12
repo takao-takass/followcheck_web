@@ -10,6 +10,8 @@ class TweetUsersViewModel
 
     public int $Count;
 
+    public int $MaxPage;
+
     public array $TweetTakeUsers = [];
 
 }
