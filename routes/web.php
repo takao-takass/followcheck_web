@@ -89,3 +89,6 @@ Route::post('/followcheck/tweetusers2/add','TweetUsers2Controller@add');
 # New 観賞モード
 Route::get('/followcheck/show_user/{user_id}','ShowByUserController@index')->name('show_user.index');
 Route::get('/followcheck/show_all','ShowAllController@index')->name('show_all.index');
+
+# メディア表示
+Route::get('/followcheck/media','MediaController@index')->name('media.index');

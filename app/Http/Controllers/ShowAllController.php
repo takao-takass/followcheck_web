@@ -68,7 +68,7 @@ class ShowAllController extends Controller
                 new ShowThumbnail(
                     $tweet_media->tweet_id,
                     '/img/tweetmedia/' . $split_thumb_path[5] . '/' . $tweet_media->thumb_file_name,
-                    '/img/tweetmedia/' . $split_media_path[5] . '/' . $tweet_media->file_name,
+                    $tweet_media->file_name,
                     $tweet_media->type
                 )
             );

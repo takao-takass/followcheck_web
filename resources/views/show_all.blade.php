@@ -52,7 +52,7 @@
             @foreach ( $Thumbnails->show_thumbnails as $show_thumbnail )
 
                 <div class='col-lg-2 col-md-3 col-4 mb-1'>
-                    <a href="{{$show_thumbnail->media_url}}">
+                    <a href="{{ route('media.index',['tweet_id'=>$show_thumbnail->tweet_id, 'file_name'=>$show_thumbnail->file_name]) }}">
                         <img class='mr-3 thumb-radius thumb-back' style='width:100%;' src='{{$show_thumbnail->thumbnail_url}}'>
                     </a>
                 </div>
@@ -60,7 +60,7 @@
         </div>
 
         <!-- ページ下部のスペーサ -->
-        <div style="margin-bottom:15em">
+        <div style="margin-bottom:15em;">
         </div>
 
     </div>
