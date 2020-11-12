@@ -19,10 +19,10 @@
                                 <ul class="pagination justify-content-end">
                                     @if($Thumbnails->Page > 0)
                                         <li class="page-item"><a class="page-link" href="#" onclick="page(0);">&lt;&lt;</a></li>
-                                        <li class="page-item"><a class="page-link" href="#" onclick="page({{$Thumbnails->Page - 1}});">&lt; 前</a></li>
+                                        <li class="page-item"><a class="page-link" href="#" onclick="page({{$Thumbnails->Page - 1}});">&lt;</a></li>
                                     @else
                                         <li class="page-item disabled"><a class="page-link" href="#">&lt;&lt;</a></li>
-                                        <li class="page-item disabled"><a class="page-link" href="#">&lt; 前</a></li>
+                                        <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
                                     @endif
                                     @for ($i = ($Thumbnails->Page-2 < 0 ? 0 : $Thumbnails->Page-2); $i <= ($Thumbnails->Page+2 > $Thumbnails->MaxPage ? $Thumbnails->MaxPage : $Thumbnails->Page+2); $i++)
                                         @if($i == $Thumbnails->Page)
@@ -32,10 +32,10 @@
                                         @endif
                                     @endfor
                                     @if($Thumbnails->Page == $Thumbnails->MaxPage)
-                                        <li class="page-item disabled"><a class="page-link" href="#">次 &gt;</a></li>
+                                        <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
                                         <li class="page-item disabled"><a class="page-link" href="#">&gt;&gt;</a></li>
                                     @else
-                                        <li class="page-item"><a class="page-link" href="#" onclick="page({{ $Thumbnails->Page + 1 }});">次 &gt;</a></li>
+                                        <li class="page-item"><a class="page-link" href="#" onclick="page({{ $Thumbnails->Page + 1 }});">&gt;</a></li>
                                         <li class="page-item"><a class="page-link" href="#" onclick="page({{ $Thumbnails->MaxPage }});">&gt;&gt;</a></li>
                                     @endif
                                 </ul>
@@ -72,6 +72,9 @@
 @section('script')
         <!-- Business JavaScript -->
         <script>
-
+            // 画面表示
+            $(document).ready(function(){
+                $('body').css('background-color','#232323');
+            });
         </script>
 @endsection

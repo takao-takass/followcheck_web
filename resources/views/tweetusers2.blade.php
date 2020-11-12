@@ -35,10 +35,10 @@
                             <ul class="pagination justify-content-end">
                                 @if($Users->Page > 0)
                                     <li class="page-item"><a class="page-link" href="#" onclick="page(0);">&lt;&lt;</a></li>
-                                    <li class="page-item"><a class="page-link" href="#" onclick="page({{$Users->Page - 1}});">&lt; 前</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="page({{$Users->Page - 1}});">&lt;</a></li>
                                 @else
                                     <li class="page-item disabled"><a class="page-link" href="#">&lt;&lt;</a></li>
-                                    <li class="page-item disabled"><a class="page-link" href="#">&lt; 前</a></li>
+                                    <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
                                 @endif
                                 @for ($i = ($Users->Page-2 < 0 ? 0 : $Users->Page-2); $i <= ($Users->Page+2 > $Users->MaxPage ? $Users->MaxPage : $Users->Page+2); $i++)
                                     @if($i == $Users->Page)
@@ -48,10 +48,10 @@
                                     @endif
                                 @endfor
                                 @if($Users->Page == $Users->MaxPage)
-                                    <li class="page-item disabled"><a class="page-link" href="#">次 &gt;</a></li>
+                                    <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
                                     <li class="page-item disabled"><a class="page-link" href="#">&gt;&gt;</a></li>
                                 @else
-                                    <li class="page-item"><a class="page-link" href="#" onclick="page({{ $Users->Page + 1 }});">次 &gt;</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="page({{ $Users->Page + 1 }});">&gt;</a></li>
                                     <li class="page-item"><a class="page-link" href="#" onclick="page({{ $Users->MaxPage }});">&gt;&gt;</a></li>
                                 @endif
                             </ul>
@@ -105,10 +105,6 @@
 @section('script')
 
 <script>
-    // 画面表示
-    $(document).ready(function(){
-        $('body').css('background-color','#232323');
-    });
 </script>
 
 @endsection
