@@ -11,7 +11,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">＠</span>
                         </div>
-                        <input type="text" name="accountname" class="form-control">
+                        <input type="text" name="user_id" class="form-control">
                         <div class="input-group-append">
                             <button type="submit" class="btn btn-outline-secondary" id="add-button">追加</button>
                         </div>
@@ -40,7 +40,7 @@
                                     <li class="page-item disabled"><a class="page-link" href="#">&lt;&lt;</a></li>
                                     <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
                                 @endif
-                                @for ($i = ($Users->Page-2 < 0 ? 0 : $Users->Page-2); $i <= ($Users->Page+2 > $Users->MaxPage ? $Users->MaxPage : $Users->Page+2); $i++)
+                                @for ($i = ($Users->Page-5 < 0 ? 0 : $Users->Page-5); $i <= ($Users->Page+5 > $Users->MaxPage ? $Users->MaxPage : $Users->Page+5); $i++)
                                     @if($i == $Users->Page)
                                         <li class="page-item active"><a class="page-link" href="#" onclick="page({{ $i }});">{{ $i+1 }}</a></li>
                                     @else

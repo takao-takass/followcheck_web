@@ -102,7 +102,7 @@ class TweetUsers2Controller extends Controller
         // Twitterアカウントの情報を取得
         $twitter_api = new TwitterOAuth(config('app.consumer_key'), config('app.consumer_secret'), config('app.access_token'), config('app.access_token_secret'));
         $response = $twitter_api->get("users/show", [
-            "screen_name" => $request['accountname']
+            "screen_name" => $user_id
         ]);
 
         // 入力チェック
@@ -127,6 +127,6 @@ class TweetUsers2Controller extends Controller
             $response->id_str
         ]);
 
-        return redirect()->route('tweetuser.index', $param)->cookie('sign', $this->updateToken()->signtext, 24 * 60);
+        return redirect()->route('tweetuser.index')->cookie('sign', $this->updateToken()->signtext, 24 * 60);
     }
 }

@@ -15,7 +15,7 @@
     </head>
 
     <body>
-    
+
         <!-- 上に移動ボタン -->
         <a href="#"><div class="movetop"><i data-feather="arrow-up" class="iconwhite"></i></div></a>
 
@@ -38,6 +38,7 @@
                         <a class="nav-item nav-link" href="{{ action('RemlistController@init') }}">リムられリスト</a>
                         <a class="nav-item nav-link" href="{{ action('TweetUsersController@index') }}">ツイートを見る</a>
                         <a class="nav-item nav-link" href="{{ action('TweetUsers2Controller@index') }}">ツイートを見る(改善版)</a>
+                        <a class="nav-item nav-link" href="{{ action('ShowAllController@index') }}">全ユーザ観賞モード</a>
                         <a class="nav-item nav-link" href="{{ action('GroupsController@index') }}">グループ</a>
                         <a class="nav-item nav-link" href="{{ action('OldTweetsController@index') }}">まもなく削除されるツイート</a>
                         <a class="nav-item nav-link" href="{{ action('LoginController@logout') }}">ログアウト</a>
@@ -47,7 +48,7 @@
         </nav>
 
         @yield('content')
-        
+
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -61,7 +62,7 @@
         <script>feather.replace()</script>
 
         <!-- Common Logic -->
-        
+
         <script src="{{ asset('/js/app.js') }}"></script>
 
         <!-- Business JavaScript -->
