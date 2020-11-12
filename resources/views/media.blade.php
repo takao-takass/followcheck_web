@@ -7,18 +7,16 @@
 @section('content')
 
     <!-- メインコンテンツ -->
-    <div class="container-fluid">
+    <div class="container">
 
         <div class="row">
-            <div class="col">
-                <a href="{{ $Media->path }}"><img src="{{ $Media->path }}" style="width:99vw;" /></a>
+            <div class="col" style="text-align:center;">
+                <a href="{{ $Media->path }}"><img src="{{ $Media->path }}" style="max-width:99vw;max-height:99vh;" /></a>
             </div>
         </div>
         <div class="row mt-3">
-            <div class="col-3">
+            <div class="col">
                 <img class="usericon" src="{{ $Media->user_thumbnail_path }}" />
-            </div>
-            <div class="col-9">
                 <label style="color:white;">{{ $Media->tweet_body }}</label>
             </div>
         </div>
