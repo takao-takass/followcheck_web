@@ -82,7 +82,7 @@ Route::get('/followcheck/keywords/{page?}','KeywordsController@index');
 
 
 
-
+# New ツイートを見る
 Route::get('/followcheck/tweetusers2','TweetUsers2Controller@index')->name('tweetuser.index');
 Route::post('/followcheck/tweetusers2/add','TweetUsers2Controller@add');
 

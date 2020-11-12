@@ -81,10 +81,9 @@ class TweetUsers2Controller extends Controller
      * ユーザを追加する
      *
      * @param Request $request
-     * @param $param
      * @return \Illuminate\Http\Response
      */
-    public function add(Request $request, $param)
+    public function add(Request $request)
     {
         // 有効なトークンでない場合は認証エラー
         if (! $this->isValidToken()) {
