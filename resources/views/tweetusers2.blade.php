@@ -26,38 +26,42 @@
         </div>
 
         <!-- ページ切り替えフォーム -->
-        <form action="{{ route('tweetuser.index') }}" method="get">
-            @csrf
-            <div class="row d-flex justify-content-center">
-                <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-end">
-                        @if($Users->Page > 0)
-                            <li class="page-item"><a class="page-link" href="#" onclick="page(0);">&lt;&lt;</a></li>
-                            <li class="page-item"><a class="page-link" href="#" onclick="page({{$Users->Page - 1}});">&lt; 前</a></li>
-                        @else
-                            <li class="page-item disabled"><a class="page-link" href="#">&lt;&lt;</a></li>
-                            <li class="page-item disabled"><a class="page-link" href="#">&lt; 前</a></li>
-                        @endif
-                        @for ($i = ($Users->Page-2 < 0 ? 0 : $Users->Page-2); $i <= ($Users->Page+2 > $Users->MaxPage ? $Users->MaxPage : $Users->Page+2); $i++)
-                            @if($i == $Users->Page)
-                                <li class="page-item active"><a class="page-link" href="#" onclick="page({{ $i }});">{{ $i+1 }}</a></li>
-                            @else
-                                <li class="page-item"><a class="page-link" href="#" onclick="page({{ $i }});">{{ $i+1 }}</a></li>
-                            @endif
-                        @endfor
-                        @if($Users->Page == $Users->MaxPage)
-                            <li class="page-item disabled"><a class="page-link" href="#">次 &gt;</a></li>
-                            <li class="page-item disabled"><a class="page-link" href="#">&gt;&gt;</a></li>
-                        @else
-                            <li class="page-item"><a class="page-link" href="#" onclick="page({{ $Users->Page + 1 }});">次 &gt;</a></li>
-                            <li class="page-item"><a class="page-link" href="#" onclick="page({{ $Users->MaxPage }});">&gt;&gt;</a></li>
-                        @endif
-                    </ul>
-                </nav>
+        <div class="row" style="margin-top:2em;">
+            <div class="col">
+                <form action="{{ route('tweetuser.index') }}" method="get">
+                    @csrf
+                    <div class="d-flex justify-content-center">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-end">
+                                @if($Users->Page > 0)
+                                    <li class="page-item"><a class="page-link" href="#" onclick="page(0);">&lt;&lt;</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="page({{$Users->Page - 1}});">&lt; 前</a></li>
+                                @else
+                                    <li class="page-item disabled"><a class="page-link" href="#">&lt;&lt;</a></li>
+                                    <li class="page-item disabled"><a class="page-link" href="#">&lt; 前</a></li>
+                                @endif
+                                @for ($i = ($Users->Page-2 < 0 ? 0 : $Users->Page-2); $i <= ($Users->Page+2 > $Users->MaxPage ? $Users->MaxPage : $Users->Page+2); $i++)
+                                    @if($i == $Users->Page)
+                                        <li class="page-item active"><a class="page-link" href="#" onclick="page({{ $i }});">{{ $i+1 }}</a></li>
+                                    @else
+                                        <li class="page-item"><a class="page-link" href="#" onclick="page({{ $i }});">{{ $i+1 }}</a></li>
+                                    @endif
+                                @endfor
+                                @if($Users->Page == $Users->MaxPage)
+                                    <li class="page-item disabled"><a class="page-link" href="#">次 &gt;</a></li>
+                                    <li class="page-item disabled"><a class="page-link" href="#">&gt;&gt;</a></li>
+                                @else
+                                    <li class="page-item"><a class="page-link" href="#" onclick="page({{ $Users->Page + 1 }});">次 &gt;</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="page({{ $Users->MaxPage }});">&gt;&gt;</a></li>
+                                @endif
+                            </ul>
+                        </nav>
+                    </div>
+                    <input type="hidden" name="page" id="pageNumber" value="{{$Users->Page}}">
+                    <button type="submit" id="searchSubmit" style="display:none;">
+                </form>
             </div>
-            <input type="hidden" name="page" id="pageNumber" value="{{$Users->Page}}">
-            <button type="submit" id="searchSubmit" style="display:none;">
-        </form>
+        </div>
 
         <!-- ユーザ一覧 -->
         <div class="row contents" id="userlist">
