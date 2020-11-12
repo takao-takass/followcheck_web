@@ -13,7 +13,7 @@
                         </div>
                         <input type="text" name="accountname" class="form-control">
                         <div class="input-group-append">
-                            <button type="submit" class="btn btn-outline-secondary" id="add-button">　　追　加　　</button>
+                            <button type="submit" class="btn btn-outline-secondary" id="add-button">追加</button>
                         </div>
                     </div>
                 </form>
@@ -26,40 +26,36 @@
         </div>
 
         <!-- ページ切り替えフォーム -->
-        <div class="row" style="margin-top:2em;">
-
-            <div class="col-md-12 contents">
-
-                <form action="{{ route('tweetuser.index') }}" method="get">
-                @csrf
-
-                    <nav style="margin-top:1em;">
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link" onclick="page({{ ($Users->Page)-1 }});">
-                                    <i data-feather="arrow-left" class="iconwhite"></i>
-                                </a>
-                            </li>
-                            <li class="page-item disabled">
-                                <a class="page-link">
-                                    <span id="tweet-ct"></span>ユーザ
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" onclick="page({{ ($Users->Page)+1 }});">
-                                    <i data-feather="arrow-right" class="iconwhite"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                    <input type="hidden" name="page" id="pageNumber" value="{{$Users->Page}}">
-                    <button type="submit" id="searchSubmit" style="display:none;">
-
-                </form>
+        <form action="{{ route('tweetuser.index') }}" method="get">
+            @csrf
+            <div class="row d-flex justify-content-center">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-end">
+                        @if($User->Page > 0)
+                            <li class="page-item"><a class="page-link" href="#" onclick="page(0);">&lt;&lt;</a></li>
+                            <li class="page-item"><a class="page-link" href="#" onclick="page({{$User->Page - 1}});">&lt; 前</a></li>
+                        @else
+                            <li class="page-item disabled"><a class="page-link" href="#">&lt;&lt;</a></li>
+                            <li class="page-item disabled"><a class="page-link" href="#">&lt; 前</a></li>
+                        @endif
+                        @for ($i = ($User->Page-3 < 0 ? 0 : $User->Page-3); $i <= ($User->Page+3 > $User->MaxPage ? $User->MaxPage : $User->Page+3); $i++)
+                            @if($i == $User->Page)
+                                <li class="page-item active"><a class="page-link" href="#" onclick="page({{ $i }});">{{ $i+1 }}</a></li>
+                            @else
+                                <li class="page-item"><a class="page-link" href="#" onclick="page({{ $i }});">{{ $i+1 }}</a></li>
+                            @endif
+                        @endfor
+                        @if($User->Page == $User->MaxPage)
+                            <li class="page-item"><a class="page-link" href="#" onclick="page({{ $User->Page + 1 }});">次 &gt;</a></li>
+                            <li class="page-item"><a class="page-link" href="#" onclick="page({{ $User->MaxPage }});">&gt;&gt;</a></li>
+                        @else
+                            <li class="page-item disabled"><a class="page-link" href="#">次 &gt;</a></li>
+                            <li class="page-item disabled"><a class="page-link" href="#">&gt;&gt;</a></li>
+                        @endif
+                    </ul>
+                </nav>
             </div>
-
-        </div>
-
+        </form>
 
         <!-- ユーザ一覧 -->
         <div class="row contents" id="userlist">
@@ -96,9 +92,6 @@
 
         <!-- スペーサ -->
         <div style="margin-bottom:300px"></div>
-
-
-
 
     </div>
 @endsection
