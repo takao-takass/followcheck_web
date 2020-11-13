@@ -4,10 +4,10 @@
     <link rel="stylesheet" href="{{ asset('/css/show.css') }}">
 @endsection
 
-@section('content')
+@section('content-fluid')
 
     <!-- メインコンテンツ -->
-    <div class="container" style="">
+    <div class="container-f" style="">
 
         <!-- ページ切り替えフォーム -->
         <div class="row" style="margin-top:2em;">
@@ -50,13 +50,17 @@
         <!-- ツイート一覧 -->
         <div class="row contents">
             @foreach ( $Thumbnails->show_thumbnails as $show_thumbnail )
-
                 <div class='col-lg-2 col-md-3 col-4 mb-1'>
                     <a href="{{ route('media.index',['tweet_id'=>$show_thumbnail->tweet_id, 'file_name'=>$show_thumbnail->file_name]) }}">
                         <img class='mr-3 thumb-radius thumb-back' style='width:100%;' src='{{$show_thumbnail->thumbnail_url}}'>
                     </a>
                 </div>
             @endforeach
+            <div class='col-lg-2 col-md-3 col-4 mb-1'>
+                <a href="#" onclick="page({{ $Thumbnails->Page + 1 }});">
+                    <div class="mr-3 thumb-radius thumb-back" style="background-color:#f9d7d7">次のページ</div>
+                </a>
+            </div>
         </div>
 
 

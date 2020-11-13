@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{{ asset('/css/show.css') }}">
 @endsection
 
-@section('content')
+@section('content-fluid')
 
     <!-- メインコンテンツ -->
     <div class="container" style="">
@@ -57,6 +57,11 @@
                     </a>
                 </div>
             @endforeach
+            <div class='col-lg-2 col-md-3 col-4 mb-1'>
+                <a href="#" onclick="page({{ $Thumbnails->Page + 1 }});">
+                    <div class="mr-3 thumb-radius thumb-back" style="background-color:#f9d7d7">次のページ</div>
+                </a>
+            </div>
         </div>
 
         <!-- ページ下部のスペーサ -->
