@@ -36,11 +36,15 @@ class ShowAllController extends Controller
 
         $viewModel->Count = DB::table('tweets')
             ->Where('service_user_id', '=', $this->session_user->service_user_id)
+            ->Where('is_media', '=', 1)
+            ->Where('media_ready', '=', 1)
             ->Count();
         $viewModel->MaxPage = ceil($viewModel->Count/300);
 
         $tweets = DB::table('tweets')
             ->Where('service_user_id', '=', $this->session_user->service_user_id)
+            ->Where('is_media', '=', 1)
+            ->Where('media_ready', '=', 1)
             ->orderByDesc('tweeted_datetime')
             ->skip($page * 300)
             ->take(300)
@@ -63,7 +67,6 @@ class ShowAllController extends Controller
                 continue;
             }
             $split_thumb_path = explode("/", $tweet_media->thumb_directory_path);
-            $split_media_path = explode("/", $tweet_media->directory_path);
             array_push($viewModel->show_thumbnails,
                 new ShowThumbnail(
                     $tweet_media->tweet_id,
