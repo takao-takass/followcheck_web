@@ -4,10 +4,10 @@
     <link rel="stylesheet" href="{{ asset('/css/show.css') }}">
 @endsection
 
-@section('content-fluid')
+@section('content')
 
     <!-- メインコンテンツ -->
-    <div class="container" style="">
+    <div class="container-fluid" style="">
 
         <!-- ページ切り替えフォーム -->
         <div class="row" style="margin-top:2em;">
