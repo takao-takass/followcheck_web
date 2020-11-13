@@ -58,11 +58,10 @@
             @endforeach
             <div class='col-lg-2 col-md-3 col-4 mb-1'>
                 <a href="#" onclick="page({{ $Thumbnails->Page + 1 }});">
-                    <div class="mr-3 thumb-radius thumb-back" style="background-color:#f9d7d7">次のページ</div>
+                    <img class='mr-3 thumb-radius thumb-back' style='width:100%;' src='{{ asset('/img/media_next.jpg') }}'>
                 </a>
             </div>
         </div>
-
 
         <!-- ページ下部のスペーサ -->
         <div style="margin-bottom:15em">

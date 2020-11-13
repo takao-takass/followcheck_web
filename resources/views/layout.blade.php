@@ -17,7 +17,7 @@
     <body>
 
         <!-- 上に移動ボタン -->
-        <a href="#"><div class="movetop"><i data-feather="arrow-up" class="iconwhite"></i></div></a>
+        <!--<a href="#"><div class="movetop"><i data-feather="arrow-up" class="iconwhite"></i></div></a>-->
 
         <!-- ヘッダ  -->
         <nav class="navbar navbar-dark shadow-sm" style="background-color: #436be3;">

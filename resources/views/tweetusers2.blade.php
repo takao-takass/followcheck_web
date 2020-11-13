@@ -22,10 +22,10 @@
                     </div>
                 </form>
             </div>
-            @if (!empty($ErrorMessage))
+            @if ($ErrorMessage<>"")
                 <div class="col-md-12">
-                <span style="color:red;">{{ $ErrorMessage }}</span>
-            </div>
+                    <span style="color:red;">{{ $ErrorMessage }}</span>
+                </div>
             @endif
         </div>
 
@@ -82,6 +82,11 @@
                     </div>
                 @endif
             @endforeach
+            <div class="col-4 col-md-3 col-lg-2">
+                <a href="#" onclick="page({{ $Users->Page + 1 }});">
+                    <img class='img-radius img-fluid' style=" max-width: 100%; height: auto;" src='{{ asset('/img/user_next.jpg') }}'>
+                </a>
+            </div>
         </div>
 
         <!-- スペーサ -->
@@ -92,7 +97,7 @@
 
 @section('script')
 
-<script>
-</script>
+    <script>
+    </script>
 
 @endsection
