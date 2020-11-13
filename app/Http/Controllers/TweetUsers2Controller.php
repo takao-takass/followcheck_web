@@ -31,6 +31,7 @@ class TweetUsers2Controller extends Controller
             return redirect()->route('login.logout');
         }
 
+        $param['ErrorMessage'] = "";
         if (property_exists($request, 'error')) {
             switch ($request['error']) {
                 case "user_not_found":

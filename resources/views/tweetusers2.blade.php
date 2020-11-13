@@ -22,7 +22,7 @@
                     </div>
                 </form>
             </div>
-            @if ($ErrorMessage<>"")
+            @if ($ErrorMessage <> "")
                 <div class="col-md-12">
                     <span style="color:red;">{{ $ErrorMessage }}</span>
                 </div>
