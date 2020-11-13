@@ -1,5 +1,9 @@
 @extends('layout')
 
+@section('style')
+    <link rel="stylesheet" href="{{ asset('/css/show.css') }}">
+@endsection
+
 @section('content')
     <div class="container">
         <!-- アカウント追加フォーム -->
@@ -64,37 +68,21 @@
         </div>
 
         <!-- ユーザ一覧 -->
-        <div class="row contents" id="userlist">
-
+        <div class="row">
             @foreach ($Users->TweetTakeUsers as $tweetTakeUser)
-            <div class='col-lg-3 col-md-4 col-6' style='margin-bottom:1em'>
-                <div class='card shadow-sm' style='width:100%;height:100%;'>
-                    <a href=''><img class='card-img-top' src='{{$tweetTakeUser->ThumbnailUrl}}' style='height: 100px;object-fit: cover;'></a>
-                    <div class='card-body'>
-                        <h5 class='card-title' style='font-weight: bold;'>{{$tweetTakeUser->Name}}</h5>
-                        @if ($tweetTakeUser->Status != 'D')
-                        <div class='text-right'>
-                            <button class='btn btn-secondary rounded-pill del-button' style="height:35px;font-size:10pt;">削除</button>
-                        </div>
-                        @endif
-
-                        @if (in_array($tweetTakeUser->Status, array('5','6','9')))
-                        <div>
-                            <h6 class='card-subtitle text-muted' style="margin-top:0.5em;"><a href="{{ action('TweetsController@index',[$tweetTakeUser->UserId]) }}" target='_blank' rel='noreferrer' class='card-link'>ツイート</a></h6>
-                            <h6 class='card-subtitle text-muted' style="margin-top:0.5em;"><a href="{{ action('ShowController@index',[$tweetTakeUser->UserId]) }}" target='_blank' rel='noreferrer' class='card-link'>観賞モード</a></h6>
-                            <h6 class='card-subtitle text-muted' style="margin-top:0.5em;"><a href="{{ route('show_user.index', ['user_id' => $tweetTakeUser->UserId]) }}" target='_blank' rel='noreferrer' class='card-link'>観賞モード2</a></h6>
-                        </div>
-                        @else
-                        <div>
-                            <h6 class='card-subtitle text-muted' style="margin-top:0.5em;">削除中...</h6>
-                        </div>
-                        @endif
+                @if (in_array($tweetTakeUser->Status, array('5','6','9')))
+                    <div class="col-4 col-md-3 col-lg-2">
+                        <a href="{{ route('show_user.index', ['user_id' => $tweetTakeUser->UserId]) }}" target='_blank' rel='noreferrer'>
+                            <img class='img-radius img-fluid' style=" max-width: 100%; height: auto;" src='{{$tweetTakeUser->ThumbnailUrl}}'>
+                        </a>
                     </div>
-                </div>
-            </div>
+                @else
+                    <div class="col-4 col-md-3 col-lg-2">
+                        <img class='img-radius img-opacity img-fluid' style=" max-width: 100%; height: auto;" src='{{$tweetTakeUser->ThumbnailUrl}}'>
+                    </div>
+                @endif
             @endforeach
-
-        <div>
+        </div>
 
         <!-- スペーサ -->
         <div style="margin-bottom:300px"></div>

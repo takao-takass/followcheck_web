@@ -16,6 +16,16 @@
     border-top-right-radius: 9999px;
 }
 
+.img-radius{
+    border-bottom-left-radius: 9999px;
+    border-bottom-right-radius: 9999px;
+    border-top-left-radius: 9999px;
+    border-top-right-radius: 9999px;
+}
+.img-opacity{
+    opacity: 0.2;
+}
+
 
 /* ユーザアイコン */
 .usericon {
