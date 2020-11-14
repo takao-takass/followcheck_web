@@ -45,7 +45,7 @@ class ShowAllController extends Controller
             ->Where('service_user_id', '=', $this->session_user->service_user_id)
             ->Where('is_media', '=', 1)
             ->Where('media_ready', '=', 1)
-            ->orderByDesc('tweeted_datetime')
+            ->orderByDesc('update_datetime')
             ->skip($page * 300)
             ->take(300)
             ->get();
