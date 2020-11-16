@@ -20,7 +20,7 @@ class GroupsController extends Controller
      */
     public function index()
     {
-        
+
         // 有効なトークンが無い場合はログイン画面に飛ばす
         if(!$this->isValidToken()){
             return redirect(action('LoginController@logout'));
@@ -42,8 +42,7 @@ class GroupsController extends Controller
         }
 
         return response()
-        ->view('groups', $param)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        ->view('groups', $param);
     }
 
     /**

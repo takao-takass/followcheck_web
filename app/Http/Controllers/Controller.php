@@ -14,7 +14,7 @@ use Carbon\Carbon;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-    
+
     private $sign;
     private $ip;
     protected $session_user;
@@ -28,7 +28,7 @@ class Controller extends BaseController
      * トークンの有効性を評価する
      */
     public function isValidToken(){
-        
+
         \Log::debug('トークンを認証');
         \Log::debug('token = '. $this->sign);
         \Log::debug('address = '. $this->ip);
@@ -51,6 +51,8 @@ class Controller extends BaseController
             return false;
         }
 
+        $this->updateExpire();
+
         $this->session_user = new User;
         $this->session_user->service_user_id = $user[0]->service_user_id;
         $this->session_user->name = $user[0]->name;
@@ -60,10 +62,20 @@ class Controller extends BaseController
     }
 
     /**
+     * トークンの有効期間を更新する
+     */
+    public function updateExpire(){
+        $expire_datetime = Carbon::now('Asia/Tokyo')->addWeek(1);
+        DB::table('token')
+            ->where('sign', $this->sign)
+            ->update(['expire_datetime' => $expire_datetime]);
+    }
+
+    /**
      * トークンを更新する
      */
     public function updateToken(){
-        
+
         // 新しいトークンを発行
         $token = $this->createToken($this->getTokenUser()->service_user_id);
 
@@ -75,14 +87,14 @@ class Controller extends BaseController
         DB::table('token')
         ->where('sign', $this->sign)
         ->delete();
-        return $token;        
+        return $token;
     }
 
     /**
      * トークンを生成する
      */
     public function createToken($user_id){
-        
+
         $token = new Token;
         $token->user_id = $user_id;
         $token->ipaddress = $this->ip;
@@ -96,7 +108,7 @@ class Controller extends BaseController
                 'expire_datetime' => $token->expire_datetime,
             ]
         );
-        
+
         return $token;
     }
 

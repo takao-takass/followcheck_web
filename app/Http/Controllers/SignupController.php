@@ -32,7 +32,7 @@ class SignupController extends Controller
         $user->password = $request['password'];
         $user->passwordcheck = $request['passwordcheck'];
         $user->invitecode = $request['invitecode'];
-        
+
         // 入力情報のチェック
         $this->checkParam($user);
 
@@ -71,7 +71,7 @@ class SignupController extends Controller
             ]
         );
 
-        return response('',200)->cookie('sign', $token->signtext, 60*24);
+        return response('',200);
     }
 
     /**

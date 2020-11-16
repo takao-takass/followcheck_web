@@ -89,8 +89,7 @@ class ShowByUserController extends Controller
 
         $param['Thumbnails'] = $viewModel;
 
-        return  response()->view('show_user', $param)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        return  response()->view('show_user', $param);
     }
 
 }

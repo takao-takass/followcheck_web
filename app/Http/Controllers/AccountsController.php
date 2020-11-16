@@ -20,7 +20,7 @@ class AccountsController extends Controller
      */
     public function index()
     {
-        
+
 
         // 有効なトークンが無い場合はログイン画面に飛ばす
         if(!$this->isValidToken()){
@@ -51,8 +51,7 @@ class AccountsController extends Controller
 
 
         return response()
-        ->view('accounts', $param)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        ->view('accounts', $param);
     }
 
     /**
@@ -66,7 +65,7 @@ class AccountsController extends Controller
         if(!$this->isValidToken()){
             response('Unauthorized ',401);
         }
-                
+
         // Twitterアカウントの情報を取得
         $twitterApi = new TwitterOAuth(config('app.consumer_key'), config('app.consumer_secret'), config('app.access_token'), config('app.access_token_secret'));
         $response = $twitterApi->get("users/show", ["screen_name" => $request['accountname']]);
@@ -95,7 +94,7 @@ class AccountsController extends Controller
         // アカウントマスタに登録する
         $remusers = DB::connection('mysql')->insert(
         " INSERT INTO users_accounts (service_user_id, user_id, create_datetime, update_datetime, deleted)" .
-        " VALUES (?, ?, NOW(), NOW(), 0)" 
+        " VALUES (?, ?, NOW(), NOW(), 0)"
         ,[$this->session_user->service_user_id,$response->id_str]);
 
         // Twitterユーザマスタに登録する
@@ -106,8 +105,7 @@ class AccountsController extends Controller
         " update_datetime = NOW() /*既に登録済みの場合は更新日時のみ更新*/ "
         ,[$response->id_str,$response->screen_name,$response->name]);
 
-        return response('',200)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        return response('',200);
     }
 
     /**
@@ -121,15 +119,14 @@ class AccountsController extends Controller
         if(!$this->isValidToken()){
             response('Unauthorized ',401);
         }
-        
+
         // アカウントマスタから削除する
         $remusers = DB::connection('mysql')->delete(
         " DELETE FROM users_accounts" .
         " WHERE service_user_id = ?" .
-        " AND user_id = ?" 
+        " AND user_id = ?"
         ,[$this->session_user->service_user_id,$request['user_id']]);
 
-        return response('',200)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        return response('',200);
     }
 }

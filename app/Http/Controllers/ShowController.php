@@ -18,7 +18,7 @@ class ShowController extends Controller
     const SEARCH_TYPE_BYUSER = 1;
     const SEARCH_TYPE_BUGROUP = 2;
     const SEARCH_TYPE_BYOLD = 3;
-        
+
     /**
      * 画面表示(ユーザ指定)
      *
@@ -63,8 +63,7 @@ class ShowController extends Controller
             'page' => $page
         ];
 
-        return  response()->view('show', $param)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        return  response()->view('show', $param);
     }
 
     /**
@@ -154,7 +153,6 @@ class ShowController extends Controller
                 break;
         }
 
-        return response($param,200)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        return response($param,200);
     }
 }

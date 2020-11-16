@@ -53,8 +53,7 @@ class MediaController extends Controller
 
         $param['Media'] = $viewModel;
 
-        return  response()->view('media', $param)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        return  response()->view('media', $param);
     }
 
 }

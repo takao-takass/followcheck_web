@@ -32,8 +32,7 @@ class OldTweetsController extends Controller
             'unchecked_check' => 'checked'
         ];
 
-        return  response()->view('oldtweets', $param)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        return  response()->view('oldtweets', $param);
     }
 
     /**
@@ -60,7 +59,7 @@ class OldTweetsController extends Controller
         $numPage = intval($page);
 
         // ツイートの総数を取得
-        $queryCnt = 
+        $queryCnt =
             " SELECT COUNT(*) AS ct" .
             " FROM queue_delete_tweets DT " .
             " INNER JOIN tweets TW".
@@ -99,7 +98,7 @@ class OldTweetsController extends Controller
         $param['record'] = $recordCount;
 
         // ツイートを取得する
-        $queryList = 
+        $queryList =
         " SELECT TW.tweet_id".
         "       ,TW.thumbnail_url".
         "       ,TW.tweeted_datetime".
@@ -187,8 +186,7 @@ class OldTweetsController extends Controller
             ];
         }
 
-        return response($param,200)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        return response($param,200);
     }
 
 }

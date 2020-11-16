@@ -78,7 +78,7 @@ class TweetUsers2Controller extends Controller
 
         $param['Users'] = $viewModel;
 
-        return response()->view('tweetusers2', $param)->cookie('sign', $this->updateToken()->signtext, 24 * 60);
+        return response()->view('tweetusers2', $param);
     }
 
     /**
@@ -97,7 +97,7 @@ class TweetUsers2Controller extends Controller
         $user_id = $request['user_id'];
         if (empty($user_id)) {
             $param['error'] = 'require';
-            return redirect()->route('tweetuser.index', $param)->cookie('sign', $this->updateToken()->signtext, 24 * 60);
+            return redirect()->route('tweetuser.index', $param);
         }
 
         // Twitterアカウントの情報を取得
@@ -110,7 +110,7 @@ class TweetUsers2Controller extends Controller
         // APIからユーザが取得できない場合はエラー
         if (! property_exists($response, 'id_str')) {
             $param['error'] = 'user_not_found';
-            return redirect()->route('tweetuser.index', $param)->cookie('sign', $this->updateToken()->signtext, 24 * 60);
+            return redirect()->route('tweetuser.index', $param);
         }
 
         // 既に登録されているアカウントはエラー
@@ -119,7 +119,7 @@ class TweetUsers2Controller extends Controller
             ->count();
         if ($exists > 0) {
             $param['error'] = 'duplicated';
-            return redirect()->route('tweetuser.index', $param)->cookie('sign', $this->updateToken()->signtext, 24 * 60);
+            return redirect()->route('tweetuser.index', $param);
         }
 
         // ダウンロードアカウントマスタに登録する
@@ -128,6 +128,6 @@ class TweetUsers2Controller extends Controller
             $response->id_str
         ]);
 
-        return redirect()->route('tweetuser.index')->cookie('sign', $this->updateToken()->signtext, 24 * 60);
+        return redirect()->route('tweetuser.index');
     }
 }

@@ -32,9 +32,8 @@ class TweetUsersController extends Controller
         $param['filter'] = [
             'page' => $page,
         ];
-        
-        return  response()->view('tweetusers', $param)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+
+        return  response()->view('tweetusers', $param);
     }
 
     /**
@@ -54,13 +53,13 @@ class TweetUsersController extends Controller
         $page = $request['page'];
 
         // 入力チェックを行う
-        
+
         // ページ数から取得範囲の計算
         $pageRecord = 100;
         $numPage = intval($page);
 
         // アカウントの総数を取得
-        $query = 
+        $query =
             " SELECT COUNT(*) AS ct" .
             " FROM tweet_take_users TT" .
             " WHERE TT.service_user_id = '".$this->session_user->service_user_id."'";
@@ -74,7 +73,7 @@ class TweetUsersController extends Controller
         $param['record'] = $recordCount;
 
         // ツイートを取得する
-        $query = 
+        $query =
             " SELECT RU.user_id".
             "       ,RU.disp_name".
             "       ,RU.name".
@@ -105,7 +104,7 @@ class TweetUsersController extends Controller
             // ユーザ名による絞り込み
             (
                 $userName == "" ? "" :
-                "    AND RU.disp_name = '". $userName ."'" 
+                "    AND RU.disp_name = '". $userName ."'"
             ).
             "    AND TT.deleted = 0" .
             "  ORDER BY SA.tweeted_datetime DESC".
@@ -126,8 +125,7 @@ class TweetUsersController extends Controller
             ];
         }
 
-        return response($param,200)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        return response($param,200);
     }
 
     /**
@@ -170,7 +168,7 @@ class TweetUsersController extends Controller
         // ダウンロードアカウントマスタに登録する
         $remusers = DB::connection('mysql')->insert(
         " INSERT INTO tweet_take_users (service_user_id, user_id, status, create_datetime, update_datetime, deleted)" .
-        " VALUES (?, ?, '0',NOW(), NOW(), 0)" 
+        " VALUES (?, ?, '0',NOW(), NOW(), 0)"
         ,[$this->session_user->service_user_id,$response->id_str]);
 
         // Twitterユーザマスタに登録する
@@ -181,8 +179,7 @@ class TweetUsersController extends Controller
         " update_datetime = NOW() /*既に登録済みの場合は更新日時のみ更新*/ "
         ,[$response->id_str,$response->screen_name,$response->name]);
 
-        return response('',200)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        return response('',200);
     }
 
     /**
@@ -203,11 +200,10 @@ class TweetUsersController extends Controller
         " SET status = 'D' " .
         "    ,update_datetime = NOW() " .
         " WHERE service_user_id = ?" .
-        " AND user_id = ?" 
+        " AND user_id = ?"
         ,[$this->session_user->service_user_id,$request['user_id']]);
 
-        return response('',200)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        return response('',200);
     }
 
 }

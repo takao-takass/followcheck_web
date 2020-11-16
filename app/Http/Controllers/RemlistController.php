@@ -40,8 +40,7 @@ class RemlistController extends Controller
             break;
         }
 
-        return redirect("followcheck/remlist/".$param."/0")
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        return redirect("followcheck/remlist/".$param."/0");
     }
 
     /**
@@ -86,7 +85,7 @@ class RemlistController extends Controller
         );
         $recordCount = $res[0]->ct;
         $param['record'] = $recordCount;
-        
+
         // ページ数から取得範囲の計算
         $pageRecord = 50;
         $numPage = intval($page);
@@ -100,7 +99,7 @@ class RemlistController extends Controller
             " WHERE RM.user_id = '". $user_id ."'" .
             " ORDER BY RM.create_datetime DESC, RL.disp_name".
             " LIMIT ". $pageRecord .
-            " OFFSET ". $pageRecord*$numPage 
+            " OFFSET ". $pageRecord*$numPage
         );
 
         $param['users'] = [];
@@ -125,7 +124,6 @@ class RemlistController extends Controller
         $param['max_page'] = ceil($recordCount / $pageRecord);
 
         return response()
-        ->view('remlist', $param)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        ->view('remlist', $param);
     }
 }

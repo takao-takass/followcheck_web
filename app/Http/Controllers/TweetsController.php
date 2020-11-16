@@ -17,7 +17,7 @@ class TweetsController extends Controller
     const SEARCH_TYPE_BYUSER = 1;
     const SEARCH_TYPE_BUGROUP = 2;
     const SEARCH_TYPE_BYOLD = 3;
-    
+
     /**
      * 画面表示(ユーザID)
      *
@@ -43,8 +43,7 @@ class TweetsController extends Controller
             'unchecked_check' => 'checked'
         ];
 
-        return  response()->view('tweets', $param)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        return  response()->view('tweets', $param);
     }
 
     /**
@@ -72,8 +71,7 @@ class TweetsController extends Controller
             'unchecked_check' => 'checked'
         ];
 
-        return  response()->view('tweets', $param)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        return  response()->view('tweets', $param);
     }
 
     /**
@@ -101,7 +99,7 @@ class TweetsController extends Controller
             $request['filter-unkeep'],
             $request['filter-unchecked']
         );
-        
+
         // 入力チェックを行う
 
 
@@ -167,8 +165,7 @@ class TweetsController extends Controller
                 break;
         }
 
-        return response($param,200)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        return response($param,200);
     }
 
     /**
@@ -201,7 +198,7 @@ class TweetsController extends Controller
             ->where('service_user_id', $this->session_user->service_user_id)
             ->where('tweet_id', $tweetId)
             ->count();
-    
+
             if($exists==0){
                 DB::table('keep_tweets')
                 ->insert(
@@ -213,8 +210,7 @@ class TweetsController extends Controller
             }
         }
 
-        return response('',200)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        return response('',200);
     }
 
     /**
@@ -237,7 +233,7 @@ class TweetsController extends Controller
                 ['tweetid']
             );
         }
-        
+
         // キープテーブルに登録されているか確認する
         // 登録されていれば削除する
         $tweetIdList = explode(",",$request['tweetid']);
@@ -247,7 +243,7 @@ class TweetsController extends Controller
             ->where('service_user_id', $this->session_user->service_user_id)
             ->where('tweet_id', $tweetId)
             ->count();
-    
+
             if($exists>0){
                 DB::table('keep_tweets')
                 ->where('service_user_id', $this->session_user->service_user_id)
@@ -257,8 +253,7 @@ class TweetsController extends Controller
 
         }
 
-        return response('',200)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        return response('',200);
     }
 
 
@@ -292,7 +287,7 @@ class TweetsController extends Controller
             ->where('service_user_id', $this->session_user->service_user_id)
             ->where('tweet_id', $tweetId)
             ->count();
-    
+
             if($exists==0){
                 DB::table('checked_tweets')
                 ->insert(
@@ -305,8 +300,7 @@ class TweetsController extends Controller
 
         }
 
-        return response('',200)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        return response('',200);
     }
 
 

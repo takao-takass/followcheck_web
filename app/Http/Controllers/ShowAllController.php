@@ -80,8 +80,7 @@ class ShowAllController extends Controller
 
         $param['Thumbnails'] = $viewModel;
 
-        return  response()->view('show_all', $param)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        return  response()->view('show_all', $param);
     }
 
 }

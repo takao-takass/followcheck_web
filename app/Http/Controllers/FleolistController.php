@@ -41,8 +41,7 @@ class FleolistController extends Controller
             break;
         }
 
-        return redirect("followcheck/fleolist/".$param."/0")
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        return redirect("followcheck/fleolist/".$param."/0");
     }
 
     /**
@@ -89,7 +88,7 @@ class FleolistController extends Controller
         );
         $recordCount = $res[0]->ct;
         $param['record'] = $recordCount;
-        
+
         // ページ数から取得範囲の計算
         $pageRecord = 50;
         $numPage = intval($page);
@@ -104,7 +103,7 @@ class FleolistController extends Controller
             " AND RM.user_id = '" . $user_id . "'" .
             " ORDER BY RM.create_datetime DESC, RL.disp_name".
             " LIMIT ". $pageRecord .
-            " OFFSET ". $pageRecord*$numPage 
+            " OFFSET ". $pageRecord*$numPage
         );
 
         $param['users'] = [];
@@ -128,8 +127,7 @@ class FleolistController extends Controller
         $param['max_page'] = ceil($recordCount / $pageRecord);
 
         return response()
-        ->view('fleolist', $param)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+        ->view('fleolist', $param);
     }
 
     /**
@@ -155,9 +153,8 @@ class FleolistController extends Controller
             " WHERE RM.user_id = ?" .
             " AND RM.follow_user_id = ? "
             ,[$request['user_id'],$request['follow_user_id']]);
-    
-        return response('',200)
-        ->cookie('sign',$this->updateToken()->signtext,24*60);
+
+        return response('',200);
     }
 
 }

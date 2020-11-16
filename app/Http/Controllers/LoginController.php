@@ -18,8 +18,7 @@ class LoginController extends Controller
     public function index()
     {
         if($this->isValidToken()){
-            return redirect(action('AccountsController@index'))
-            ->cookie('sign',$this->updateToken()->signtext,24*60);
+            return redirect(action('AccountsController@index'));
         }
 
         return view('login');
@@ -89,6 +88,6 @@ class LoginController extends Controller
             ]
         );
 
-        return response('',200)->cookie('sign', $token->signtext, 60*24);
+        return response('',200)->cookie('sign', $token->signtext, 60*24*30);
     }
 }
