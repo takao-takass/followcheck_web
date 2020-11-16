@@ -68,26 +68,6 @@
         <div style="margin-bottom:15em">
         </div>
 
-        <!--設定モーダル-->
-        <div class="modal fade" id="settingModal" tabindex="-1" role="dialog" aria-labelledby="settingModal" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                </div>
-                <div class="modal-body">
-
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="retweet"　{{ $Thumbnails->remove_retweets == 1 ? 'checked' : '' }}
-                        onclick="$('#removeRetweets').val($('#retweet').prop('checked') ? 1 : 0)" />
-                        <label class="custom-control-label" for="retweet">リツイートを除外する</label>
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-
     </div>
 
 
