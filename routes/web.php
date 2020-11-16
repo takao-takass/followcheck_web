@@ -81,6 +81,9 @@ Route::get('/followcheck/keywords/{page?}','KeywordsController@index');
 
 
 
+# コンフィグ
+Route::get('/followcheck/user_config','UserConfigController@index')->name('config.index');
+Route::post('/followcheck/user_config','UserConfigController@save')->name('config.save');
 
 # New ツイートを見る
 Route::get('/followcheck/tweetusers2','TweetUsers2Controller@index')->name('tweetuser.index');

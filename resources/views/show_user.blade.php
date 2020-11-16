@@ -42,7 +42,6 @@
                         </nav>
                     </div>
                     <input type="hidden" name="page" id="pageNumber" value="{{$Thumbnails->Page}}">
-                    <input type="hidden" name="remove_retweets" id="removeRetweets" value="{{$Thumbnails->remove_retweets}}">
                     <button type="submit" id="searchSubmit" style="display:none;">
                 </form>
             </div>

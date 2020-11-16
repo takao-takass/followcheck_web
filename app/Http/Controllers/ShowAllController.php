@@ -34,13 +34,17 @@ class ShowAllController extends Controller
         $viewModel = new ShowThumbnailViewModel();
         $viewModel->Page = $page == null ? 0 : $page;
 
-        $remove_retweets = $request->input('remove_retweets');
+        $remove_retweet = DB::table('user_config')
+            ->select(['value'])
+            ->Where('service_user_id',  $this->session_user->service_user_id)
+            ->Where('config_id', 1)
+            ->first();
 
         $query = DB::table('tweets')
             ->Where('service_user_id', '=', $this->session_user->service_user_id)
             ->Where('is_media', '=', 1)
             ->Where('media_ready', '=', 1);
-        if($remove_retweets){
+        if($remove_retweet->value == 1){
             $query = $query->Where('retweeted','=', 0);
         }
 
