@@ -8,6 +8,8 @@ class ShowThumbnailViewModel
 {
     public int $Page;
 
+    public int $remove_retweets;
+
     public int $MaxPage;
 
     public int $Count;

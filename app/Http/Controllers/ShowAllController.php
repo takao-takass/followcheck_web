@@ -34,17 +34,20 @@ class ShowAllController extends Controller
         $viewModel = new ShowThumbnailViewModel();
         $viewModel->Page = $page == null ? 0 : $page;
 
-        $viewModel->Count = DB::table('tweets')
+        $remove_retweets = $request->input('remove_retweets');
+
+        $query = DB::table('tweets')
             ->Where('service_user_id', '=', $this->session_user->service_user_id)
             ->Where('is_media', '=', 1)
-            ->Where('media_ready', '=', 1)
-            ->Count();
+            ->Where('media_ready', '=', 1);
+        if($remove_retweets){
+            $query = $query->Where('retweeted','=', 0);
+        }
+
+        $viewModel->Count = $query->Count();
         $viewModel->MaxPage = ceil($viewModel->Count/300);
 
-        $tweets = DB::table('tweets')
-            ->Where('service_user_id', '=', $this->session_user->service_user_id)
-            ->Where('is_media', '=', 1)
-            ->Where('media_ready', '=', 1)
+        $tweets = $query
             ->orderByDesc('update_datetime')
             ->skip($page * 300)
             ->take(300)

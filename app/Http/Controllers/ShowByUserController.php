@@ -18,11 +18,6 @@ use Carbon\Carbon;
 class ShowByUserController extends Controller
 {
 
-    // 検索方法の区分値
-    const SEARCH_TYPE_BYUSER = 1;
-    const SEARCH_TYPE_BUGROUP = 2;
-    const SEARCH_TYPE_BYOLD = 3;
-
     /**
      * 画面表示(ユーザ指定)
      *
@@ -40,19 +35,22 @@ class ShowByUserController extends Controller
         $viewModel->user_id = $user_id;
         $viewModel->Page = $page == null ? 0 : $page;
 
-        $viewModel->Count = DB::table('tweets')
+        $remove_retweets = $request->input('remove_retweets');
+        $viewModel->remove_retweets = $remove_retweets;
+
+        $query = DB::table('tweets')
             ->Where('service_user_id', '=', $this->session_user->service_user_id)
             ->Where('user_id','=',$user_id)
             ->Where('is_media', '=', 1)
-            ->Where('media_ready', '=', 1)
-            ->Count();
+            ->Where('media_ready', '=', 1);
+        if($remove_retweets){
+            $query = $query->Where('retweeted','=', 0);
+        }
+
+        $viewModel->Count = $query->Count();
         $viewModel->MaxPage = ceil($viewModel->Count/200);
 
-        $tweets = DB::table('tweets')
-            ->Where('service_user_id', '=', $this->session_user->service_user_id)
-            ->Where('user_id','=',$user_id)
-            ->Where('is_media', '=', 1)
-            ->Where('media_ready', '=', 1)
+        $tweets = $query
             ->orderByDesc('tweeted_datetime')
             ->skip($page * 200)
             ->take(200)
