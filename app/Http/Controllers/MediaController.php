@@ -49,10 +49,16 @@ class MediaController extends Controller
             ->Where('user_id', '=', $tweet->tweet_user_id)
             ->first();
 
+        $keep_count = DB::table('keep_tweets')
+            ->Where('service_user_id', '=', $this->session_user->service_user_id)
+            ->Where('tweet_id', '=', $tweet_id)
+            ->count();
+
         $viewModel->tweet_body = $tweet->body;
         $viewModel->user_thumbnail_path = $user->thumbnail_url;
         $viewModel->twitter_url = 'https://twitter.com/' . $user->disp_name . '/status/' . $tweet_id;
         $viewModel->tweet_id = $tweet_id;
+        $viewModel->keep_count = $keep_count;
 
         $param['Media'] = $viewModel;
 
@@ -78,6 +84,30 @@ class MediaController extends Controller
             ->where('service_user_id', $this->session_user->service_user_id)
             ->where('tweet_id',$tweet_id)
             ->update(['deleted' => 1]);
+
+        $tweet = DB::table('tweets')
+            ->where('service_user_id', $this->session_user->service_user_id)
+            ->where('tweet_id', '=',  $tweet_id)
+            ->first();
+
+        return redirect( route('show_user.index', ['user_id' => $tweet->user_id]) );
+    }
+
+
+    public function keep(Request $request)
+    {
+        if(!$this->isValidToken()){
+            return redirect(action('LoginController@logout'));
+        }
+
+        $tweet_id = $request['tweet_id'];
+        DB::table('keep_tweets')
+            ->insert(
+                [
+                    'service_user_id'=>$this->session_user->service_user_id,
+                    'tweet_id'=>$tweet_id
+                ]
+            );
 
         $tweet = DB::table('tweets')
             ->where('service_user_id', $this->session_user->service_user_id)

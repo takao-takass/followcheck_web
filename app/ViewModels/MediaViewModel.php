@@ -12,5 +12,9 @@ class MediaViewModel
 
     public string $twitter_url;
 
+    public string $tweet_id;
+
+    public int $keep_count;
+
 }
 

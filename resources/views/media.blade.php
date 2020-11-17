@@ -6,7 +6,7 @@
 
 @section('content')
 
-    <a href="{{ $Media->path }}"><img src="{{ $Media->path }}" style="max-width:100vw;max-height:100vh;" /></a>
+    <a href="{{ $Media->path }}"><img src="{{ $Media->path }}" style="width:100vw;height:100vh;" /></a>
 
     <!-- メインコンテンツ -->
     <div class="container">
@@ -22,6 +22,19 @@
                 <a href="{{ $Media->twitter_url }}"><input type="button" class="btn btn-secondary form-control" value="Twitterで見る" /></a>
             </div>
         </div>
+        <form action="{{ route('media.keep', ['tweet_id' => $Media->tweet_id] ) }}" method="post">
+            @csrf
+            <div class="row mt-5 mb-3">
+                <div class="col">
+                    @if($Media->keep_count > 0)
+                        <button type="button" disabled class="btn btn-outline-warning form-control">キープ済み</button>
+                        <button type="submit" class="btn btn-warning form-control" style="display: none;">キープする</button>
+                    @else
+                        <button type="submit" class="btn btn-warning form-control">キープする</button>
+                    @endif
+                </div>
+            </div>
+        </form>
         <form action="{{ route('media.delete', ['tweet_id' => $Media->tweet_id] ) }}" method="post">
             @csrf
             <div class="row mt-5 mb-3">
