@@ -31,6 +31,8 @@ class MediaController extends Controller
 
         $viewModel = new MediaViewModel();
 
+        $st = microtime(true);
+
         // メディアのパス
         $tweet_media = DB::table('tweet_medias')
             ->Where('tweet_id', '=', $tweet_id)
@@ -39,14 +41,29 @@ class MediaController extends Controller
         $split_media_path = explode("/", $tweet_media->directory_path);
         $viewModel->path = '/img/tweetmedia/' . $split_media_path[5] . '/' . $tweet_media->file_name;
 
+        $now = microtime(true);
+        var_dump("tweet_medias : {($now - $st)} 秒");
+
+        $st = microtime(true);
+
         // ツイート本文とツイートしたユーザ
         $tweet = DB::table('tweets')
             ->Where('service_user_id', '=', $this->session_user->service_user_id)
             ->Where('tweet_id', '=', $tweet_id)
             ->first();
+
+        $now = microtime(true);
+        var_dump("tweets : {($now - $st)} 秒");
+
+        $st = microtime(true);
+
         $user = DB::table('relational_users')
             ->Where('user_id', '=', $tweet->tweet_user_id)
             ->first();
+
+        $now = microtime(true);
+        var_dump("relational_users : {($now - $st)} 秒");
+
         $viewModel->tweet_body = $tweet->body;
         $viewModel->user_thumbnail_path = $user->thumbnail_url;
         $viewModel->twitter_url = 'https://twitter.com/' . $user->disp_name . '/status/' . $tweet_id;
