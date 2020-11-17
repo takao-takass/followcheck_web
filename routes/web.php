@@ -95,3 +95,4 @@ Route::get('/followcheck/show_all','ShowAllController@index')->name('show_all.in
 
 # メディア表示
 Route::get('/followcheck/media','MediaController@index')->name('media.index');
+Route::post('/followcheck/media/delete','MediaController@delete')->name('media.delete');

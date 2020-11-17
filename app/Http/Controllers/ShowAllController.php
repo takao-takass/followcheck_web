@@ -41,11 +41,12 @@ class ShowAllController extends Controller
             ->first();
 
         $query = DB::table('tweets')
-            ->Where('service_user_id', '=', $this->session_user->service_user_id)
-            ->Where('is_media', '=', 1)
-            ->Where('media_ready', '=', 1);
+            ->Where('service_user_id', $this->session_user->service_user_id)
+            ->Where('is_media', 1)
+            ->Where('media_ready', 1)
+            ->Where('deleted', 0);
         if($remove_retweet->value == 1){
-            $query = $query->Where('retweeted','=', 0);
+            $query = $query->Where('deleted', 0);
         }
 
         $viewModel->Count = $query->Count();

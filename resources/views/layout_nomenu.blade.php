@@ -5,6 +5,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+        @yield('title')
+
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
         <!-- App CSS -->
@@ -12,7 +14,7 @@
     </head>
 
     <body>
-    
+
         <!-- ヘッダ  -->
         <div class="navbar navbar-dark shadow-sm" style="background-color: #436be3;">
             <div class="container d-flex justify-content-between">
@@ -23,7 +25,7 @@
         </div>
 
         @yield('content')
-        
+
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

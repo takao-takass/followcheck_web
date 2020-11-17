@@ -52,10 +52,38 @@ class MediaController extends Controller
         $viewModel->tweet_body = $tweet->body;
         $viewModel->user_thumbnail_path = $user->thumbnail_url;
         $viewModel->twitter_url = 'https://twitter.com/' . $user->disp_name . '/status/' . $tweet_id;
+        $viewModel->tweet_id = $tweet_id;
 
         $param['Media'] = $viewModel;
 
         return  response()->view('media', $param);
     }
 
+    public function delete(Request $request)
+    {
+        if(!$this->isValidToken()){
+            return redirect(action('LoginController@logout'));
+        }
+
+        $tweet_id = $request['tweet_id'];
+        DB::table('deletable_tweets')
+            ->insert(
+                [
+                    'service_user_id'=>$this->session_user->service_user_id,
+                    'tweet_id'=>$tweet_id
+                ]
+            );
+
+        DB::table('tweets')
+            ->where('service_user_id', $this->session_user->service_user_id)
+            ->where('tweet_id',$tweet_id)
+            ->update(['deleted' => 1]);
+
+        $tweet = DB::table('tweets')
+            ->where('service_user_id', $this->session_user->service_user_id)
+            ->where('tweet_id', '=',  $tweet_id)
+            ->first();
+
+        return redirect( route('show_user.index', ['user_id' => $tweet->user_id]) );
+    }
 }

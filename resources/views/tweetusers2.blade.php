@@ -1,5 +1,9 @@
 @extends('layout')
 
+@section('title')
+    <title>ツイートを見る</title>
+@endsection
+
 @section('style')
     <link rel="stylesheet" href="{{ asset('/css/show.css') }}">
 @endsection

@@ -1,7 +1,7 @@
 @extends('layout_nohead')
 
-@section('style')
-
+@section('title')
+    <title>メディア</title>
 @endsection
 
 @section('content')
@@ -22,6 +22,14 @@
                 <a href="{{ $Media->twitter_url }}"><input type="button" class="btn btn-secondary form-control" value="Twitterで見る" /></a>
             </div>
         </div>
+        <form action="{{ route('media.delete', ['tweet_id' => $Media->tweet_id] ) }}" method="post">
+            @csrf
+            <div class="row mt-5 mb-3">
+                <div class="col">
+                   <button type="submit" class="btn btn-danger form-control">削除する</button>
+                </div>
+            </div>
+        </form>
 
     </div>
 
