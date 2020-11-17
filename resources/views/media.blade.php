@@ -6,7 +6,7 @@
 
 @section('content')
 
-    <a href="{{ $Media->path }}"><img src="{{ $Media->path }}" style="width:100vw;height:100vh;" /></a>
+    <a href="{{ $Media->path }}"><img src="{{ $Media->path }}" style="max-width:100vw;max-height:100vh;" /></a>
 
     <!-- メインコンテンツ -->
     <div class="container">
