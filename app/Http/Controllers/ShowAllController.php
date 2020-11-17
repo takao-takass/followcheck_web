@@ -50,7 +50,7 @@ class ShowAllController extends Controller
         }
 
         $viewModel->Count = $query->Count();
-        $viewModel->MaxPage = ceil($viewModel->Count/300);
+        $viewModel->MaxPage = floor($viewModel->Count/300);
 
         $tweets = $query
             ->orderByDesc('update_datetime')

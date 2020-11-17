@@ -15,15 +15,15 @@ use App\Models\Token;
 use App\ViewModels\ShowThumbnailViewModel;
 use Carbon\Carbon;
 
-class ShowByUserController extends Controller
+class ShowKeepController extends Controller
 {
 
     /**
-     * 画面表示(ユーザ指定)
+     * 画面表示
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($user_id, Request $request)
+    public function index(Request $request)
     {
         // 有効なトークンが無い場合はログイン画面に飛ばす
         if(!$this->isValidToken()){
@@ -32,32 +32,18 @@ class ShowByUserController extends Controller
 
         $page = $request->input('page');
         $viewModel = new ShowThumbnailViewModel();
-        $viewModel->user_id = $user_id;
         $viewModel->Page = $page == null ? 0 : $page;
 
-        $remove_retweet = DB::table('user_config')
-            ->select(['value'])
-            ->Where('service_user_id',  $this->session_user->service_user_id)
-            ->Where('config_id', 1)
-            ->first();
-
-        $query = DB::table('tweets')
-            ->Where('service_user_id', $this->session_user->service_user_id)
-            ->Where('user_id', $user_id)
-            ->Where('is_media', 1)
-            ->Where('media_ready', 1)
-            ->Where('deleted', 0);
-        if($remove_retweet->value == 1){
-            $query = $query->Where('retweeted','=', 0);
-        }
+        $query = DB::table('keep_tweets')
+            ->Where('service_user_id', $this->session_user->service_user_id);
 
         $viewModel->Count = $query->Count();
-        $viewModel->MaxPage = floor($viewModel->Count/200);
+        $viewModel->MaxPage = floor($viewModel->Count/300);
 
         $tweets = $query
-            ->orderByDesc('tweeted_datetime')
-            ->skip($page * 200)
-            ->take(200)
+            ->orderByDesc('update_datetime')
+            ->skip($page * 300)
+            ->take(300)
             ->get();
 
         $tweet_ids = [];
@@ -77,7 +63,6 @@ class ShowByUserController extends Controller
                 continue;
             }
             $split_thumb_path = explode("/", $tweet_media->thumb_directory_path);
-            $split_media_path = explode("/", $tweet_media->directory_path);
             array_push($viewModel->show_thumbnails,
                 new ShowThumbnail(
                     $tweet_media->tweet_id,
@@ -91,7 +76,7 @@ class ShowByUserController extends Controller
 
         $param['Thumbnails'] = $viewModel;
 
-        return  response()->view('show_user', $param);
+        return  response()->view('show_keep', $param);
     }
 
 }

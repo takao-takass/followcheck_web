@@ -60,11 +60,13 @@
                     </a>
                 </div>
             @endforeach
-            <div class='col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-1'>
-                <a href="#" onclick="page({{ $Thumbnails->Page + 1 }});">
-                    <img class='mr-3 thumb-radius thumb-back' style='width:100%;' src='{{ asset('/img/media_next.jpg') }}'>
-                </a>
-            </div>
+            @if($Thumbnails->Page <> $Thumbnails->MaxPage)
+                <div class='col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-1'>
+                    <a href="#" onclick="page({{ $Thumbnails->Page + 1 }});">
+                        <img class='mr-3 thumb-radius thumb-back' style='width:100%;' src='{{ asset('/img/media_next.jpg') }}'>
+                    </a>
+                </div>
+            @endif
         </div>
 
         <!-- ページ下部のスペーサ -->

@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('title')
-    <title>削除</title>
+    <title>観賞</title>
 @endsection
 
 @section('style')
@@ -16,7 +16,7 @@
         <!-- ページ切り替えフォーム -->
         <div class="row" style="margin-top:2em;">
             <div class="col">
-                <form action="{{ route('show_user.delete', ['user_id' => $Thumbnails->user_id] ) }}" method="get">
+                <form action="{{ route('show_keep.index') }}" method="get">
                     @csrf
                     <div class="d-flex justify-content-center">
                         <nav aria-label="Page navigation">
@@ -55,24 +55,25 @@
         <div class="row contents">
             @foreach ( $Thumbnails->show_thumbnails as $show_thumbnail )
                 <div class='col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-1'>
-                        <img class='mr-3 thumb-radius thumb-back deletable' style='width:100%;' src='{{$show_thumbnail->thumbnail_url}}'>
+                    <a href="{{ route('media.index',['tweet_id'=>$show_thumbnail->tweet_id, 'file_name'=>$show_thumbnail->file_name]) }}">
+                        <img class='mr-3 thumb-radius thumb-back' style='width:100%;' src='{{$show_thumbnail->thumbnail_url}}'>
+                    </a>
                 </div>
             @endforeach
-            <div class='col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-1'>
-                <a href="#" onclick="page({{ $Thumbnails->Page + 1 }});">
-                    <img class='mr-3 thumb-radius thumb-back' style='width:100%;' src='{{ asset('/img/media_next.jpg') }}'>
-                </a>
-            </div>
+            @if($Thumbnails->Page <> $Thumbnails->MaxPage)
+                <div class='col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-1'>
+                    <a href="#" onclick="page({{ $Thumbnails->Page + 1 }});">
+                        <img class='mr-3 thumb-radius thumb-back' style='width:100%;' src='{{ asset('/img/media_next.jpg') }}'>
+                    </a>
+                </div>
+            @endif
         </div>
-
-        <form action="{{ route('show_user.delete', ['user_id' => $Thumbnails->user_id] ) }}" method="get">
-            <button class="fixed_btn btn btn-danger">削除</button>
-        </form>
-
 
         <!-- ページ下部のスペーサ -->
-        <div style="margin-bottom:15em">
+        <div style="margin-bottom:15em;">
         </div>
+
+    </div>
 
     </div>
 
@@ -86,18 +87,5 @@
         $(document).ready(function(){
             $('body').css('background-color','#232323');
         });
-
-        $('.deletable').on('click',function(evt){
-
-            $evt = $(evt)
-            if($evt.hasClass('del-tgt')){
-                $evt.removeClass('del-tgt');
-            }else{
-                $evt.addClass('del-tgt');
-            }
-
-        });
-
-
     </script>
 @endsection
