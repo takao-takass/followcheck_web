@@ -49,6 +49,31 @@
             </div>
         </div>
 
+        <div class="row mt-2">
+            <div class="col">
+                <div class="custom-control custom-switch">
+                    @if($user_config[2]->value == 1)
+                        <input type="checkbox" class="custom-control-input" id="check" checked name="check">
+                    @else
+                        <input type="checkbox" class="custom-control-input" id="check" name="check">
+                    @endif
+                    <label class="custom-control-label" for="check">既読ツイートを記録する</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col">
+                <div class="custom-control custom-switch">
+                    @if($user_config[3]->value == 1)
+                        <input type="checkbox" class="custom-control-input" id="filter_checked" checked name="filter_checked">
+                    @else
+                        <input type="checkbox" class="custom-control-input" id="filter_checked" name="filter_checked">
+                    @endif
+                    <label class="custom-control-label" for="filter_checked">既読ツイートは表示しない</label>
+                </div>
+            </div>
+        </div>
 
         <button class="btn btn-primary mt-4" type="submit">保存</button>
 

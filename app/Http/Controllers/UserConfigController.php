@@ -39,6 +39,8 @@ class UserConfigController extends Controller
 
         $retweet = $request->input('retweet');
         $reply = $request->input('reply');
+        $check = $request->input('check');
+        $filter_checked = $request->input('filter_checked');
 
         DB::table('user_config')
             ->where('service_user_id', $this->session_user->service_user_id)
@@ -49,6 +51,16 @@ class UserConfigController extends Controller
             ->where('service_user_id', $this->session_user->service_user_id)
             ->where('config_id',2)
             ->update(['value'=>$reply=='on'?1:0]);
+
+        DB::table('user_config')
+            ->where('service_user_id', $this->session_user->service_user_id)
+            ->where('config_id',3)
+            ->update(['value'=>$check=='on'?1:0]);
+
+        DB::table('user_config')
+            ->where('service_user_id', $this->session_user->service_user_id)
+            ->where('config_id',4)
+            ->update(['value'=>$filter_checked=='on'?1:0]);
 
         return redirect()->route('config.index');
     }

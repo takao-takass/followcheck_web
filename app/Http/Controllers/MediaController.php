@@ -59,8 +59,44 @@ class MediaController extends Controller
         $viewModel->twitter_url = 'https://twitter.com/' . $user->disp_name . '/status/' . $tweet_id;
         $viewModel->tweet_id = $tweet_id;
         $viewModel->keep_count = $keep_count;
-
         $param['Media'] = $viewModel;
+
+        // 既読ツイートの登録
+        $check_enabled = DB::table('user_config')
+            ->select(['value'])
+            ->Where('service_user_id',  $this->session_user->service_user_id)
+            ->Where('config_id', 3)
+            ->first();
+        $last_tweet_id = $request->input('last_tweet_id');
+        if($check_enabled->value == 1 && $last_tweet_id <> null){//tweet_id=1123975877505835008 & last_tweet_id=1101064720595877888
+
+            $last_tweet_datetime = DB::table('tweets')
+                ->select(['tweeted_datetime'])
+                ->Where('service_user_id', $this->session_user->service_user_id)
+                ->Where('tweet_id', $last_tweet_id)
+                ->first();
+
+            $checked_tweets_ids = DB::table('tweets')
+                ->select(['tweet_id'])
+                ->Where('service_user_id', $this->session_user->service_user_id)
+                ->Where('user_id', $tweet->user_id)
+                ->Where('is_media', 1)
+                ->Where('media_ready', 1)
+                ->Where('deleted', 0)
+                ->Where('tweeted_datetime', '>=', $tweet->tweeted_datetime)
+                ->Where('tweeted_datetime', '<=', $last_tweet_datetime->tweeted_datetime)
+                ->get();
+
+            foreach ($checked_tweets_ids as $checked_tweets_id){
+                DB::table('checked_tweets')->updateOrInsert(
+                    [
+                        'service_user_id'=>$this->session_user->service_user_id,
+                        'tweet_id'=>$checked_tweets_id->tweet_id
+                    ]
+                );
+            }
+        }
+
 
         return  response()->view('media', $param);
     }

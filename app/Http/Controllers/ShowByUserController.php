@@ -41,12 +41,29 @@ class ShowByUserController extends Controller
             ->Where('config_id', 1)
             ->first();
 
+        $filter_checked = DB::table('user_config')
+            ->select(['value'])
+            ->Where('service_user_id',  $this->session_user->service_user_id)
+            ->Where('config_id', 4)
+            ->first();
+
         $query = DB::table('tweets')
             ->Where('service_user_id', $this->session_user->service_user_id)
             ->Where('user_id', $user_id)
             ->Where('is_media', 1)
             ->Where('media_ready', 1)
             ->Where('deleted', 0);
+
+        if($filter_checked->value == 1){
+            $query = $query->whereNotExists(function($subquery){
+                $subquery
+                    ->select(DB::raw(1))
+                    ->from('checked_tweets')
+                    ->where('service_user_id', $this->session_user->service_user_id)
+                    ->whereRaw('checked_tweets.tweet_id = tweets.tweet_id');
+            });
+        }
+
         if($remove_retweet->value == 1){
             $query = $query->Where('retweeted','=', 0);
         }
@@ -67,8 +84,12 @@ class ShowByUserController extends Controller
 
         $tweet_medias =
             DB::table('tweet_medias')
-            ->whereIn('tweet_id', $tweet_ids)
-            ->get();
+                ->join('tweets', 'tweets.tweet_id', '=', 'tweet_medias.tweet_id')
+                ->Where('tweets.service_user_id', $this->session_user->service_user_id)
+                ->Where('tweets.user_id', $user_id)
+                ->whereIn('tweet_medias.tweet_id', $tweet_ids)
+                ->orderByDesc('tweeted_datetime')
+                ->get();
 
         $viewModel->show_thumbnails = [];
         foreach ($tweet_medias as $tweet_media) {
@@ -77,7 +98,6 @@ class ShowByUserController extends Controller
                 continue;
             }
             $split_thumb_path = explode("/", $tweet_media->thumb_directory_path);
-            $split_media_path = explode("/", $tweet_media->directory_path);
             array_push($viewModel->show_thumbnails,
                 new ShowThumbnail(
                     $tweet_media->tweet_id,
