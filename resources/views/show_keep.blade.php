@@ -13,6 +13,12 @@
     <!-- メインコンテンツ -->
     <div class="container-fluid" style="">
 
+        <div class="row mt-1 mb-1">
+            <div class="col" style="text-align: center">
+                <a href="{{ route('slideshow.index') }}" target='_blank' rel='noreferrer'>スライドショーで観賞する</a>
+            </div>
+        </div>
+
         <!-- ページ切り替えフォーム -->
         <div class="row" style="margin-top:2em;">
             <div class="col">

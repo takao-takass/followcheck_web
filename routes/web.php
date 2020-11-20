@@ -98,3 +98,6 @@ Route::get('/followcheck/show_keep','ShowKeepController@index')->name('show_keep
 Route::get('/followcheck/media','MediaController@index')->name('media.index');
 Route::post('/followcheck/media/delete','MediaController@delete')->name('media.delete');
 Route::post('/followcheck/media/keep','MediaController@keep')->name('media.keep');
+
+# スライドショー
+Route::get('/followcheck/slideshow','SlideshowController@index')->name('slideshow.index');
