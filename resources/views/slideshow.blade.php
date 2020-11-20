@@ -31,18 +31,26 @@
         });
 
         $(function(){
-            setInterval(changeImage,10*1000);
+            setInterval(changeImage,20*1000);
         });
 
         function changeImage(){
             $.get("{{ route('api.slideshow.image') }}",function(response){
-                $("#image").stop().animate({opacity:'0'},500);
+
+                var image = new Image();
+                image.src = response.url;
+
+                $("#image").animate({opacity:'0'},500);
                 $("#image").attr("src",response.url)
-                $("#image").stop().animate({opacity:'1'},500);
+                if(image.width < image.height){
+                    $("#image").addClass('height-zoom');
+                    $("#image").removeClass('width-zoom');
+                }else{
+                    $("#image").addClass('width-zoom');
+                    $("#image").removeClass('height-zoom');
+                }
+                $("#image").animate({opacity:'1'},500);
             });
         }
-
-
-
     </script>
 @endsection
