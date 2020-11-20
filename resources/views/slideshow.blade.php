@@ -4,12 +4,21 @@
     <title>スライドショー</title>
 @endsection
 
+@section('style')
+    <link rel="stylesheet" href="{{ asset('/css/slideshow.css') }}">
+@endsection
+
 @section('content')
 
+    <div class="slideshow">
+        <img id="image" src=""/>
+    </div>
+
+    <!--
     <div style="text-align: center">
         <img id="image" src="" style="max-width:100vw;max-height:100vh;" />
     </div>
-
+    -->
 @endsection
 
 @section('script')
