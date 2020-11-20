@@ -40,16 +40,20 @@
                 var image = new Image();
                 image.src = response.url;
 
-                $("#image").animate({opacity:'0'},500);
-                $("#image").attr("src",response.url)
-                if(image.width < image.height){
-                    $("#image").addClass('height-zoom');
-                    $("#image").removeClass('width-zoom');
-                }else{
-                    $("#image").addClass('width-zoom');
-                    $("#image").removeClass('height-zoom');
-                }
-                $("#image").animate({opacity:'1'},500);
+                $("#image").animate({opacity:'0'},500,function(){
+
+                    $("#image").attr("src",response.url)
+                    if(image.width < image.height){
+                        $("#image").addClass('height-zoom');
+                        $("#image").removeClass('width-zoom');
+                    }else{
+                        $("#image").addClass('width-zoom');
+                        $("#image").removeClass('height-zoom');
+                    }
+                    $("#image").animate({opacity:'1'},500);
+                    
+                });
+
             });
         }
     </script>
