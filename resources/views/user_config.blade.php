@@ -79,6 +79,18 @@
 
     </form>
 
-
+    <div class="row" style="margin-top:2em;">
+        <div class="col-md-12">
+            <h2 class="text-center">
+                <strong>システム情報</strong>
+            </h2>
+        </div>
+    </div>
+    <hr/>
+    <div class="row mt-2">
+        <div class="col">
+            削除されるメディアの数：{{$system_deletable_count}}
+        </div>
+    </div>
 </div>
 @endsection
