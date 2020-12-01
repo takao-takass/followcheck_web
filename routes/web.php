@@ -72,7 +72,7 @@ Route::get('/followcheck/groups','GroupsController@index');
 
 # ユーザ
 # - 画面表示
-Route::get('/followcheck/user/{user_id}','UserController@index');
+Route::get('/followcheck/user/{user_id}','UserController@index')->name('user.index');
 
 
 # キーワード検索
