@@ -92,5 +92,10 @@
             削除されるメディアの数：{{$system_deletable_count}}
         </div>
     </div>
+    <div class="row mt-2">
+        <div class="col">
+            <a href="{{ route('system.repair_user.index') }}">取得できなかったユーザを修復する</a>
+        </div>
+    </div>
 </div>
 @endsection

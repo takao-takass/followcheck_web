@@ -128,6 +128,14 @@ class TweetUsers2Controller extends Controller
             $response->id_str
         ]);
 
+        // Twitterユーザマスタに登録する
+        $remusers = DB::connection('mysql')->insert(
+            " INSERT INTO relational_users (user_id, disp_name, name, description, theme_color, follow_count, follower_count, create_datetime, update_datetime, deleted)" .
+            " VALUES (?, ?, ?, '', '', 0, 0, NOW(), '2000-01-01', 0)".
+            " ON DUPLICATE KEY UPDATE ".
+            " update_datetime = NOW() /*既に登録済みの場合は更新日時のみ更新*/ "
+            ,[$response->id_str,$response->screen_name,$response->name]);
+
         return redirect()->route('tweetuser.index');
     }
 }

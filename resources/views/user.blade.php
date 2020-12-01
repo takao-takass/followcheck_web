@@ -17,11 +17,13 @@
                         <h6 class="card-title">{{$account['description']}}</h6>
                         <h6 class="card-title">フォロー：{{$account['follow_count']}}</h6>
                         <h6 class="card-title">フォロワー：{{$account['follower_count']}}</h6>
+
+                        <h6 class="card-title mt-2">ユーザID：{{$account['user_id']}}</h6>
                     </div>
                 </div>
             </div>
     </div>
-    
+
     <!-- スペーサ -->
     <div style="margin-bottom:300px"></div>
 

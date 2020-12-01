@@ -14,24 +14,14 @@
         <img id="image" src=""/>
     </div>
 
-    <!--
-    <div style="text-align: center">
-        <img id="image" src="" style="max-width:100vw;max-height:100vh;" />
-    </div>
-    -->
 @endsection
 
 @section('script')
-    <!-- Business JavaScript -->
     <script>
-        // 画面表示
-        $(document).ready(function(){
+        $(function(){
             $('body').css('background-color','#232323');
             changeImage();
-        });
-
-        $(function(){
-            setInterval(changeImage,20*1000);
+            setInterval(changeImage, 20 * 1000);
         });
 
         function changeImage(){
@@ -40,9 +30,9 @@
                 var image = new Image();
                 image.src = response.url;
 
-                $("#image").animate({opacity:'0'},500,function(){
+                $("#image").animate({opacity:'0'}, 500, function(){
 
-                    $("#image").attr("src",response.url)
+                    $("#image").attr("src", response.url)
                     if(image.width < image.height){
                         $("#image").addClass('height-zoom');
                         $("#image").removeClass('width-zoom');
@@ -50,10 +40,9 @@
                         $("#image").addClass('width-zoom');
                         $("#image").removeClass('height-zoom');
                     }
-                    $("#image").animate({opacity:'1'},500);
-                    
-                });
+                    $("#image").animate({opacity:'1'}, 500);
 
+                });
             });
         }
     </script>

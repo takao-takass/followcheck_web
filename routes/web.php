@@ -101,3 +101,7 @@ Route::post('/followcheck/media/keep','MediaController@keep')->name('media.keep'
 
 # スライドショー
 Route::get('/followcheck/slideshow','SlideshowController@index')->name('slideshow.index');
+
+#システム
+Route::get('/followcheck/system/repair_user','SystemRepairUserController@index')->name('system.repair_user.index');
+Route::post('followcheck/system/repair_user/repair','SystemRepairUserController@add')->name('system.repair_user.repair');
