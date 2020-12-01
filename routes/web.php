@@ -91,6 +91,8 @@ Route::post('/followcheck/tweetusers2/add','TweetUsers2Controller@add');
 
 # New 観賞モード
 Route::get('/followcheck/show_user/{user_id}','ShowByUserController@index')->name('show_user.index');
+Route::get('/followcheck/show_user/remove_list/{user_id}','ShowByUserController@indexRemove')->name('show_user.index.remove');
+Route::post('/followcheck/show_user/remove/{user_id}','ShowByUserController@removeTweet')->name('show_user.remove');
 Route::get('/followcheck/show_all','ShowAllController@index')->name('show_all.index');
 Route::get('/followcheck/show_keep','ShowKeepController@index')->name('show_keep.index');
 
