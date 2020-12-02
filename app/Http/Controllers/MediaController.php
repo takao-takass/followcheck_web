@@ -68,7 +68,7 @@ class MediaController extends Controller
             ->Where('config_id', 3)
             ->first();
         $last_tweet_id = $request->input('last_tweet_id');
-        if($check_enabled->value == 1 && $last_tweet_id <> null){//tweet_id=1123975877505835008 & last_tweet_id=1101064720595877888
+        if($check_enabled->value == 1 && $last_tweet_id <> null){
 
             $last_tweet_datetime = DB::table('tweets')
                 ->select(['tweeted_datetime'])
