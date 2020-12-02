@@ -31,6 +31,13 @@ class UserController extends Controller
             ->where('tweets.service_user_id',$this->session_user->service_user_id)
             ->count();
 
+        $param['media_ready_count'] = DB::table('tweets')
+            ->join('tweet_medias','tweets.tweet_id','=','tweet_medias.tweet_id')
+            ->where('tweets.user_id',$request['user_id'])
+            ->where('tweets.service_user_id',$this->session_user->service_user_id)
+            ->where('tweets.media_ready',1)
+            ->count();
+
         return response()
             ->view('user', $param)
             ->cookie('sign',$this->updateToken()->signtext,24*60);
