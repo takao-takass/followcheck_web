@@ -6,6 +6,7 @@
 
 @section('style')
     <link rel="stylesheet" href="{{ asset('/css/slideshow.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/darktheme.css') }}">
 @endsection
 
 @section('content')
@@ -19,7 +20,6 @@
 @section('script')
     <script>
         $(function(){
-            $('body').css('background-color','#232323');
             changeImage();
             setInterval(changeImage, 20 * 1000);
         });

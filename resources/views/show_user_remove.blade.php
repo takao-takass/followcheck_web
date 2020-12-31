@@ -88,11 +88,6 @@
 @section('script')
     <!-- Business JavaScript -->
     <script>
-        // 画面表示
-        $(document).ready(function(){
-            $('body').css('background-color','#232323');
-        });
-
         function remove(id){
             $('#tweet_id').val(id);
             $('#submit').click();

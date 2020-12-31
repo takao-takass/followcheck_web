@@ -4,6 +4,10 @@
     <title>メディア</title>
 @endsection
 
+@section('style')
+    <link rel="stylesheet" href="{{ asset('/css/darktheme.css') }}">
+@endsection
+
 @section('content')
 
     <a href="{{ $Media->path }}"><img src="{{ $Media->path }}" style="max-width:100vw;max-height:100vh;" /></a>
@@ -51,9 +55,5 @@
 @section('script')
     <!-- Business JavaScript -->
     <script>
-        // 画面表示
-        $(document).ready(function(){
-            $('body').css('background-color','#232323');
-        });
     </script>
 @endsection
