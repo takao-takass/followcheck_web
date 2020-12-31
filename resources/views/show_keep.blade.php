@@ -6,6 +6,7 @@
 
 @section('style')
     <link rel="stylesheet" href="{{ asset('/css/show.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/darktheme.css') }}">
 @endsection
 
 @section('content')
