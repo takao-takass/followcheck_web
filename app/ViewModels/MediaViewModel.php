@@ -8,6 +8,8 @@ class MediaViewModel
 
     public string $user_thumbnail_path;
 
+    public string $user_id;
+
     public string $tweet_body;
 
     public string $twitter_url;

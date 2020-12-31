@@ -6,6 +6,7 @@
 
 @section('style')
     <link rel="stylesheet" href="{{ asset('/css/show.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/darktheme.css') }}">
 @endsection
 
 @section('content')
@@ -89,9 +90,5 @@
 @section('script')
     <!-- Business JavaScript -->
     <script>
-        // 画面表示
-        $(document).ready(function(){
-            $('body').css('background-color','#232323');
-        });
     </script>
 @endsection

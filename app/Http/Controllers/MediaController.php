@@ -56,6 +56,7 @@ class MediaController extends Controller
 
         $viewModel->tweet_body = $tweet->body;
         $viewModel->user_thumbnail_path = $user->thumbnail_url;
+        $viewModel->user_id = $user->user_id;
         $viewModel->twitter_url = 'https://twitter.com/' . $user->disp_name . '/status/' . $tweet_id;
         $viewModel->tweet_id = $tweet_id;
         $viewModel->keep_count = $keep_count;
