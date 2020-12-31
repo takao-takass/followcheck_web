@@ -22,8 +22,11 @@
             </div>
         </div>
         <div class="row mt-3 mb-3">
-            <div class="col">
+            <div class="col-6">
                 <a href="{{ $Media->twitter_url }}"><input type="button" class="btn btn-secondary form-control" value="Twitterで見る" /></a>
+            </div>
+            <div class="col-6">
+                <a href="{{ route('show_user.index', ['user_id' => $Media->user_id]) }}"><input type="button" class="btn btn-secondary form-control" value="戻る" /></a>
             </div>
         </div>
         <form action="{{ route('media.keep', ['tweet_id' => $Media->tweet_id] ) }}" method="post">
@@ -39,15 +42,6 @@
                 </div>
             </div>
         </form>
-        <form action="{{ route('media.delete', ['tweet_id' => $Media->tweet_id] ) }}" method="post">
-            @csrf
-            <div class="row mt-5 mb-3">
-                <div class="col">
-                   <button type="submit" class="btn btn-danger form-control">削除する</button>
-                </div>
-            </div>
-        </form>
-
     </div>
 
 @endsection
