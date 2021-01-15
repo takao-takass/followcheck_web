@@ -89,9 +89,17 @@ class ShowByUserController extends Controller
         DB::table('shown_tweets')
             ->where('sign', $this->getToken())
             ->delete();
-        $tweet_ids = [];
+        $tweet_medias = [];
         foreach ($tweets as $tweet) {
-            array_push($tweet_ids, $tweet->tweet_id);
+            $records = DB::table('tweet_medias')
+                ->Where('service_user_id', $this->session_user->service_user_id)
+                ->Where('user_id', $tweet->user_id)
+                ->where('tweet_id', $tweet->tweet_id)
+                ->get();
+            foreach ($records as $record){
+                array_push($tweet_medias,$record);
+            }
+
             DB::table('shown_tweets')->updateOrInsert(
                 [
                     'sign'=>$this->getToken(),
@@ -101,15 +109,6 @@ class ShowByUserController extends Controller
                 ]
             );
         }
-
-        $tweet_medias =
-            DB::table('tweet_medias')
-                ->join('tweets', 'tweets.tweet_id', '=', 'tweet_medias.tweet_id')
-                ->Where('tweets.service_user_id', $this->session_user->service_user_id)
-                ->Where('tweets.user_id', $user_id)
-                ->whereIn('tweet_medias.tweet_id', $tweet_ids)
-                ->orderByDesc('tweeted_datetime')
-                ->get();
 
         $viewModel->show_thumbnails = [];
         foreach ($tweet_medias as $tweet_media) {
