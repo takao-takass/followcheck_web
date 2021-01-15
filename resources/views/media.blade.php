@@ -35,7 +35,7 @@
                 @endif
             </div>
         </div>
-        <form action="{{ route('media.keep', ['tweet_id' => $Media->tweet_id] ) }}" method="post">
+        <form action="{{ route('media.keep', ['tweet_id' => $Media->tweet_id, 'show_type' => $ShowType] ) }}" method="post">
             @csrf
             <div class="row mt-5 mb-3">
                 <div class="col">

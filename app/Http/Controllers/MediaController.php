@@ -91,35 +91,6 @@ class MediaController extends Controller
         return  response()->view('media', $param);
     }
 
-    public function delete(Request $request)
-    {
-        if(!$this->isValidToken()){
-            return redirect(action('LoginController@logout'));
-        }
-
-        $tweet_id = $request['tweet_id'];
-        DB::table('deletable_tweets')
-            ->insert(
-                [
-                    'service_user_id'=>$this->session_user->service_user_id,
-                    'tweet_id'=>$tweet_id
-                ]
-            );
-
-        DB::table('tweets')
-            ->where('service_user_id', $this->session_user->service_user_id)
-            ->where('tweet_id',$tweet_id)
-            ->update(['deleted' => 1]);
-
-        $tweet = DB::table('tweets')
-            ->where('service_user_id', $this->session_user->service_user_id)
-            ->where('tweet_id', '=',  $tweet_id)
-            ->first();
-
-        return redirect( route('show_user.index', ['user_id' => $tweet->user_id]) );
-    }
-
-
     public function keep(Request $request)
     {
         if(!$this->isValidToken()){
@@ -140,6 +111,10 @@ class MediaController extends Controller
             ->where('tweet_id', '=',  $tweet_id)
             ->first();
 
-        return redirect( route('show_user.index', ['user_id' => $tweet->user_id]) );
+        if($request['show_type'] == 'user'){
+            return redirect( route('show_user.index', ['user_id' => $tweet->user_id]) );
+        }else{
+            return redirect( route('show_all.index') );
+        }
     }
 }
