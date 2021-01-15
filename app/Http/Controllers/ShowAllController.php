@@ -94,7 +94,6 @@ class ShowAllController extends Controller
                 ->Where('service_user_id', $this->session_user->service_user_id)
                 ->Where('user_id', $tweet->user_id)
                 ->where('tweet_id', $tweet->tweet_id)
-                ->orderByDesc('tweeted_datetime')
                 ->get();
             foreach ($records as $record){
                 array_push($tweet_medias,$record);
