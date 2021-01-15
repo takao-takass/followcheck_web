@@ -18,13 +18,13 @@ use Carbon\Carbon;
 class ShowAllController extends Controller
 {
 
-    public function index($user_id, Request $request)
+    public function index(Request $request)
     {
         // 有効なトークンが無い場合はログイン画面に飛ばす
         if(!$this->isValidToken()){
             return redirect(action('LoginController@logout'));
         }
-        return  response()->view('show_all',$this->createViewParam($user_id,$request));
+        return  response()->view('show_all',$this->createViewParam($request));
     }
 
     private function createViewParam(Request $request)
