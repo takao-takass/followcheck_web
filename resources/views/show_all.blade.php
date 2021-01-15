@@ -14,16 +14,10 @@
     <!-- メインコンテンツ -->
     <div class="container-fluid" style="">
 
-        <div class="row mt-1 mb-1">
-            <div class="col" style="text-align: center">
-                <a href="{{ route('slideshow.index') }}" target='_blank' rel='noreferrer'>スライドショーで観賞する</a>
-            </div>
-        </div>
-
         <!-- ページ切り替えフォーム -->
         <div class="row" style="margin-top:2em;">
             <div class="col">
-                <form action="{{ route('show_keep.index') }}" method="get">
+                <form action="{{ route('show_all.index') }}" method="get">
                     @csrf
                     <div class="d-flex justify-content-center">
                         <nav aria-label="Page navigation">
@@ -62,7 +56,7 @@
         <div class="row contents">
             @foreach ( $Thumbnails->show_thumbnails as $show_thumbnail )
                 <div class='col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-1'>
-                    <a href="{{ route('media.index',['tweet_id'=>$show_thumbnail->tweet_id, 'file_name'=>$show_thumbnail->file_name, 'show_type'=>'keep']) }}">
+                    <a href="{{ route('media.index',['tweet_id'=>$show_thumbnail->tweet_id, 'file_name'=>$show_thumbnail->file_name, 'show_type'=>'all']) }}">
                         <img class='mr-3 thumb-radius thumb-back' style='width:100%;' src='{{$show_thumbnail->thumbnail_url}}'>
                     </a>
                 </div>
@@ -77,10 +71,8 @@
         </div>
 
         <!-- ページ下部のスペーサ -->
-        <div style="margin-bottom:15em;">
+        <div style="margin-bottom:15em">
         </div>
-
-    </div>
 
     </div>
 

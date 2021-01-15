@@ -15,23 +15,22 @@ use App\Models\Token;
 use App\ViewModels\ShowThumbnailViewModel;
 use Carbon\Carbon;
 
-class ShowByUserController extends Controller
+class ShowAllController extends Controller
 {
 
-    public function index($user_id, Request $request)
+    public function index(Request $request)
     {
         // 有効なトークンが無い場合はログイン画面に飛ばす
         if(!$this->isValidToken()){
             return redirect(action('LoginController@logout'));
         }
-        return  response()->view('show_user',$this->createViewParam($user_id,$request));
+        return  response()->view('show_all',$this->createViewParam($request));
     }
 
-    private function createViewParam($user_id, Request $request)
+    private function createViewParam(Request $request)
     {
         $page = $request->input('page');
         $viewModel = new ShowThumbnailViewModel();
-        $viewModel->user_id = $user_id;
         $viewModel->Page = $page == null ? 0 : $page;
 
         $remove_retweet = DB::table('user_config')
@@ -48,7 +47,6 @@ class ShowByUserController extends Controller
 
         $query = DB::table('tweets')
             ->Where('service_user_id', $this->session_user->service_user_id)
-            ->Where('user_id', $user_id)
             ->Where('is_media', 1)
             ->Where('media_ready', 1)
             ->Where('deleted', 0);
@@ -91,6 +89,7 @@ class ShowByUserController extends Controller
             ->delete();
         $tweet_medias = [];
         foreach ($tweets as $tweet) {
+
             $records = DB::table('tweet_medias')
                 ->Where('service_user_id', $this->session_user->service_user_id)
                 ->Where('user_id', $tweet->user_id)

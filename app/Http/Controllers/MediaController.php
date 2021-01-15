@@ -61,6 +61,7 @@ class MediaController extends Controller
         $viewModel->tweet_id = $tweet_id;
         $viewModel->keep_count = $keep_count;
         $param['Media'] = $viewModel;
+        $param['ShowType'] = $request->input('show_type');
 
         // 既読ツイートの登録
         $check_enabled = DB::table('user_config')
