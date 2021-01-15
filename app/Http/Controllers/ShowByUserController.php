@@ -76,7 +76,7 @@ class ShowByUserController extends Controller
             ->take(200)
             ->get();
 
-        DB::table('users')
+        DB::table('shown_tweets')
             ->where('sign', $this->getToken())
             ->delete();
         $tweet_ids = [];
