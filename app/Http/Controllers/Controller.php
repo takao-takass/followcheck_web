@@ -24,6 +24,10 @@ class Controller extends BaseController
         $this->ip = \Request::ip();
     }
 
+    public function getToken(){
+        return $this->sign;
+    }
+
     /**
      * トークンの有効性を評価する
      */
