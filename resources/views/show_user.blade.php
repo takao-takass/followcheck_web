@@ -58,7 +58,7 @@
         <div class="row contents">
             @foreach ( $Thumbnails->show_thumbnails as $show_thumbnail )
                 <div class='col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-1'>
-                    <a href="{{ route('media.index',['tweet_id'=>$show_thumbnail->tweet_id, 'file_name'=>$show_thumbnail->file_name, 'last_tweet_id'=>$Thumbnails->show_thumbnails[0]->tweet_id]) }}">
+                    <a href="{{ route('media.index',['tweet_id'=>$show_thumbnail->tweet_id, 'file_name'=>$show_thumbnail->file_name, 'show_type'=>'user']) }}">
                         <img class='mr-3 thumb-radius thumb-back' style='width:100%;' src='{{$show_thumbnail->thumbnail_url}}'>
                     </a>
                 </div>

@@ -26,7 +26,13 @@
                 <a href="{{ $Media->twitter_url }}"><input type="button" class="btn btn-secondary form-control" value="Twitterで見る" /></a>
             </div>
             <div class="col-6">
-                <a href="{{ route('show_user.index', ['user_id' => $Media->user_id]) }}"><input type="button" class="btn btn-secondary form-control" value="戻る" /></a>
+                @if($ShowType == 'user')
+                    <a href="{{ route('show_user.index', ['user_id' => $Media->user_id]) }}"><input type="button" class="btn btn-secondary form-control" value="戻る" /></a>
+                @elseif($ShowType == 'all')
+                    <a href="{{ route('show_all.index') }}"><input type="button" class="btn btn-secondary form-control" value="戻る" /></a>
+                @elseif($ShowType == 'keep')
+                    <a href="{{ route('show_keep.index') }}"><input type="button" class="btn btn-secondary form-control" value="戻る" /></a>
+                @endif
             </div>
         </div>
         <form action="{{ route('media.keep', ['tweet_id' => $Media->tweet_id] ) }}" method="post">
