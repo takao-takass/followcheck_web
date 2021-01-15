@@ -68,36 +68,24 @@ class MediaController extends Controller
             ->Where('service_user_id',  $this->session_user->service_user_id)
             ->Where('config_id', 3)
             ->first();
-        $last_tweet_id = $request->input('last_tweet_id');
-        if($check_enabled->value == 1 && $last_tweet_id <> null){
 
-            $last_tweet_datetime = DB::table('tweets')
-                ->select(['tweeted_datetime'])
-                ->Where('service_user_id', $this->session_user->service_user_id)
-                ->Where('tweet_id', $last_tweet_id)
-                ->first();
-
-            $checked_tweets_ids = DB::table('tweets')
-                ->select(['tweet_id'])
-                ->Where('service_user_id', $this->session_user->service_user_id)
-                ->Where('user_id', $tweet->user_id)
-                ->Where('is_media', 1)
-                ->Where('media_ready', 1)
-                ->Where('deleted', 0)
+        if($check_enabled->value == 1){
+            $checked_tweets_ids = DB::table('shown_tweets')
+                ->select(['user_id','tweet_id'])
+                ->Where('sign', $this->getToken())
                 ->Where('tweeted_datetime', '>=', $tweet->tweeted_datetime)
-                ->Where('tweeted_datetime', '<=', $last_tweet_datetime->tweeted_datetime)
                 ->get();
 
             foreach ($checked_tweets_ids as $checked_tweets_id){
-                DB::table('checked_tweets')->updateOrInsert(
+                DB::table('delete_tweets')->updateOrInsert(
                     [
                         'service_user_id'=>$this->session_user->service_user_id,
+                        'user_id'=>$checked_tweets_id->user_id,
                         'tweet_id'=>$checked_tweets_id->tweet_id
                     ]
                 );
             }
         }
-
 
         return  response()->view('media', $param);
     }

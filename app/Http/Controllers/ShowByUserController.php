@@ -27,33 +27,6 @@ class ShowByUserController extends Controller
         return  response()->view('show_user',$this->createViewParam($user_id,$request));
     }
 
-    public function indexRemove($user_id, Request $request)
-    {
-        // 有効なトークンが無い場合はログイン画面に飛ばす
-        if(!$this->isValidToken()){
-            return redirect(action('LoginController@logout'));
-        }
-        return  response()->view('show_user_remove',$this->createViewParam($user_id,$request));
-    }
-
-    public function removeTweet($user_id, Request $request)
-    {
-        var_dump($request->tweet_id);
-        // 有効なトークンが無い場合はログイン画面に飛ばす
-        if(!$this->isValidToken()){
-            return redirect(action('LoginController@logout'));
-        }
-
-        DB::table('checked_tweets')->updateOrInsert(
-            [
-                'service_user_id'=>$this->session_user->service_user_id,
-                'tweet_id'=>$request->tweet_id
-            ]
-        );
-
-        return  response()->view('show_user_remove',$this->createViewParam($user_id,$request));
-    }
-
     private function createViewParam($user_id, Request $request)
     {
         $page = $request->input('page');
@@ -81,12 +54,22 @@ class ShowByUserController extends Controller
             ->Where('deleted', 0);
 
         if ($filter_checked->value == 1) {
+            /* ↓ delete_tweets に切り替えた際は削除する */
             $query = $query->whereNotExists(function ($subquery) {
                 $subquery
                     ->select(DB::raw(1))
                     ->from('checked_tweets')
                     ->where('service_user_id', $this->session_user->service_user_id)
                     ->whereRaw('checked_tweets.tweet_id = tweets.tweet_id');
+            });
+            /* ↑ delete_tweets に切り替えた際は削除する */
+            $query = $query->whereNotExists(function ($subquery) {
+                $subquery
+                    ->select(DB::raw(1))
+                    ->from('delete_tweets')
+                    ->where('service_user_id', $this->session_user->service_user_id)
+                    ->whereRaw('delete_tweets.user_id = tweets.user_id')
+                    ->whereRaw('delete_tweets.tweet_id = tweets.tweet_id');
             });
         }
 
@@ -103,9 +86,20 @@ class ShowByUserController extends Controller
             ->take(200)
             ->get();
 
+        DB::table('shown_tweets')
+            ->where('sign', $this->getToken())
+            ->delete();
         $tweet_ids = [];
         foreach ($tweets as $tweet) {
             array_push($tweet_ids, $tweet->tweet_id);
+            DB::table('shown_tweets')->updateOrInsert(
+                [
+                    'sign'=>$this->getToken(),
+                    'user_id'=>$tweet->user_id,
+                    'tweet_id'=>$tweet->tweet_id,
+                    'tweeted_datetime'=>$tweet->tweeted_datetime,
+                ]
+            );
         }
 
         $tweet_medias =
