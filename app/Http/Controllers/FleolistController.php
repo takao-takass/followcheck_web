@@ -4,10 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use App\Exceptions\ParamInvalidException;
-use App\Models\Token;
 use App\Styles\AboutNum;
-use Carbon\Carbon;
 
 class FleolistController extends Controller
 {
@@ -146,7 +143,7 @@ class FleolistController extends Controller
 
 
         // 非表示に更新する
-        $remusers = DB::connection('mysql')->update(
+        DB::connection('mysql')->update(
             " UPDATE follow_eachother RM" .
             " SET RM.undisplayed = 1" .
             "    ,RM.update_datetime = NOW()" .

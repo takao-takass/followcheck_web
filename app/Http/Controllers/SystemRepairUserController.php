@@ -5,12 +5,6 @@ namespace App\Http\Controllers;
 use Abraham\TwitterOAuth\TwitterOAuth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use App\Exceptions\ParamInvalidException;
-use App\Exceptions\ParamConflictException;
-use App\Models\Token;
-use App\Models\TweetTakeUser;
-use App\ViewModels\TweetUsersViewModel;
-use Carbon\Carbon;
 
 
 set_include_path(config('app.vendor_path'));
