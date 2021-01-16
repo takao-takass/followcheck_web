@@ -23,8 +23,7 @@ class UserConfigController extends Controller
             ->get();
 
         $param['system_deletable_count'] = DB::table('delete_tweets')
-            ->join('tweet_medias', 'checked_tweets.tweet_id', '=', 'tweet_medias.tweet_id')
-            ->where('checked_tweets.service_user_id', $this->session_user->service_user_id)
+            ->where('service_user_id', $this->session_user->service_user_id)
             ->count();
 
         return response()
