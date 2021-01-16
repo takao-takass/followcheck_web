@@ -3,17 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\ShowThumbnail;
-use App\Models\TweetTakeUser;
-use App\ViewModels\TweetUsersViewModel;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
-use App\Exceptions\ParamInvalidException;
-use App\Models\TweetListFilter;
-use App\Models\TweetShow;
-use App\Models\Token;
 use App\ViewModels\ShowThumbnailViewModel;
-use Carbon\Carbon;
 
 class ShowByUserController extends Controller
 {
@@ -54,8 +46,8 @@ class ShowByUserController extends Controller
             ->Where('deleted', 0);
 
         if ($filter_checked->value == 1) {
-            $query = $query->whereNotExists(function ($subquery) {
-                $subquery
+            $query = $query->whereNotExists(function ($sub_query) {
+                $sub_query
                     ->select(DB::raw(1))
                     ->from('delete_tweets')
                     ->where('service_user_id', $this->session_user->service_user_id)
