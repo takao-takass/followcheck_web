@@ -52,15 +52,6 @@ class ShowAllController extends Controller
             ->Where('deleted', 0);
 
         if ($filter_checked->value == 1) {
-            /* ↓ delete_tweets に切り替えた際は削除する */
-            $query = $query->whereNotExists(function ($subquery) {
-                $subquery
-                    ->select(DB::raw(1))
-                    ->from('checked_tweets')
-                    ->where('service_user_id', $this->session_user->service_user_id)
-                    ->whereRaw('checked_tweets.tweet_id = tweets.tweet_id');
-            });
-            /* ↑ delete_tweets に切り替えた際は削除する */
             $query = $query->whereNotExists(function ($subquery) {
                 $subquery
                     ->select(DB::raw(1))
