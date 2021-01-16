@@ -3,17 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\ShowThumbnail;
-use App\Models\TweetTakeUser;
-use App\ViewModels\TweetUsersViewModel;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
-use App\Exceptions\ParamInvalidException;
-use App\Models\TweetListFilter;
-use App\Models\TweetShow;
-use App\Models\Token;
 use App\ViewModels\ShowThumbnailViewModel;
-use Carbon\Carbon;
 
 class ShowKeepController extends Controller
 {

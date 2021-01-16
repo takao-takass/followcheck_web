@@ -7,8 +7,6 @@ require "vendor/autoload.php";
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Exceptions\ParamInvalidException;
-use App\Models\Token;
-use Carbon\Carbon;
 use Abraham\TwitterOAuth\TwitterOAuth;
 
 class AccountsController extends Controller
@@ -20,8 +18,6 @@ class AccountsController extends Controller
      */
     public function index()
     {
-
-
         // 有効なトークンが無い場合はログイン画面に飛ばす
         if(!$this->isValidToken()){
             return redirect(action('LoginController@logout'));
@@ -92,13 +88,13 @@ class AccountsController extends Controller
         }
 
         // アカウントマスタに登録する
-        $remusers = DB::connection('mysql')->insert(
+        DB::connection('mysql')->insert(
         " INSERT INTO users_accounts (service_user_id, user_id, create_datetime, update_datetime, deleted)" .
         " VALUES (?, ?, NOW(), NOW(), 0)"
         ,[$this->session_user->service_user_id,$response->id_str]);
 
         // Twitterユーザマスタに登録する
-        $remusers = DB::connection('mysql')->insert(
+        DB::connection('mysql')->insert(
         " INSERT INTO relational_users (user_id, disp_name, name, description, theme_color, follow_count, follower_count, create_datetime, update_datetime, deleted)" .
         " VALUES (?, ?, ?, '', '', 0, 0, NOW(), '2000-01-01', 0)".
         " ON DUPLICATE KEY UPDATE ".
@@ -121,7 +117,7 @@ class AccountsController extends Controller
         }
 
         // アカウントマスタから削除する
-        $remusers = DB::connection('mysql')->delete(
+        DB::connection('mysql')->delete(
         " DELETE FROM users_accounts" .
         " WHERE service_user_id = ?" .
         " AND user_id = ?"

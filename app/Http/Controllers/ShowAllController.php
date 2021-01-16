@@ -3,17 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\ShowThumbnail;
-use App\Models\TweetTakeUser;
-use App\ViewModels\TweetUsersViewModel;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
-use App\Exceptions\ParamInvalidException;
-use App\Models\TweetListFilter;
-use App\Models\TweetShow;
-use App\Models\Token;
 use App\ViewModels\ShowThumbnailViewModel;
-use Carbon\Carbon;
 
 class ShowAllController extends Controller
 {
@@ -52,17 +44,8 @@ class ShowAllController extends Controller
             ->Where('deleted', 0);
 
         if ($filter_checked->value == 1) {
-            /* ↓ delete_tweets に切り替えた際は削除する */
-            $query = $query->whereNotExists(function ($subquery) {
-                $subquery
-                    ->select(DB::raw(1))
-                    ->from('checked_tweets')
-                    ->where('service_user_id', $this->session_user->service_user_id)
-                    ->whereRaw('checked_tweets.tweet_id = tweets.tweet_id');
-            });
-            /* ↑ delete_tweets に切り替えた際は削除する */
-            $query = $query->whereNotExists(function ($subquery) {
-                $subquery
+            $query = $query->whereNotExists(function ($sub_query) {
+                $sub_query
                     ->select(DB::raw(1))
                     ->from('delete_tweets')
                     ->where('service_user_id', $this->session_user->service_user_id)

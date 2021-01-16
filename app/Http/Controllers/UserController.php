@@ -3,10 +3,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use App\Exceptions\ParamInvalidException;
-use App\Models\Token;
-use Carbon\Carbon;
-use Abraham\TwitterOAuth\TwitterOAuth;
 
 class UserController extends Controller
 {
