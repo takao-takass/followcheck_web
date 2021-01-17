@@ -35,11 +35,11 @@ class UserController extends Controller
             ->count();
 
         $param['media_checked_count'] = DB::table('tweets')
-            ->join('checked_tweets','tweets.tweet_id','=','checked_tweets.tweet_id')
-            ->join('tweet_medias','checked_tweets.tweet_id','=','tweet_medias.tweet_id')
+            ->join('delete_tweets','tweets.tweet_id','=','delete_tweets.tweet_id')
+            ->join('tweet_medias','delete_tweets.tweet_id','=','tweet_medias.tweet_id')
             ->where('tweets.user_id',$request['user_id'])
             ->where('tweets.service_user_id',$this->session_user->service_user_id)
-            ->where('checked_tweets.service_user_id',$this->session_user->service_user_id)
+            ->where('delete_tweets.service_user_id',$this->session_user->service_user_id)
             ->count();
 
         return response()
