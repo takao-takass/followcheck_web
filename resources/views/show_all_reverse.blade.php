@@ -16,7 +16,7 @@
 
         <div class="row mt-1 mb-1">
             <div class="col" style="text-align: center">
-                <a href="{{ route('slideshow.index') }}" target='_blank' rel='noreferrer'>古いもの順で表示する</a>
+                <a href="{{ route('show_all_reverse.index') }}">古いもの順で表示する</a>
             </div>
         </div>
 
