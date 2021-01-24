@@ -110,7 +110,7 @@ class MediaController extends Controller
         if($request['show_type'] == 'user') {
             return redirect(route('show_user.index', ['user_id' => $tweet->user_id]));
         }elseif($request['show_type'] == 'all_reverse'){
-                return redirect( route('show_user_reverse.index', ['user_id' => $tweet->user_id]) );
+                return redirect( route('show_all_reverse.index') );
         }else{
             return redirect( route('show_all.index') );
         }
