@@ -16,7 +16,7 @@
 
         <div class="row mt-1 mb-1">
             <div class="col" style="text-align: center">
-                <a href="{{ route('slideshow.index') }}" target='_blank' rel='noreferrer'>古いもの順で表示する</a>
+                <a href="{{ route('show_all_reverse.index') }}">古いもの順で表示する</a>
             </div>
         </div>
 
@@ -53,7 +53,7 @@
                         </nav>
                     </div>
                     <input type="hidden" name="page" id="pageNumber" value="{{$Thumbnails->Page}}">
-                    <button type="submit" id="searchSubmit" style="display:none;">
+                    <button type="submit" id="searchSubmit" style="display:none;"></button>
                 </form>
             </div>
         </div>
@@ -63,14 +63,14 @@
             @foreach ( $Thumbnails->show_thumbnails as $show_thumbnail )
                 <div class='col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-1'>
                     <a href="{{ route('media.index',['tweet_id'=>$show_thumbnail->tweet_id, 'file_name'=>$show_thumbnail->file_name, 'show_type'=>'all']) }}">
-                        <img class='mr-3 thumb-radius thumb-back' style='width:100%;' src='{{$show_thumbnail->thumbnail_url}}'>
+                        <img alt="" class='mr-3 thumb-radius thumb-back' style='width:100%;' src='{{$show_thumbnail->thumbnail_url}}'>
                     </a>
                 </div>
             @endforeach
             @if($Thumbnails->Page <> $Thumbnails->MaxPage)
                 <div class='col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-1'>
                     <a href="#" onclick="page({{ $Thumbnails->Page + 1 }});">
-                        <img class='mr-3 thumb-radius thumb-back' style='width:100%;' src='{{ asset('/img/media_next.jpg') }}'>
+                        <img alt="" class='mr-3 thumb-radius thumb-back' style='width:100%;' src='{{ asset('/img/media_next.jpg') }}'>
                     </a>
                 </div>
             @endif
