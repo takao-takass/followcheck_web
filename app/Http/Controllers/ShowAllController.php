@@ -25,7 +25,7 @@ class ShowAllController extends Controller
         if(!$this->isValidToken()){
             return redirect(action('LoginController@logout'));
         }
-        return  response()->view('show_all',$this->createViewParam(1, $request));
+        return  response()->view('show_all_reverse',$this->createViewParam(1, $request));
     }
 
     private function createViewParam(int $sort, Request $request)
