@@ -52,6 +52,7 @@ class MediaController extends Controller
         $viewModel->keep_count = $keep_count;
         $param['Media'] = $viewModel;
         $param['ShowType'] = $request->input('show_type');
+        $sort = $request->input('sort');
 
         // 既読ツイートの登録
         $check_enabled = DB::table('user_config')
@@ -61,11 +62,16 @@ class MediaController extends Controller
             ->first();
 
         if($check_enabled->value == 1){
-            $checked_tweets_ids = DB::table('shown_tweets')
+
+            $query = DB::table('shown_tweets')
                 ->select(['user_id','tweet_id'])
-                ->Where('sign', $this->getToken())
-                ->Where('tweeted_datetime', '>=', $tweet->tweeted_datetime)
-                ->get();
+                ->Where('sign', $this->getToken());
+            if($sort==1){
+                $query = $query->Where('tweeted_datetime', '<=', $tweet->tweeted_datetime);
+            }else{
+                $query = $query->Where('tweeted_datetime', '>=', $tweet->tweeted_datetime);
+            }
+            $checked_tweets_ids = $query->get();
 
             foreach ($checked_tweets_ids as $checked_tweets_id){
                 DB::table('delete_tweets')->updateOrInsert(
