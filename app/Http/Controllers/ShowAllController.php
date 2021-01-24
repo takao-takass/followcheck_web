@@ -16,10 +16,19 @@ class ShowAllController extends Controller
         if(!$this->isValidToken()){
             return redirect(action('LoginController@logout'));
         }
-        return  response()->view('show_all',$this->createViewParam($request));
+        return  response()->view('show_all',$this->createViewParam(0, $request));
     }
 
-    private function createViewParam(Request $request)
+    public function index_reverse(Request $request)
+    {
+        // 有効なトークンが無い場合はログイン画面に飛ばす
+        if(!$this->isValidToken()){
+            return redirect(action('LoginController@logout'));
+        }
+        return  response()->view('show_all',$this->createViewParam(1, $request));
+    }
+
+    private function createViewParam(int $sort, Request $request)
     {
         $page = $request->input('page');
         $viewModel = new ShowThumbnailViewModel();
@@ -61,8 +70,13 @@ class ShowAllController extends Controller
         $viewModel->Count = $query->Count();
         $viewModel->MaxPage = floor($viewModel->Count / 200);
 
+        if($sort==0){
+            $query = $query->orderByDesc('tweeted_datetime');
+        }else{
+            $query = $query->orderBy('tweeted_datetime');
+        }
+
         $tweets = $query
-            ->orderByDesc('tweeted_datetime')
             ->skip($page * 200)
             ->take(200)
             ->get();
