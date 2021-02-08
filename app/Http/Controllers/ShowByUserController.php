@@ -61,12 +61,12 @@ class ShowByUserController extends Controller
         }
 
         $viewModel->Count = $query->Count();
-        $viewModel->MaxPage = floor($viewModel->Count / 200);
+        $viewModel->MaxPage = floor($viewModel->Count / 50);
 
         $tweets = $query
             ->orderByDesc('tweeted_datetime')
-            ->skip($page * 200)
-            ->take(200)
+            ->skip($page * 50)
+            ->take(50)
             ->get();
 
         DB::table('shown_tweets')
