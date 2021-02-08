@@ -68,7 +68,7 @@ class ShowAllController extends Controller
         }
 
         $viewModel->Count = $query->Count();
-        $viewModel->MaxPage = floor($viewModel->Count / 200);
+        $viewModel->MaxPage = floor($viewModel->Count / 50);
 
         if($sort==0){
             $query = $query->orderByDesc('tweeted_datetime');
@@ -77,8 +77,8 @@ class ShowAllController extends Controller
         }
 
         $tweets = $query
-            ->skip($page * 200)
-            ->take(200)
+            ->skip($page * 50)
+            ->take(50)
             ->get();
 
         DB::table('shown_tweets')
