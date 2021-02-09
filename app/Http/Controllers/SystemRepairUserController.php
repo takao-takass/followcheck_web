@@ -78,6 +78,7 @@ class SystemRepairUserController extends Controller
                     " ON DUPLICATE KEY UPDATE ".
                     " update_datetime = NOW() /*既に登録済みの場合は更新日時のみ更新*/ "
                     ,[$user_id]);
+                continue;
             }
 
             // Twitterユーザマスタに登録する
