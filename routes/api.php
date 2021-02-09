@@ -68,5 +68,14 @@ Route::post('/followcheck/show/list','ShowController@list');
 # - ツイート取得
 Route::post('/followcheck/oldtweets/list','OldTweetsController@list');
 
+
+
+
+
+
+
+# 観賞モードAPI
+Route::Post('/followcheck/show_all/keep','ShowAllApiController@keep')->name('api.show_all.keep');
+
 # スライドショーAPI
 Route::Get('/followcheck/slideshow/image','SlideshowApiController@image')->name('api.slideshow.image');
