@@ -23,7 +23,7 @@
         <!-- ページ切り替えフォーム -->
         <div class="row" style="margin-top:2em;">
             <div class="col">
-                <form action="{{ route('show_all.index') }}" method="get">
+                <form action="{{ route('show_all_reverse.index') }}" method="get">
                     @csrf
                     <div class="d-flex justify-content-center">
                         <nav aria-label="Page navigation">
@@ -90,7 +90,7 @@
     <!-- Business JavaScript -->
     <script>
         function keep(tweet_id){
-            $.post("{{ route('api.show_all.keep') }}",{ tweet_id: tweet_id },function(response){
+            $.post("{{ route('api.show_all.keep') }}",{ tweet_id: tweet_id },function(){
                 $('.tweet-'+tweet_id).addClass('img-opacity');
             });
         }
