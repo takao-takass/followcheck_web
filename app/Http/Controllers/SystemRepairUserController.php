@@ -54,36 +54,41 @@ class SystemRepairUserController extends Controller
             return redirect()->route('login.logout');
         }
 
-        $user_id = $request['user_id'];
-        if (empty($user_id)) {
+        $user_id_str = $request['user_id'];
+        if (empty($user_id_str)) {
             $param['error'] = 'require';
             return redirect()->route('tweetuser.index', $param);
         }
 
-        // Twitterアカウントの情報を取得
-        $twitter_api = new TwitterOAuth(config('app.consumer_key'), config('app.consumer_secret'), config('app.access_token'), config('app.access_token_secret'));
-        $response = $twitter_api->get("users/show", [
-            "user_id" => $user_id
-        ]);
+        $user_ids = explode(' ',$user_id_str);
 
-        // 入力チェック
-        // APIからユーザが取得できない場合はエラー
-        if (! property_exists($response, 'id_str')) {
-            $param['error'] = 'user_not_found';
-            return redirect()->route('system.repair_user.index', $param);
+        foreach ($user_ids as $user_id) {
+            // Twitterアカウントの情報を取得
+            $twitter_api = new TwitterOAuth(config('app.consumer_key'), config('app.consumer_secret'), config('app.access_token'), config('app.access_token_secret'));
+            $response = $twitter_api->get("users/show", [
+                "user_id" => $user_id
+            ]);
+
+            // 入力チェック
+            // APIからユーザが取得できない場合はエラー
+            if (! property_exists($response, 'id_str')) {
+                DB::connection('mysql')->insert(
+                    " INSERT INTO relational_users (user_id, disp_name, name, description, theme_color, follow_count, follower_count, create_datetime, update_datetime, deleted)" .
+                    " VALUES (?, 'TWITTER_NOT_FOUND', 'TWITTER_NOT_FOUND', '', '', 0, 0, NOW(), NOW(), 0)".
+                    " ON DUPLICATE KEY UPDATE ".
+                    " update_datetime = NOW() /*既に登録済みの場合は更新日時のみ更新*/ "
+                    ,[$user_id]);
+            }
+
+            // Twitterユーザマスタに登録する
+            DB::connection('mysql')->insert(
+                " INSERT INTO relational_users (user_id, disp_name, name, description, theme_color, follow_count, follower_count, create_datetime, update_datetime, deleted)" .
+                " VALUES (?, ?, ?, '', '', 0, 0, NOW(), '2000-01-01', 0)".
+                " ON DUPLICATE KEY UPDATE ".
+                " update_datetime = NOW() /*既に登録済みの場合は更新日時のみ更新*/ "
+                ,[$response->id_str,$response->screen_name,$response->name]);
         }
-
-        DB::table('relational_users')
-            ->where('user_id','=',$response->id_str)
-            ->delete();
-
-        // Twitterユーザマスタに登録する
-        $remusers = DB::connection('mysql')->insert(
-            " INSERT INTO relational_users (user_id, disp_name, name, description, theme_color, follow_count, follower_count, create_datetime, update_datetime, deleted)" .
-            " VALUES (?, ?, ?, '', '', 0, 0, NOW(), '2000-01-01', 0)".
-            " ON DUPLICATE KEY UPDATE ".
-            " update_datetime = NOW() /*既に登録済みの場合は更新日時のみ更新*/ "
-            ,[$response->id_str,$response->screen_name,$response->name]);
+        unset($user_id);
 
         return redirect()->route('system.repair_user.index');
     }
