@@ -70,7 +70,7 @@ class SystemRepairUserController extends Controller
             ]);
 
             DB::table('relational_users')
-                ->where('user_id','=',$response->id_str)
+                ->where('user_id','=',$user_id_str)
                 ->delete();
 
             // 入力チェック
@@ -91,7 +91,7 @@ class SystemRepairUserController extends Controller
                 " VALUES (?, ?, ?, '', '', 0, 0, NOW(), '2000-01-01', 0)".
                 " ON DUPLICATE KEY UPDATE ".
                 " update_datetime = NOW() /*既に登録済みの場合は更新日時のみ更新*/ "
-                ,[$response->id_str,$response->screen_name,$response->name]);
+                ,[$user_id_str,$response->screen_name,$response->name]);
         }
         unset($user_id);
 
