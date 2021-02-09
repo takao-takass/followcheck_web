@@ -65,7 +65,7 @@
                     <a href="{{ route('media.index',['tweet_id'=>$show_thumbnail->tweet_id, 'file_name'=>$show_thumbnail->file_name, 'show_type'=>'all_reverse', 'sort'=>1]) }}">
                         <img alt="" class='mr-3 thumb-radius thumb-back tweet-{{$show_thumbnail->tweet_id}}' style='width:100%;' src='{{$show_thumbnail->thumbnail_url}}'>
                     </a>
-                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="keep({{$show_thumbnail->tweet_id}})">KEEP</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" style='width: 100%;' onclick="keep('{{$show_thumbnail->tweet_id}}')">KEEP</button>
                 </div>
             @endforeach
             @if($Thumbnails->Page <> $Thumbnails->MaxPage)
