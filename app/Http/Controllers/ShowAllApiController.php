@@ -29,6 +29,8 @@ class ShowAllApiController extends Controller
                 );
         }
 
-        return response();
+        return response()->json([
+            'success' => True
+        ]);
     }
 }
