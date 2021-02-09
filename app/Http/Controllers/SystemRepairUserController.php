@@ -69,6 +69,10 @@ class SystemRepairUserController extends Controller
                 "user_id" => $user_id
             ]);
 
+            DB::table('relational_users')
+                ->where('user_id','=',$response->id_str)
+                ->delete();
+
             // 入力チェック
             // APIからユーザが取得できない場合はエラー
             if (! property_exists($response, 'id_str')) {
