@@ -78,3 +78,6 @@ Route::get('/followcheck/slideshow','SlideshowController@index')->name('slidesho
 #システム
 Route::get('/followcheck/system/repair_user','SystemRepairUserController@index')->name('system.repair_user.index');
 Route::post('followcheck/system/repair_user/repair','SystemRepairUserController@add')->name('system.repair_user.repair');
+
+
+Route::get('/followcheck/test','TestController@index')->name('test.index');
