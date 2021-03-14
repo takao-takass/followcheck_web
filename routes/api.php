@@ -79,3 +79,7 @@ Route::Post('/followcheck/show_all/keep','ShowAllApiController@keep')->name('api
 
 # スライドショーAPI
 Route::Get('/followcheck/slideshow/image','SlideshowApiController@image')->name('api.slideshow.image');
+
+# TwitterAccountsAPI
+Route::post('/followcheck/api/twitter/accounts/{disp_name}/add','Account\TwitterAccountsApiController@add')
+    ->name('api.twitter.account.add');
