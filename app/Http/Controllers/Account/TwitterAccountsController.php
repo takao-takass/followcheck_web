@@ -4,14 +4,18 @@ namespace App\Http\Controllers\Account;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Abraham\TwitterOAuth\TwitterOAuth;
+use App\Http\Controllers\Controller;
 use App\Exceptions\ParamInvalidException;
-use App\DataModels\RelationalUser;
+use App\DataModels\RelationalUsers;
+use App\DataModels\TweetTakeUsers;
 use App\Constants\WebRoute;
 use App\Constants\Invalid;
-use App\Http\Controllers\Controller;
+use App\ViewModels\TwitterAccountsViewModel;
 
 class TwitterAccountsController extends Controller
 {
+    const RECORDS_COUNT = 20;
+
     /**
      * 画面表示
      *
@@ -21,11 +25,20 @@ class TwitterAccountsController extends Controller
     {
         $this->authentication();
 
-        $view['users'] = RelationalUser::orderBy('create_datetime','desc')
-            ->take(50)
-            ->get();
+        $viewModel = new TwitterAccountsViewModel();
+        $viewModel->Page = $request->input('page') == null ? 0 : $request->input('page');
+        $viewModel->Count = RelationalUsers::count();
+        $viewModel->MaxPage = floor($viewModel->Count / self::RECORDS_COUNT);
+        $viewModel->Accounts = RelationalUsers::orderBy('create_datetime','desc')
+            ->skip(self::RECORDS_COUNT * $viewModel->Page)
+            ->take(self::RECORDS_COUNT)
+            ->get()
+            ->toArray();
+        $param['data'] = $viewModel;
 
-        return view('account.twitter_accounts', $view);
+
+        return view('account.twitter_accounts', $param);
+
     }
 
     /**
@@ -46,7 +59,7 @@ class TwitterAccountsController extends Controller
         }
         
         // 登録済？
-        $record = RelationalUser::where('disp_name',$disp_name)
+        $record = RelationalUsers::where('disp_name',$disp_name)
             ->count();
         if($record == 1){
             $param['error'] = Invalid::DUPULICATED;
@@ -71,7 +84,7 @@ class TwitterAccountsController extends Controller
 
         // アカウントの登録
         /* save()しても反映されないため原因調査が必要
-        $relational_user = new RelationalUser;
+        $relational_user = new RelationalUsers;
         $relational_user->user_id = $response->id_str;
         $relational_user->disp_name = $response->screen_name;
         $relational_user->name = $response->name;
@@ -84,7 +97,7 @@ class TwitterAccountsController extends Controller
         $relational_user->save();
         */
         
-        DB::table(RelationalUser::TABLE_NAME)
+        DB::table(RelationalUsers::TABLE_NAME)
             ->insert(
                 [
                     'user_id' => $response->id_str,

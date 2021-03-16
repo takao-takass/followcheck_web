@@ -4,7 +4,7 @@ namespace App\DataModels;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RelationalUser extends Model
+class RelationalUsers extends Model
 {
     const TABLE_NAME = 'relational_users';
 
