@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Account;
 
 use Illuminate\Support\Facades\DB;
@@ -11,6 +12,8 @@ use App\DataModels\TweetTakeUsers;
 use App\Constants\WebRoute;
 use App\Constants\Invalid;
 use App\ViewModels\TwitterAccountsViewModel;
+use App\ViewModels\TwitterAccount;
+
 
 class TwitterAccountsController extends Controller
 {
@@ -29,16 +32,34 @@ class TwitterAccountsController extends Controller
         $viewModel->Page = $request->input('page') == null ? 0 : $request->input('page');
         $viewModel->Count = RelationalUsers::count();
         $viewModel->MaxPage = floor($viewModel->Count / self::RECORDS_COUNT);
-        $viewModel->Accounts = RelationalUsers::orderBy('create_datetime','desc')
+        $relational_users = RelationalUsers::orderBy('create_datetime','desc')
             ->skip(self::RECORDS_COUNT * $viewModel->Page)
             ->take(self::RECORDS_COUNT)
             ->get()
             ->toArray();
+
+        $tweet_take_users = TweetTakeUsers::select(['user_id'])
+            ->where('service_user_id', $this->session_user->service_user_id)
+            ->get()
+            ->toArray();
+        
+        $twitter_accounts = [];
+        foreach($relational_users as $relational_user ){
+
+            $twitter_account = new TwitterAccount();
+            $twitter_account->User = $relational_user;
+            $twitter_account->TakingTweet = array_search(
+                $relational_user['user_id'],
+                array_column( $tweet_take_users, 'user_id')
+            );
+            $twitter_account->TakedFollow = False;
+            $twitter_account->TakedFavorite = False;
+            array_push($twitter_accounts,$twitter_account);
+        }
+        $viewModel->Accounts = $twitter_accounts;
         $param['data'] = $viewModel;
-
-
+        
         return view('account.twitter_accounts', $param);
-
     }
 
     /**

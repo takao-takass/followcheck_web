@@ -74,29 +74,29 @@
             <div class="col-12 mt-2">
                 <div class="d-flex p-3" style="background-color:#F6F6F6;">
                     <div class="d-inline-flex" style="min-width: 75px; width: 75px;">
-                        <a href="{{ route('user.index', ['user_id' => $account['user_id']]) }}">
-                            <img class='img-radius img-fluid async-load' src="{{asset('./img/usericon1.jpg')}}" data-async-load="{{$account['thumbnail_url']}}">
+                        <a href="{{ route('user.index', ['user_id' => $account->User['user_id']]) }}">
+                            <img class='img-radius img-fluid async-load' src="{{asset('./img/usericon1.jpg')}}" data-async-load="{{$account->User['thumbnail_url']}}">
                         </a>
                     </div>
                     <div class="d-inline-flex d-flex flex-column ml-4">
                         <div>
-                            <label><strong>{{$account['name']}}</strong></label>
-                            <label class="ml-4" style="color: gray;"><strong>@ {{$account['disp_name']}}</strong></label>
-                            <label class="ml-3" style="color: maroon;">{{$account['protected']==0 ? '' : '【鍵垢】'}}</label>
-                            <label class="ml-3" style="color: maroon;">{{$account['icecream']==0 ? '' : '【凍結】'}}</label>
-                            <label class="ml-3" style="color: maroon;">{{$account['not_found']==0 ? '' : '【垢消し済】'}}</label>
+                            <label><strong>{{$account->User['name']}}</strong></label>
+                            <label class="ml-4" style="color: gray;"><strong>@ {{$account->User['disp_name']}}</strong></label>
+                            <label class="ml-3" style="color: red;">{{$account->User['protected']==0 ? '' : '【鍵垢】'}}</label>
+                            <label class="ml-3" style="color: red;">{{$account->User['icecream']==0 ? '' : '【凍結】'}}</label>
+                            <label class="ml-3" style="color: red;">{{$account->User['not_found']==0 ? '' : '【垢消し済】'}}</label>
                         </div>
                         <div>
-                            <label>{{$account['description']}}</label>
+                            <label>{{$account->User['description']}}</label>
                         </div>
                         <div style="color: gray;">
-                            <label>{{$account['follow_count']}}フォロー</label>
-                            <label class="ml-4">{{$account['follower_count']}}フォロワー</label>
+                            <label>{{$account->User['follow_count']}}フォロー</label>
+                            <label class="ml-4">{{$account->User['follower_count']}}フォロワー</label>
                         </div>
                         <div style="color: navy;">
-                            <label>－</label><label class="ml-1">ツイート取得</label>
-                            <label class="ml-3">－</label><label class="ml-1">フォロイー取得</label>
-                            <label class="ml-3">－</label><label class="ml-1">いいね取得</label>
+                            <label>{{$account->TakingTweet ? '〇' : '－'}}</label><label class="ml-1">ツイート取得</label>
+                            <label class="ml-3">{{$account->TakedFollow ? '〇' : '－'}}</label><label class="ml-1">フォロイー取得</label>
+                            <label class="ml-3">{{$account->TakedFavorite ? '〇' : '－'}}</label><label class="ml-1">いいね取得</label>
                         </div>
                     </div>
                 </div>
