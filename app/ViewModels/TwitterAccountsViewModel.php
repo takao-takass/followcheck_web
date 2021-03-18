@@ -19,6 +19,5 @@ class TwitterAccount
     public bool $TakingTweet; 
     public bool $TakedFollow;
     public bool $TakedFavorite;
-    public array $User;
-    public array $Medias = [];
+    public array $MediaUrls = [];
 }

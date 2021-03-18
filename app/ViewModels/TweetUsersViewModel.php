@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\TweetTakeUser;
-
 namespace App\ViewModels;
+
+use App\Models\TweetTakeUser;
 
 class TweetUsersViewModel
 {

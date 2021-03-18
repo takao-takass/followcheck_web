@@ -28,6 +28,9 @@
                     <button type="submit" class="btn btn-outline-secondary" id="add-button">　　追加　　</button>
                 </div>
             </div>
+            @if($error!=null)
+                <label style="color: red;">{{$error}}</label>
+            @endif
         </div>
     </form>
 
@@ -88,6 +91,11 @@
                         </div>
                         <div>
                             <label>{{$account->User['description']}}</label>
+                        </div>
+                        <div>
+                            @foreach($account->MediaUrls as $MediaUrl)
+                                <img alt="" class='mr-3 thumb-radius thumb-back' style='width:100%;' src='{{$MediaUrl}}'>
+                            @endforeach
                         </div>
                         <div style="color: gray;">
                             <label>{{$account->User['follow_count']}}フォロー</label>
