@@ -1,5 +1,7 @@
 <?php
 
+use App\Constants\WebRoute;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -52,11 +54,6 @@ Route::get('/followcheck/keywords/{page?}','KeywordsController@index');
 
 
 
-
-# コンフィグ
-Route::get('/followcheck/user_config','UserConfigController@index')->name('config.index');
-Route::post('/followcheck/user_config','UserConfigController@save')->name('config.save');
-
 # New ツイートを見る
 Route::get('/followcheck/tweetusers2','TweetUsers2Controller@index')->name('tweetuser.index');
 Route::post('/followcheck/tweetusers2/add','TweetUsers2Controller@add');
@@ -75,6 +72,19 @@ Route::post('/followcheck/media/keep','MediaController@keep')->name('media.keep'
 # スライドショー
 Route::get('/followcheck/slideshow','SlideshowController@index')->name('slideshow.index');
 
-#システム
+# システム
 Route::get('/followcheck/system/repair_user','SystemRepairUserController@index')->name('system.repair_user.index');
 Route::post('followcheck/system/repair_user/repair','SystemRepairUserController@add')->name('system.repair_user.repair');
+
+# コンフィグ
+Route::get('/followcheck/user_config','UserConfigController@index')->name('config.index');
+Route::post('/followcheck/user_config','UserConfigController@save')->name('config.save');
+
+# アカウント一覧
+Route::get('/followcheck/twitter/accounts','Account\TwitterAccountsController@index')
+    ->name(WebRoute::TWITTER_ACCOUNT_INDEX);
+Route::post('/followcheck/twitter/accounts','Account\TwitterAccountsController@add')
+    ->name(WebRoute::TWITTER_ACCOUNT_ADD);
+
+# テスト用
+Route::get('/followcheck/test','TestController@index')->name('test.index');

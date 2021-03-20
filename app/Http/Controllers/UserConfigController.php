@@ -1,8 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 
-set_include_path(config('app.vendor_path'));
-require "vendor/autoload.php";
+//set_include_path(config('app.vendor_path'));
+//require "vendor/autoload.php";
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;

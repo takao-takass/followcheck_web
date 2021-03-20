@@ -28,6 +28,18 @@ class Controller extends BaseController
         return $this->sign;
     }
 
+    public function authentication(){
+        if(!$this->isValidToken()){
+            return redirect(action('LoginController@logout'));
+        }
+    }
+
+    public function apiAuthentication(){
+        if(!$this->isValidToken()){
+            return redirect(action('LoginController@logout'));
+        }
+    }
+
     /**
      * トークンの有効性を評価する
      */

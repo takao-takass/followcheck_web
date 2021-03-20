@@ -17,7 +17,9 @@
 
         <div class="row mt-3">
             <div class="col">
-                <img alt="UserIcon" class="usericon" src="{{ $Media->user_thumbnail_path }}" />
+                <a href="{{ route('user.index', ['user_id' => $Media->user_id]) }}">
+                    <img alt="UserIcon" class="usericon" src="{{ $Media->user_thumbnail_path }}" />
+                </a>
                 <label style="color:white;">{{ $Media->tweet_body }}</label>
             </div>
         </div>

@@ -9,8 +9,8 @@ use App\Models\TweetTakeUser;
 use App\ViewModels\TweetUsersViewModel;
 
 
-set_include_path(config('app.vendor_path'));
-require "vendor/autoload.php";
+//set_include_path(config('app.vendor_path'));
+//require "vendor/autoload.php";
 
 class TweetUsers2Controller extends Controller
 {
