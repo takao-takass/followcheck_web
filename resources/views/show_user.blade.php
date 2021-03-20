@@ -59,7 +59,7 @@
             @foreach ( $Thumbnails->show_thumbnails as $show_thumbnail )
                 <div class='col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-1'>
                     <a href="{{ route('media.index',['tweet_id'=>$show_thumbnail->tweet_id, 'file_name'=>$show_thumbnail->file_name, 'show_type'=>'user']) }}">
-                        <img alt="" class='mr-3 thumb-radius thumb-back tweet-{{$show_thumbnail->tweet_id}}' style='width:100%;' src='{{$show_thumbnail->thumbnail_url}}'>
+                        <img alt="" class='mr-3 thumb-radius thumb-back async-load tweet-{{$show_thumbnail->tweet_id}}' style='width:100%;' src="{{asset('./img/media_default.jpg')}}" data-async-load='{{$show_thumbnail->thumbnail_url}}'>
                     </a>
                     <button type="button" class="btn btn-outline-secondary btn-sm" style='width: 100%;' onclick="keep('{{$show_thumbnail->tweet_id}}')">KEEP</button>
                 </div>
@@ -85,6 +85,11 @@
 @section('script')
     <!-- Business JavaScript -->
     <script>
+        
+        $(function(){
+            asyncLoad();
+        });
+
         function keep(tweet_id){
             $.post("{{ route('api.show_all.keep') }}",{ tweet_id: tweet_id },function(){
                 $('.tweet-'+tweet_id).addClass('img-opacity');
