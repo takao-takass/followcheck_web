@@ -21,15 +21,15 @@ class UserTweetsModel
         $this->media_urls = [];
         $this->thumb_urls = [];
         foreach($tweet_medias as $tweet_media){
-            $split_path = explode("/", $tweet_media['directory_path']);
+            $split_path = explode("/", $tweet_media->directory_path);
             array_push(
                 $this->media_urls,
-                '/img/tweetmedia/' . $split_path[5] . '/' . $tweet_media['file_name']
+                '/img/tweetmedia/' . $split_path[5] . '/' . $tweet_media->file_name
             );
-            $split_path = explode("/", $tweet_media['thumb_directory_path']);
+            $split_path = explode("/", $tweet_media->thumb_directory_path);
             array_push(
                 $this->thumb_urls,
-                '/img/tweetmedia/' . $split_path[5] . '/' . $tweet_media['thumb_file_name']
+                '/img/tweetmedia/' . $split_path[5] . '/' . $tweet_media->thumb_file_name
             );
             
         }
