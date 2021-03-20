@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\DataModels\Tweets;
 use App\DataModels\TweetMedias;
+use App\DataModels\TweetTakeUsers;
 use App\Functions\TweetMediaFunctions;
 
 class UserController extends Controller
@@ -55,14 +56,29 @@ class UserController extends Controller
             ->get()
             ->toArray();
         $tweet_ids = array_column( $tweets, 'tweet_id');
-        $tweet_medias = TweetMedias::orderBy('create_datetime')
+        $tweet_medias = TweetMedias::select(['thumb_directory_path','thumb_file_name'])
+            ->orderBy('create_datetime')
             ->where('service_user_id',$this->session_user->service_user_id)
             ->where('user_id',$request['user_id'])
             ->WhereIn('tweet_id',$tweet_ids)
             ->get()
             ->toArray();
-        $param['media_urls'] = TweetMediaFunctions::makeMediaUrls($tweet_medias);
         $param['thumb_urls'] = TweetMediaFunctions::makeThumbUrls($tweet_medias);
+
+        // ツイートの取得対象か否か
+        $param['tweet_taking'] = 1 == TweetTakeUsers::where('service_user_id',$this->session_user->service_user_id)
+            ->where('user_id',$request['user_id'])
+            ->count();
+
+        // フォロイー取得したか否か
+        // TODO: Not implemented.
+        $param['follow_taked'] = 1 == 0;
+
+        // イイネしたツイートを取得したか否か
+        // TODO: Not implemented.
+        $param['favorite_taked'] = 1 == 0;
+
+
 
         return response()->view('user', $param);
     }
