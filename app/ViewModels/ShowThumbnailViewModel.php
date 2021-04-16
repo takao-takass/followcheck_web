@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\ShowThumbnail;
-
 namespace App\ViewModels;
+
+use App\Models\ShowThumbnail;
 
 class ShowThumbnailViewModel
 {

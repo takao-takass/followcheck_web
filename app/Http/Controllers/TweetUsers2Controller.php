@@ -29,17 +29,11 @@ class TweetUsers2Controller extends Controller
 
         $param['ErrorMessage'] = "";
         if (property_exists($request, 'error')) {
-            switch ($request['error']) {
-                case "user_not_found":
-                    $param['ErrorMessage'] = 'Twitterに登録されていないユーザです。';
-                    break;
-                case "require":
-                    $param['ErrorMessage'] = 'ユーザ名を入力してください。';
-                    break;
-                case "duplicated":
-                    $param['ErrorMessage'] = '既に登録されているユーザです。';
-                    break;
-            }
+            $param['ErrorMessage'] = match ($request['error']) {
+                "user_not_found" => 'Twitterに登録されていないユーザです。',
+                "require" => 'ユーザ名を入力してください。',
+                "duplicated" => '既に登録されているユーザです。',
+            };
         }
         $page = $request->input('page');
 
