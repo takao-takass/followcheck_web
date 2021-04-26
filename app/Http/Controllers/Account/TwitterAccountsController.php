@@ -69,6 +69,7 @@ class TwitterAccountsController extends Controller
         $relational_user_ids = array_column( $relational_users, 'user_id');
 
         //　ユーザごとにツイートtop5のメディアを取得
+        /*
         $tweets = Tweets::select(['user_id','tweet_id'])
             ->where('service_user_id',$this->session_user->service_user_id)
             ->wherein('user_id',$relational_user_ids)
@@ -121,7 +122,7 @@ class TwitterAccountsController extends Controller
                 }
             }
             $top5_user_tweet->set_medias($user_tweet_medias);
-        }
+        }*/
 
         // ツイート取得対象を取得
         $tweet_take_users = TweetTakeUsers::select(['user_id'])
@@ -141,12 +142,12 @@ class TwitterAccountsController extends Controller
             );
             $twitter_account->TakedFollow = False;
             $twitter_account->TakedFavorite = False;
-
+            /*
             foreach($top5_user_tweets as $top5_user_tweet){
                 if($top5_user_tweet->user_id == $relational_user['user_id']){
                     $twitter_account->MediaUrls = $top5_user_tweet->thumb_urls;
                 }
-            }
+            }*/
 
             array_push($twitter_accounts,$twitter_account);
         }

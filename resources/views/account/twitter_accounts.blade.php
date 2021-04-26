@@ -93,9 +93,6 @@
                             <label>{{$account->User['description']}}</label>
                         </div>
                         <div>
-                            @foreach($account->MediaUrls as $MediaUrl)
-                                <img alt="" class='mr-3 thumb-radius thumb-back' style='width:100%;' src='{{$MediaUrl}}'>
-                            @endforeach
                         </div>
                         <div style="color: gray;">
                             <label>{{$account->User['follow_count']}}フォロー</label>
