@@ -77,12 +77,12 @@
                 @if (in_array($tweetTakeUser->Status, array('5','6','9')))
                     <div class="col-4 col-md-3 col-lg-2">
                         <a href="{{ route('show_user.index', ['user_id' => $tweetTakeUser->UserId]) }}" target='_blank' rel='noreferrer'>
-                            <img class='img-radius img-fluid' style=" max-width: 100%; height: auto;" src='{{$tweetTakeUser->ThumbnailUrl=='' ? asset('./img/usericon1.jpg'):$tweetTakeUser->ThumbnailUrl}}'>
+                            <img class='img-radius img-fluid async-load' style='max-width: 100%; height: auto;' src="{{asset('./img/usericon1.jpg')}}" data-async-load='{{$tweetTakeUser->ThumbnailUrl}}'>
                         </a>
                     </div>
                 @else
                     <div class="col-4 col-md-3 col-lg-2">
-                        <img class='img-radius img-opacity img-fluid' style=" max-width: 100%; height: auto;" src='{{$tweetTakeUser->ThumbnailUrl}}'>
+                        <img class='img-radius img-opacity img-fluid async-load' style='max-width: 100%; height: auto;' src="{{asset('./img/usericon1.jpg')}}" data-async-load='{{$tweetTakeUser->ThumbnailUrl}}'>
                     </div>
                 @endif
             @endforeach
@@ -104,6 +104,9 @@
 @section('script')
 
     <script>
+        $(function(){
+            asyncLoad();
+        });
     </script>
 
 @endsection
