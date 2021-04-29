@@ -68,61 +68,6 @@ class TwitterAccountsController extends Controller
 
         $relational_user_ids = array_column( $relational_users, 'user_id');
 
-        //　ユーザごとにツイートtop5のメディアを取得
-        $tweets = Tweets::select(['user_id','tweet_id'])
-            ->where('service_user_id',$this->session_user->service_user_id)
-            ->wherein('user_id',$relational_user_ids)
-            ->where('retweeted',0)
-            ->where('is_media',1)
-            ->where('media_ready',1)
-            ->orderBy('tweeted_datetime','desc')
-            ->get()
-            ->toArray();
-        
-        $top5_user_tweets = [];
-        $tweet_ids = [];
-        foreach($relational_user_ids as $relational_user_id){
-
-            $user_tweets = [];
-            foreach($tweets as $tweet){
-                if($relational_user_id==$tweet['user_id']){
-                    array_push($user_tweets,$tweet);
-                    array_push($tweet_ids,$tweet['tweet_id']);
-                }
-                if(count($user_tweets)==5){
-                    break;
-                }
-            }
-            array_push($top5_user_tweets,new UserTweetsModel(
-                $relational_user_id,
-                $user_tweets
-            ));
-        }
-
-        $tweet_medias = TweetMedias::select(['user_id','tweet_id','thumb_directory_path','thumb_file_name'])
-            ->where('service_user_id',$this->session_user->service_user_id)
-            ->wherein('user_id',$relational_user_ids)
-            ->wherein('tweet_id',$tweet_ids)
-            ->get()
-            ->toArray();
-
-        $count = 0;
-        foreach($top5_user_tweets as $top5_user_tweet){
-
-            $user_tweet_medias = [];
-            foreach($top5_user_tweet->tweets as $tweet){
-                
-                foreach($tweet_medias as $tweet_media){
-
-                    if($tweet_media['tweet_id']==$tweet['tweet_id']){
-                        array_push($user_tweet_medias, $tweet_media);
-                        break;
-                    }
-                }
-            }
-            $top5_user_tweet->set_medias($user_tweet_medias);
-        }
-
         // ツイート取得対象を取得
         $tweet_take_users = TweetTakeUsers::select(['user_id'])
             ->where('service_user_id', $this->session_user->service_user_id)
@@ -141,13 +86,6 @@ class TwitterAccountsController extends Controller
             );
             $twitter_account->TakedFollow = False;
             $twitter_account->TakedFavorite = False;
-
-            foreach($top5_user_tweets as $top5_user_tweet){
-                if($top5_user_tweet->user_id == $relational_user['user_id']){
-                    $twitter_account->MediaUrls = $top5_user_tweet->thumb_urls;
-                }
-            }
-
             array_push($twitter_accounts,$twitter_account);
         }
         $viewModel->Accounts = $twitter_accounts;
@@ -197,21 +135,6 @@ class TwitterAccountsController extends Controller
             $param['error'] = Invalid::NOT_FOUND;
             return redirect()->route(WebRoute::TWITTER_ACCOUNT_INDEX, $param);
         }
-
-        // アカウントの登録
-        /* save()しても反映されないため原因調査が必要
-        $relational_user = new RelationalUsers;
-        $relational_user->user_id = $response->id_str;
-        $relational_user->disp_name = $response->screen_name;
-        $relational_user->name = $response->name;
-        $relational_user->description = $response->description;
-        $relational_user->protected = $response->protected
-        $relational_user->theme_color = '';
-        $relational_user->follow_count = $response->friends_count;
-        $relational_user->follower_count = $response->followers_count;
-        $relational_user->update_datetime = '2000-01-01';
-        $relational_user->save();
-        */
         
         DB::table(RelationalUsers::TABLE_NAME)
             ->insert(
