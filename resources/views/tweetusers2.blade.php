@@ -73,18 +73,56 @@
 
         <!-- ユーザ一覧 -->
         <div class="row">
+        
+
             @foreach ($Users->TweetTakeUsers as $tweetTakeUser)
                 @if (in_array($tweetTakeUser->Status, array('5','6','9')))
-                    <div class="col-4 col-md-3 col-lg-2">
-                        <a href="{{ route('show_user.index', ['user_id' => $tweetTakeUser->UserId]) }}" target='_blank' rel='noreferrer'>
-                            <img class='img-radius img-fluid async-load' style='max-width: 100%; height: auto;' src="{{asset('./img/usericon1.jpg')}}" data-async-load='{{$tweetTakeUser->ThumbnailUrl}}'>
-                        </a>
+                    <div class="col-12 mt-2">
+                        <div class="d-flex p-3" style="background-color:#F6F6F6;">
+                            <div class="d-inline-flex" style="height: 75px; min-height: 75px; min-width:75px; width: 75px;">
+                                <a href="{{ route('show_user.index', ['user_id' => $tweetTakeUser->UserId]) }}">
+                                    <img class='img-radius img-fluid async-load' src="{{asset('./img/usericon1.jpg')}}" data-async-load="{{$tweetTakeUser->ThumbnailUrl}}">
+                                </a>
+                            </div>
+                            <div class="d-inline-flex d-flex flex-column ml-4">
+                                <div>
+                                    <a href="{{ route('show_user.index', ['user_id' => $tweetTakeUser->UserId]) }}">
+                                        <label><strong>{{$tweetTakeUser->Name}}</strong></label>
+                                    </a>
+                                    <label class="ml-4" style="color: gray;"><strong>@ {{$tweetTakeUser->DispName}}</strong></label>
+                                </div>
+                                <div>
+                                    <label>{{$tweetTakeUser->Description}}</label>
+                                </div>
+                                <div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 @else
-                    <div class="col-4 col-md-3 col-lg-2">
-                        <img class='img-radius img-opacity img-fluid async-load' style='max-width: 100%; height: auto;' src="{{asset('./img/usericon1.jpg')}}" data-async-load='{{$tweetTakeUser->ThumbnailUrl}}'>
+                    <div class="col-12 mt-2">
+                        <div class="d-flex p-3" style="background-color:#F6F6F6;">
+                            <div class="d-inline-flex" style="height: 75px; min-height: 75px; min-width:75px; width: 75px;">
+                                <img class='img-radius img-opacity img-fluid async-load' src="{{asset('./img/usericon1.jpg')}}" data-async-load="{{$tweetTakeUser->ThumbnailUrl}}">
+                            </div>
+                            <div class="d-inline-flex d-flex flex-column ml-4">
+                                <div>
+                                    <label><strong>{{$tweetTakeUser->Name}}</strong></label>
+                                    <label class="ml-4" style="color: gray;"><strong>@ {{$tweetTakeUser->DispName}}</strong></label>
+                                </div>
+                                <div>
+                                    <label>{{$tweetTakeUser->Description}}</label>
+                                </div>
+                                <div>
+                                    <label style='color: red;'>ダウンロード中...</label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 @endif
+
+
+
             @endforeach
             @if($Users->Page <> $Users->MaxPage)
                 <div class="col-4 col-md-3 col-lg-2">
@@ -93,6 +131,7 @@
                     </a>
                 </div>
             @endif
+
         </div>
 
         <!-- スペーサ -->
