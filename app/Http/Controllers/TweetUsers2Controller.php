@@ -56,14 +56,14 @@ class TweetUsers2Controller extends Controller
             array_push($user_ids, $tweetTakeUser->user_id);
         }
 
-        $userDetails = json_decode(json_encode(DB::table('relational_users')->select('user_id', 'disp_name', 'name', 'thumbnail_url')
+        $userDetails = json_decode(json_encode(DB::table('relational_users')->select('user_id', 'disp_name', 'name', 'thumbnail_url', 'description')
             ->whereIn('user_id', $user_ids)
             ->get()), true);
 
         $viewModel->TweetTakeUsers = [];
         foreach ($tweetTakeUsers as $tweetTakeUser) {
             $userDetail = $userDetails[array_search($tweetTakeUser->user_id, array_column($userDetails, 'user_id'))];
-            array_push($viewModel->TweetTakeUsers, new TweetTakeUser($tweetTakeUser->user_id, $userDetail['disp_name'], $userDetail['name'], $userDetail['thumbnail_url'], $tweetTakeUser->status));
+            array_push($viewModel->TweetTakeUsers, new TweetTakeUser($tweetTakeUser->user_id, $userDetail['disp_name'], $userDetail['name'], $userDetail['thumbnail_url'], $tweetTakeUser->status, $userDetail['description']));
         }
 
         $param['Users'] = $viewModel;
