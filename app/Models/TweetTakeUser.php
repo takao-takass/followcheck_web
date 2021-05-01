@@ -11,13 +11,13 @@ class TweetTakeUser
     public string $Status;
     public string $Description;
 
-    public function __construct(string $UserId, string $DispName, string $Name,string $ThumbnailUrl, string $Status, string $Description)
+    public function __construct(string $UserId, ?string $DispName, ?string $Name, ?string $ThumbnailUrl, string $Status, ?string $Description)
     {
         $this->UserId = $UserId;
-        $this->DispName = $DispName;
-        $this->Name = $Name;
-        $this->ThumbnailUrl = $ThumbnailUrl;
+        $this->DispName = $DispName ?? '';
+        $this->Name = $Name ?? '';
+        $this->ThumbnailUrl = $ThumbnailUrl ?? '';
         $this->Status = $Status;
-        $this->Description = $Description;
+        $this->Description = $Description ?? '';
     }
 }
