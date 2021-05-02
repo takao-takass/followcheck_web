@@ -129,8 +129,8 @@ class ShowAllController extends Controller
             ->Where('config_id', 4)
             ->first();
 
-        $query = Tweets::
-            select(
+        $query = Tweets::from('tweets as tweets')
+            ->select(
                 [
                     'user_id',
                     'tweet_id',
