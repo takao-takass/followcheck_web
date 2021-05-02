@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\DataModels\TweetTakeUsers;
 use App\DataModels\RelationalUsers;
+use App\DataModels\Tweets;
 use App\Models\TweetTakeUser;
 use App\ViewModels\TweetUsersViewModel;
 
@@ -69,7 +70,7 @@ class TweetUsers2Controller extends Controller
                     'status',
                 ]
             )
-            ->where('service_user_id', '=', $this->session_user->service_user_id)
+            ->where('service_user_id', $this->session_user->service_user_id)
             ->orderBy('update_datetime', 'desc')
             ->skip(20 * $view_model->page)
             ->take(20)
@@ -90,7 +91,22 @@ class TweetUsers2Controller extends Controller
             ->whereIn('user_id', $user_ids)
             ->get()
             ->toArray();
-
+        
+        $tweets = Tweets::
+            select(
+                [
+                    'user_id',
+                ]
+            )
+            ->where('service_user_id', $this->session_user->service_user_id)
+            ->whereIn('user_id', $user_ids)
+            ->where('is_media', 1)
+            ->where('media_ready', 1)
+            ->get()
+            ->toArray();
+        $tweet_user_ids = array_column($tweets, 'user_id');
+        $tweet_user_count = array_count_values($tweet_user_ids);
+            
         $view_model->tweet_take_users = [];
         foreach ($tweet_take_users as $tweet_take_user) {
             $user_detail = $user_details[
@@ -102,6 +118,10 @@ class TweetUsers2Controller extends Controller
                     )
                 )
             ];
+            $tweet_ready_count = 0;
+            if (array_key_exists($tweet_take_user['user_id'], $tweet_user_count)) {
+                $tweet_ready_count = $tweet_user_count[$tweet_take_user['user_id']];
+            }
             array_push(
                 $view_model->tweet_take_users,
                 new TweetTakeUser(
@@ -110,7 +130,8 @@ class TweetUsers2Controller extends Controller
                     $user_detail['name'],
                     $user_detail['thumbnail_url'],
                     $tweet_take_user['status'],
-                    $user_detail['description']
+                    $user_detail['description'],
+                    $tweet_ready_count,
                 )
             );
         }

@@ -95,6 +95,7 @@
                                     <label>{{$tweet_take_user->description}}</label>
                                 </div>
                                 <div>
+                                    <label>{{$tweet_take_user->tweet_ready_count}} ツイート閲覧可能</label>
                                 </div>
                             </div>
                         </div>

@@ -1,9 +1,28 @@
 <?php
-
+/**
+ * Data model for tweets entity.
+ * 
+ * PHP Version >= 8.0
+ * 
+ * @category DataModel
+ * @package  App\DataModels
+ * @author   Takahiro Tada <takao@takassoftware.com>
+ * @license  http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     None
+ */
 namespace App\DataModels;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Tweets
+ * 
+ * @category DataModel
+ * @package  App\DataModels
+ * @author   Takahiro Tada <takao@takassoftware.com>
+ * @license  http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     None
+ */
 class Tweets extends Model
 {
     const TABLE_NAME = 'tweets';
