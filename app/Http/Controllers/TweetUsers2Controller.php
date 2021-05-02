@@ -20,6 +20,8 @@ use App\DataModels\RelationalUsers;
 use App\DataModels\Tweets;
 use App\Models\TweetTakeUser;
 use App\ViewModels\TweetUsersViewModel;
+use App\Constants\WebRoute;
+use App\Constants\Invalid;
 
 /**
  * Class TweetUsers2Controller
@@ -32,6 +34,7 @@ use App\ViewModels\TweetUsersViewModel;
  */
 class TweetUsers2Controller extends Controller
 {
+    const RECORDS_COUNT = 20;
 
     /**
      * Render Index.
@@ -43,26 +46,33 @@ class TweetUsers2Controller extends Controller
     public function index(Request $request)
     {
         if (!$this->isValidToken()) {
-            return redirect()->route('login.logout');
+            return redirect()->route(WebRoute::LOGIN_LOGOUT);
         }
 
-        $param['ErrorMessage'] = "";
+        $param['error'] = null;
         if (property_exists($request, 'error')) {
-            $param['ErrorMessage'] = match ($request['error']) {
-                "user_not_found" => 'Twitterに登録されていないユーザです。',
-                "require" => 'ユーザ名を入力してください。',
-                "duplicated" => '既に登録されているユーザです。',
+            $param['error'] = match ($request['error']) {
+                Invalid::NOT_FOUND => 'Twitterに登録されていないユーザです。',
+                Invalid::REQUIRED => 'ユーザ名を入力してください。',
+                Invalid::DUPULICATED => '既に登録されているユーザです。',
             };
         }
         $page = $request->input('page');
 
+        // ページング情報
         $view_model = new TweetUsersViewModel();
         $view_model->page = $page == null ? 0 : $page;
-        $view_model->count = DB::table('tweet_take_users')
-            ->Where('service_user_id', '=', $this->session_user->service_user_id)
-            ->Count();
-        $view_model->max_page = floor($view_model->count / 20);
+        $view_model->count = TweetTakeUsers::
+            select(
+                [
+                    'user_id'
+                ]
+            )
+            ->where('service_user_id', '=', $this->session_user->service_user_id)
+            ->count();
+        $view_model->max_page = floor($view_model->count / self::RECORDS_COUNT);
 
+        // 表示するユーザ
         $tweet_take_users = TweetTakeUsers::
             select(
                 [
@@ -72,12 +82,11 @@ class TweetUsers2Controller extends Controller
             )
             ->where('service_user_id', $this->session_user->service_user_id)
             ->orderBy('update_datetime', 'desc')
-            ->skip(20 * $view_model->page)
-            ->take(20)
+            ->skip(self::RECORDS_COUNT * $view_model->page)
+            ->take(self::RECORDS_COUNT)
             ->get()
             ->toArray();
         $user_ids = array_column($tweet_take_users, 'user_id');
-
         $user_details = RelationalUsers::
             select(
                 [
@@ -92,6 +101,7 @@ class TweetUsers2Controller extends Controller
             ->get()
             ->toArray();
         
+        // メディア閲覧の準備が出来ているツイート数
         $tweets = Tweets::
             select(
                 [
@@ -106,7 +116,8 @@ class TweetUsers2Controller extends Controller
             ->toArray();
         $tweet_user_ids = array_column($tweets, 'user_id');
         $tweet_user_count = array_count_values($tweet_user_ids);
-            
+        
+        // ユーザごとのViewModel作成
         $view_model->tweet_take_users = [];
         foreach ($tweet_take_users as $tweet_take_user) {
             $user_detail = $user_details[
@@ -152,13 +163,13 @@ class TweetUsers2Controller extends Controller
     {
 
         if (!$this->isValidToken()) {
-            return redirect()->route('login.logout');
+            return redirect()->route(WebRoute::LOGIN_LOGOUT);
         }
 
         $user_id = $request['user_id'];
         if (empty($user_id)) {
-            $param['error'] = 'require';
-            return redirect()->route('tweetuser.index', $param);
+            $param['error'] = Invalid::REQUIRED;
+            return redirect()->route(WebRoute::TWEETUSER_INDEX, $param);
         }
 
         // Twitterアカウントの情報を取得
@@ -176,8 +187,8 @@ class TweetUsers2Controller extends Controller
         // 入力チェック
         // APIからユーザが取得できない場合はエラー
         if (!property_exists($response, 'id_str')) {
-            $param['error'] = 'user_not_found';
-            return redirect()->route('tweetuser.index', $param);
+            $param['error'] = Invalid::NOT_FOUND;
+            return redirect()->route(WebRoute::TWEETUSER_INDEX, $param);
         }
 
         // 既に登録されているアカウントはエラー
@@ -185,8 +196,8 @@ class TweetUsers2Controller extends Controller
             ->where('service_user_id', $this->session_user->service_user_id)
             ->count();
         if ($exists > 0) {
-            $param['error'] = 'duplicated';
-            return redirect()->route('tweetuser.index', $param);
+            $param['error'] = Invalid::DUPULICATED;
+            return redirect()->route(WebRoute::TWEETUSER_INDEX, $param);
         }
 
         // ダウンロードアカウントマスタに登録する
@@ -245,6 +256,6 @@ class TweetUsers2Controller extends Controller
             ]
         );
 
-        return redirect()->route('tweetuser.index');
+        return redirect()->route(WebRoute::TWEETUSER_INDEX);
     }
 }

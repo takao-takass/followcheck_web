@@ -26,10 +26,8 @@
                     </div>
                 </form>
             </div>
-            @if ($ErrorMessage <> "")
-                <div class="col-md-12">
-                    <span style="color:red;">{{ $ErrorMessage }}</span>
-                </div>
+            @if($error != null)
+                <label style="color: red;">{{$error}}</label>
             @endif
         </div>
 
