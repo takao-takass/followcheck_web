@@ -94,6 +94,7 @@
                                 </div>
                                 <div>
                                     <label>{{$tweet_take_user->tweet_ready_count}} ツイート閲覧可能</label>
+                                    <a class="ml-2" href="{{ route('user.index', ['user_id' => $tweet_take_user->user_id] ) }}">プロフィール</a>
                                 </div>
                             </div>
                         </div>
