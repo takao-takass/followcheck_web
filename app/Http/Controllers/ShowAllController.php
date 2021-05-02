@@ -129,8 +129,8 @@ class ShowAllController extends Controller
             ->Where('config_id', 4)
             ->first();
 
-        $query = Tweets::from('tweets as tweets')
-            ->select(
+        $query = Tweets::
+            select(
                 [
                     'user_id',
                     'tweet_id',
@@ -142,7 +142,7 @@ class ShowAllController extends Controller
             ->Where('media_ready', 1)
             ->Where('deleted', 0);
 
-        if ($filter_checked->value == 1) {
+        if ($filter_checked['value'] == 1) {
             $query = $query->whereNotExists(
                 function ($sub_query) {
                     $sub_query
@@ -152,13 +152,13 @@ class ShowAllController extends Controller
                             'service_user_id',
                             $this->session_user->service_user_id
                         )
-                        ->whereRaw('delete_tweets.user_id = tweets.user_id')
-                        ->whereRaw('delete_tweets.tweet_id = tweets.tweet_id');
+                        ->whereRaw('delete_tweets.user_id = tweetsa.user_id')
+                        ->whereRaw('delete_tweets.tweet_id = tweetsa.tweet_id');
                 }
             );
         }
 
-        if ($remove_retweet->value == 1) {
+        if ($remove_retweet['value'] == 1) {
             $query = $query->Where('retweeted', '=', 0);
         }
 
