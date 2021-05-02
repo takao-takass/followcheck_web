@@ -41,13 +41,4 @@ class UserConfig extends Model
     protected $keyType = 'int';
     // タイムスタンプの自動更新
     public $timestamps = false;
-
-    // カラム
-    public $Id;
-    public $tweet_user_id;
-    public $config_id;
-    public $value;
-    public $create_datetime;
-    public $update_datetime;
-
 }

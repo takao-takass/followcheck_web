@@ -110,24 +110,16 @@ class ShowAllController extends Controller
         $viewModel->Page = $page == null ? 0 : $page;
 
         $remove_retweet = UserConfig::
-            select(
-                [
-                    'value',
-                ]
-            )
-            ->Where('service_user_id', $this->session_user->service_user_id)
-            ->Where('config_id', 1)
-            ->first();
+            where('service_user_id', $this->session_user->service_user_id)
+            ->where('config_id', 1)
+            ->first()
+            ->getAttributes();
 
         $filter_checked = UserConfig::
-            select(
-                [
-                    'value',
-                ]
-            )
-            ->Where('service_user_id', $this->session_user->service_user_id)
-            ->Where('config_id', 4)
-            ->first();
+            where('service_user_id', $this->session_user->service_user_id)
+            ->where('config_id', 4)
+            ->first()
+            ->getAttributes();
 
         $query = Tweets::
             select(
@@ -152,8 +144,8 @@ class ShowAllController extends Controller
                             'service_user_id',
                             $this->session_user->service_user_id
                         )
-                        ->whereRaw('delete_tweets.user_id = tweetsa.user_id')
-                        ->whereRaw('delete_tweets.tweet_id = tweetsa.tweet_id');
+                        ->whereRaw('delete_tweets.user_id = tweets.user_id')
+                        ->whereRaw('delete_tweets.tweet_id = tweets.tweet_id');
                 }
             );
         }
