@@ -14,8 +14,6 @@
     <!-- メインコンテンツ -->
     <div class="container-fluid" style="">
 
-        <a class="mb-1" href="{{ route('user.index', ['user_id' => $Thumbnails->user_id] ) }}">ユーザのプロフィール</a>
-
         <!-- ページ切り替えフォーム -->
         <div class="row" style="margin-top:2em;">
             <div class="col">

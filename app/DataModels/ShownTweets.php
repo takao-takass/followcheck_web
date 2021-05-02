@@ -1,6 +1,6 @@
 <?php
 /**
- * Data model for code entity.
+ * Data model for shown_tweets entity.
  * 
  * PHP Version >= 8.0
  * 
@@ -15,7 +15,7 @@ namespace App\DataModels;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Code
+ * Class ShownTweets
  * 
  * @category DataModel
  * @package  App\DataModels
@@ -23,13 +23,18 @@ use Illuminate\Database\Eloquent\Model;
  * @license  http://opensource.org/licenses/gpl-license.php GNU Public License
  * @link     None
  */
-class Code extends Model
+class ShownTweets extends Model
 {
-    
+    const TABLE_NAME = 'shown_tweets';
+
+    // タイムスタンプのカスタマイズ
+    const CREATED_AT = 'create_datetime';
+    const UPDATED_AT = 'update_datetime';
+
     // モデルと関連しているテーブル
-    protected $table = 'code';
+    protected $table = self::TABLE_NAME;
     // テーブルの主キー
-    protected $primaryKey = ['type','value'];
+    protected $primaryKey = ['sign','user_id','tweet_id'];
     // IDが自動増分
     public $incrementing = false;
     // 主キーの型
@@ -38,12 +43,10 @@ class Code extends Model
     public $timestamps = false;
 
     // カラム
-    public $type;
-    public $value;
-    public $used_count;
-    public $disabled;
+    public $sign;
+    public $user_id;
+    public $tweet_id;
+    public $tweeted_datetime;
     public $create_datetime;
     public $update_datetime;
-    public $deleted;
-
 }

@@ -19,6 +19,17 @@
                 <a href="{{ route('show_all_reverse.index') }}">古いもの順で表示する</a>
             </div>
         </div>
+        <div class="row mt-1 mb-1">
+            <div class="col" style="text-align: center">
+                <a href="{{ route('show_all.index', ['page'=>$Thumbnails->Page, 'media_type'=>'photo']) }}">写真のみ表示する</a>
+            </div>
+        </div>
+        <div class="row mt-1 mb-1">
+            <div class="col" style="text-align: center">
+                <a href="{{ route('show_all.index', ['page'=>$Thumbnails->Page, 'media_type'=>'video']) }}">ビデオのみ表示する</a>
+            </div>
+        </div>
+
 
         <!-- ページ切り替えフォーム -->
         <div class="row" style="margin-top:2em;">
