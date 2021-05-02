@@ -41,31 +41,31 @@
                     <div class="d-flex justify-content-center">
                         <nav aria-label="Page navigation">
                             <ul class="pagination justify-content-end">
-                                @if($Users->Page > 0)
+                                @if($Users->page > 0)
                                     <li class="page-item"><a class="page-link" href="#" onclick="page(0);">&lt;&lt;</a></li>
-                                    <li class="page-item"><a class="page-link" href="#" onclick="page({{$Users->Page - 1}});">&lt;</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="page({{$Users->page - 1}});">&lt;</a></li>
                                 @else
                                     <li class="page-item disabled"><a class="page-link" href="#">&lt;&lt;</a></li>
                                     <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
                                 @endif
-                                @for ($i = ($Users->Page-5 < 0 ? 0 : $Users->Page-5); $i <= ($Users->Page+5 > $Users->MaxPage ? $Users->MaxPage : $Users->Page+5); $i++)
-                                    @if($i == $Users->Page)
+                                @for ($i = ($Users->page-5 < 0 ? 0 : $Users->page-5); $i <= ($Users->page+5 > $Users->max_page ? $Users->max_page : $Users->page+5); $i++)
+                                    @if($i == $Users->page)
                                         <li class="page-item active"><a class="page-link" href="#" onclick="page({{ $i }});">{{ $i+1 }}</a></li>
                                     @else
                                         <li class="page-item"><a class="page-link" href="#" onclick="page({{ $i }});">{{ $i+1 }}</a></li>
                                     @endif
                                 @endfor
-                                @if($Users->Page == $Users->MaxPage)
+                                @if($Users->page == $Users->max_page)
                                     <li class="page-item disabled"><a class="page-link" href="#">&gt;</a></li>
                                     <li class="page-item disabled"><a class="page-link" href="#">&gt;&gt;</a></li>
                                 @else
-                                    <li class="page-item"><a class="page-link" href="#" onclick="page({{ $Users->Page + 1 }});">&gt;</a></li>
-                                    <li class="page-item"><a class="page-link" href="#" onclick="page({{ $Users->MaxPage }});">&gt;&gt;</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="page({{ $Users->page + 1 }});">&gt;</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="page({{ $Users->max_page }});">&gt;&gt;</a></li>
                                 @endif
                             </ul>
                         </nav>
                     </div>
-                    <input type="hidden" name="page" id="pageNumber" value="{{$Users->Page}}">
+                    <input type="hidden" name="page" id="pageNumber" value="{{$Users->page}}">
                     <button type="submit" id="searchSubmit" style="display:none;">
                 </form>
             </div>
@@ -75,24 +75,24 @@
         <div class="row">
         
 
-            @foreach ($Users->TweetTakeUsers as $tweetTakeUser)
-                @if (in_array($tweetTakeUser->Status, array('5','6','9')))
+            @foreach ($Users->tweet_take_users as $tweet_take_user)
+                @if (in_array($tweet_take_user->status, array('5','6','9')))
                     <div class="col-12 mt-2">
                         <div class="d-flex p-3" style="background-color:#F6F6F6;">
                             <div class="d-inline-flex" style="height: 75px; min-height: 75px; min-width:75px; width: 75px;">
-                                <a href="{{ route('show_user.index', ['user_id' => $tweetTakeUser->UserId]) }}">
-                                    <img class='img-radius img-fluid async-load' src="{{asset('./img/usericon1.jpg')}}" data-async-load="{{$tweetTakeUser->ThumbnailUrl}}">
+                                <a href="{{ route('show_user.index', ['user_id' => $tweet_take_user->user_id]) }}">
+                                    <img class='img-radius img-fluid async-load' src="{{asset('./img/usericon1.jpg')}}" data-async-load="{{$tweet_take_user->thumbnail_url}}">
                                 </a>
                             </div>
                             <div class="d-inline-flex d-flex flex-column ml-4">
                                 <div>
-                                    <a href="{{ route('show_user.index', ['user_id' => $tweetTakeUser->UserId]) }}">
-                                        <label><strong>{{$tweetTakeUser->Name}}</strong></label>
+                                    <a href="{{ route('show_user.index', ['user_id' => $tweet_take_user->user_id]) }}">
+                                        <label><strong>{{$tweet_take_user->name}}</strong></label>
                                     </a>
-                                    <label class="ml-4" style="color: gray;"><strong>@ {{$tweetTakeUser->DispName}}</strong></label>
+                                    <label class="ml-4" style="color: gray;"><strong>@ {{$tweet_take_user->disp_name}}</strong></label>
                                 </div>
                                 <div>
-                                    <label>{{$tweetTakeUser->Description}}</label>
+                                    <label>{{$tweet_take_user->description}}</label>
                                 </div>
                                 <div>
                                 </div>
@@ -103,15 +103,15 @@
                     <div class="col-12 mt-2">
                         <div class="d-flex p-3" style="background-color:#F6F6F6;">
                             <div class="d-inline-flex" style="height: 75px; min-height: 75px; min-width:75px; width: 75px;">
-                                <img class='img-radius img-opacity img-fluid async-load' src="{{asset('./img/usericon1.jpg')}}" data-async-load="{{$tweetTakeUser->ThumbnailUrl}}">
+                                <img class='img-radius img-opacity img-fluid async-load' src="{{asset('./img/usericon1.jpg')}}" data-async-load="{{$tweet_take_user->thumbnail_url}}">
                             </div>
                             <div class="d-inline-flex d-flex flex-column ml-4">
                                 <div>
-                                    <label><strong>{{$tweetTakeUser->Name}}</strong></label>
-                                    <label class="ml-4" style="color: gray;"><strong>@ {{$tweetTakeUser->DispName}}</strong></label>
+                                    <label><strong>{{$tweet_take_user->name}}</strong></label>
+                                    <label class="ml-4" style="color: gray;"><strong>@ {{$tweet_take_user->disp_name}}</strong></label>
                                 </div>
                                 <div>
-                                    <label>{{$tweetTakeUser->Description}}</label>
+                                    <label>{{$tweet_take_user->description}}</label>
                                 </div>
                                 <div>
                                     <label style='color: red;'>ダウンロード中...</label>
@@ -124,9 +124,9 @@
 
 
             @endforeach
-            @if($Users->Page <> $Users->MaxPage)
+            @if($Users->page <> $Users->max_page)
                 <div class="col-4 col-md-3 col-lg-2">
-                    <a href="#" onclick="page({{ $Users->Page + 1 }});">
+                    <a href="#" onclick="page({{ $Users->page + 1 }});">
                         <img class='img-radius img-fluid' style=" max-width: 100%; height: auto;" src='{{ asset('/img/user_next.jpg') }}'>
                     </a>
                 </div>

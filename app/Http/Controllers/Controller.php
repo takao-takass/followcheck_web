@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * Base class for Controllers
+ * 
+ * PHP Version >= 8.0
+ * 
+ * @category TweetUsers
+ * @package  App\Http\Controllers
+ * @author   Takahiro Tada <takao@takassoftware.com>
+ * @license  http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     None
+ */
 namespace App\Http\Controllers;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -11,47 +22,77 @@ use App\Models\User;
 use App\Models\Token;
 use Carbon\Carbon;
 
+/**
+ * Class Controller
+ * 
+ * @category Base
+ * @package  App\Http\Controllers
+ * @author   Takahiro Tada <takao@takassoftware.com>
+ * @license  http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     None
+ */
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    private $sign;
-    private $ip;
+    private $_sign;
+    private $_ip;
     protected $session_user;
 
-    function __construct() {
-        $this->sign = \Request::cookie('sign');
-        $this->ip = \Request::ip();
+    /**
+     * Constructer.
+     */
+    function __construct()
+    {
+        $this->_sign = \Request::cookie('sign');
+        $this->_ip = \Request::ip();
     }
 
-    public function getToken(){
-        return $this->sign;
+    /**
+     * Return access token.
+     * 
+     * @return string
+     */
+    public function getToken()
+    {
+        return $this->_sign;
     }
 
-    public function authentication(){
-        if(!$this->isValidToken()){
-            return redirect(action('LoginController@logout'));
-        }
-    }
-
-    public function apiAuthentication(){
-        if(!$this->isValidToken()){
+    /**
+     * Authentication token.
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function authentication()
+    {
+        if (!$this->isValidToken()) {
             return redirect(action('LoginController@logout'));
         }
     }
 
     /**
-     * トークンの有効性を評価する
+     * Authentication token for API.
+     * 
+     * @return \Illuminate\Http\Response
      */
-    public function isValidToken(){
+    public function apiAuthentication()
+    {
+        if (!$this->isValidToken()) {
+            return redirect(action('LoginController@logout'));
+        }
+    }
 
-        \Log::debug('トークンを認証');
-        \Log::debug('token = '. $this->sign);
-        \Log::debug('address = '. $this->ip);
+    /**
+     * Verify token is valid.
+     * 
+     * @return bool
+     */
+    public function isValidToken()
+    {
 
         DB::table('token')
-        ->where('expire_datetime','<', Carbon::now('Asia/Tokyo'))
-        ->delete();
+            ->where('expire_datetime', '<', Carbon::now('Asia/Tokyo'))
+            ->delete();
 
         $user = DB::connection('mysql')->select(
             " SELECT SU.service_user_id,SU.`name`,SU.mailaddress".
@@ -59,16 +100,15 @@ class Controller extends BaseController
             " INNER JOIN service_users SU".
             " ON TK.service_user_id = SU.service_user_id".
             " AND SU.deleted = 0".
-            " WHERE TK.sign = '".$this->sign."'".
+            " WHERE TK.sign = '".$this->_sign."'".
             " LIMIT 1"
         );
 
-        if(count($user)==0){
+        if (count($user)==0) {
             return false;
         }
 
         $this->updateExpire();
-
         $this->session_user = new User;
         $this->session_user->service_user_id = $user[0]->service_user_id;
         $this->session_user->name = $user[0]->name;
@@ -78,44 +118,55 @@ class Controller extends BaseController
     }
 
     /**
-     * トークンの有効期間を更新する
+     * Update expire time for token.
+     * 
+     * @return int
      */
-    public function updateExpire(){
+    public function updateExpire()
+    {
         $expire_datetime = Carbon::now('Asia/Tokyo')->addWeek(1);
         DB::table('token')
-            ->where('sign', $this->sign)
+            ->where('sign', $this->_sign)
             ->update(['expire_datetime' => $expire_datetime]);
     }
 
     /**
-     * トークンを更新する
+     * Update token.
+     * 
+     * @return string
      */
-    public function updateToken(){
+    public function updateToken()
+    {
 
         // 新しいトークンを発行
         $token = $this->createToken($this->getTokenUser()->service_user_id);
 
-        \Log::debug('トークンを発行');
-        \Log::debug('id = '. $token->user_id);
-        \Log::debug('token = '. $token->signtext);
-
         // 使ったトークンを物理削除
         DB::table('token')
-        ->where('sign', $this->sign)
-        ->delete();
+            ->where('sign', $this->_sign)
+            ->delete();
+
         return $token;
     }
 
     /**
-     * トークンを生成する
+     * Create token.
+     * 
+     * @param $user_id string
+     * 
+     * @return string
      */
-    public function createToken($user_id){
+    public function createToken(string $user_id)
+    {
 
         $token = new Token;
         $token->user_id = $user_id;
-        $token->ipaddress = $this->ip;
+        $token->ipaddress = $this->_ip;
         $token->expire_datetime = Carbon::now('Asia/Tokyo')->addDay(1);
-        $token->signtext = password_hash($token->user_id . $token->expire_datetime, PASSWORD_BCRYPT);
+        $token->signtext = password_hash(
+            $token->user_id . $token->expire_datetime,
+            PASSWORD_BCRYPT
+        );
         DB::table('token')->insert(
             [
                 'sign' => $token->signtext,
@@ -130,14 +181,27 @@ class Controller extends BaseController
 
     /**
      * トークンからユーザ情報を取得する
+     * 
+     * @return User
      */
-    public function getTokenUser(){
+    public function getTokenUser()
+    {
 
         $tokenUser = DB::table('token')
-        ->leftJoin('service_users', 'service_users.service_user_id', '=', 'token.service_user_id')
-        ->where('sign', $this->sign)
-        ->select('service_users.service_user_id','service_users.name','service_users.mailaddress')
-        ->first();
+            ->leftJoin(
+                'service_users',
+                'service_users.service_user_id',
+                '=',
+                'token.service_user_id'
+            )
+            ->where('sign', $this->_sign)
+            ->select(
+                'service_users.service_user_id',
+                'service_users.name',
+                'service_users.mailaddress'
+            )
+            ->first();
+
         $user = new User;
         $user->service_user_id = $tokenUser->service_user_id;
         $user->name = $tokenUser->name;
