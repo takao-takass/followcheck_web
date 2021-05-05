@@ -29,4 +29,8 @@ class WebRoute
     const LOGIN_LOGOUT = 'login.logout';
 
     const TWEETUSER_INDEX = 'tweetuser.index';
+
+    const GROUP_INDEX = 'group.index';
+    const GROUP_ADD = 'group.add';
+    const GROUP_DELETE = 'group.delete';
 }

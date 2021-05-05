@@ -34,7 +34,7 @@ class Groups extends Model
     // モデルと関連しているテーブル
     protected $table = self::TABLE_NAME;
     // テーブルの主キー
-    protected $primaryKey = ['id'];
+    protected $primaryKey = 'id';
     // IDが自動増分
     public $incrementing = true;
     // 主キーの型

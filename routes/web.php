@@ -45,9 +45,6 @@ Route::get('/followcheck/fleolist/{user_id}/{page}', 'FleolistController@index')
 // アカウント管理
 Route::get('/followcheck/accounts', 'AccountsController@index');
 
-// グループ
-Route::get('/followcheck/groups', 'GroupsController@index');
-
 // ユーザ
 Route::get('/followcheck/user/{user_id}', 'UserController@index')
     ->name('user.index');
@@ -105,6 +102,14 @@ Route::get('/followcheck/twitter/accounts', 'Account\TwitterAccountsController@i
     ->name(WebRoute::TWITTER_ACCOUNT_INDEX);
 Route::post('/followcheck/twitter/accounts', 'Account\TwitterAccountsController@add')
     ->name(WebRoute::TWITTER_ACCOUNT_ADD);
+
+// グループ
+Route::get('/followcheck/groups', 'Group\GroupController@index')
+    ->name(WebRoute::GROUP_INDEX);
+Route::post('/followcheck/groups/add', 'Group\GroupController@add')
+    ->name(WebRoute::GROUP_ADD);
+Route::post('/followcheck/groups/delete', 'Group\GroupController@delete')
+    ->name(WebRoute::GROUP_DELETE);
 
 // テスト用
 Route::get('/followcheck/test', 'TestController@index')
