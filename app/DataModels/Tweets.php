@@ -42,22 +42,14 @@ class Tweets extends Model
     // タイムスタンプの自動更新
     public $timestamps = false;
 
-    // カラム
-    public $service_user_id;
-    public $user_id;
-    public $tweet_id;
-    public $tweet_user_id;
-    public $body;
-    public $arranged_body;
-    public $tweeted_datetime;
-    public $favolite_count;
-    public $retweet_count;
-    public $replied;
-    public $retweeted;
-    public $is_media;
-    public $media_ready;
-    public $create_datetime;
-    public $update_datetime;
-    public $deleted;
+    /**
+     * Relational for tweet_medias entity.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function tweetMedias()
+    {
+        return $this->hasMany(TweetMedias::class, 'tweet_id', 'tweet_id');
+    }
 
 }

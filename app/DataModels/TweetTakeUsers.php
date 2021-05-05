@@ -41,18 +41,16 @@ class TweetTakeUsers extends Model
     protected $keyType = 'string';
     // タイムスタンプの自動更新
     public $timestamps = false;
-
-    // カラム
-    public $service_user_id;
-    public $user_id;
-    public $status;
-    public $taked_datetime;
-    public $continue_tweet_id;
-    public $include_retweet;
-    public $not_tweeted_longtime;
-    public $create_datetime;
-    public $update_datetime;
-    public $deleted;
+    
+    /**
+     * Relational for group_users entity.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function groupUsers()
+    {
+        return $this->hasMany('App\DataModels\GroupUsers');
+    }
 
 
 }

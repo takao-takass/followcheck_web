@@ -1,6 +1,6 @@
 <?php
 /**
- * Data model for shown_tweets entity.
+ * Data model for groups entity.
  * 
  * PHP Version >= 8.0
  * 
@@ -15,7 +15,7 @@ namespace App\DataModels;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class ShownTweets
+ * Class Groups
  * 
  * @category DataModel
  * @package  App\DataModels
@@ -23,9 +23,9 @@ use Illuminate\Database\Eloquent\Model;
  * @license  http://opensource.org/licenses/gpl-license.php GNU Public License
  * @link     None
  */
-class ShownTweets extends Model
+class Groups extends Model
 {
-    const TABLE_NAME = 'shown_tweets';
+    const TABLE_NAME = 'groups';
 
     // タイムスタンプのカスタマイズ
     const CREATED_AT = 'create_datetime';
@@ -34,12 +34,22 @@ class ShownTweets extends Model
     // モデルと関連しているテーブル
     protected $table = self::TABLE_NAME;
     // テーブルの主キー
-    protected $primaryKey = ['sign','user_id','tweet_id'];
+    protected $primaryKey = ['id'];
     // IDが自動増分
-    public $incrementing = false;
+    public $incrementing = true;
     // 主キーの型
-    protected $keyType = 'string';
+    protected $keyType = 'int';
     // タイムスタンプの自動更新
     public $timestamps = false;
+
+    /**
+     * Relational for group_users entity.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function groupUsers()
+    {
+        return $this->hasMany('App\DataModels\GroupUsers', 'group_id');
+    }
 
 }
