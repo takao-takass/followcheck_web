@@ -1,5 +1,9 @@
 <!doctype html>
 <html lang="ja">
+    <?php
+        use App\Constants\WebRoute;
+        use App\Constants\Invalid;
+    ?>
     <head>
         <!-- Required meta tags -->
         <meta charset="utf-8">
