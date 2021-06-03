@@ -1,26 +1,7 @@
 <?php
-/**
- * Constants for Routes.
- *
- * PHP Version >= 8.0
- *
- * @category Constants
- * @package  App\Constants
- * @author   Takahiro Tada <takao@takassoftware.com>
- * @license  http://opensource.org/licenses/gpl-license.php GNU Public License
- * @link     None
- */
+
 namespace App\Constants;
 
-/**
- * Class WebRoute
- *
- * @category Constants
- * @package  App\Constants
- * @author   Takahiro Tada <takao@takassoftware.com>
- * @license  http://opensource.org/licenses/gpl-license.php GNU Public License
- * @link     None
- */
 class WebRoute
 {
     const TWITTER_ACCOUNT_INDEX = 'twitter.account.index';
@@ -37,5 +18,7 @@ class WebRoute
     const GROUP_MEMBER_JOIN = 'group_member.join';
     const GROUP_MEMBER_LEAVE = 'group_member.leave';
     const GROUP_FREE_ACCOUNT_INDEX = 'group_free_account.index';
+
+    const KEEP_INDEX = "keep.index";
 
 }

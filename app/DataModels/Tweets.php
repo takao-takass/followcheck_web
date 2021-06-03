@@ -1,9 +1,9 @@
 <?php
 /**
  * Data model for tweets entity.
- * 
+ *
  * PHP Version >= 8.0
- * 
+ *
  * @category DataModel
  * @package  App\DataModels
  * @author   Takahiro Tada <takao@takassoftware.com>
@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Tweets
- * 
+ *
  * @category DataModel
  * @package  App\DataModels
  * @author   Takahiro Tada <takao@takassoftware.com>
@@ -44,7 +44,7 @@ class Tweets extends Model
 
     /**
      * Relational for tweet_medias entity.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function tweetMedias()

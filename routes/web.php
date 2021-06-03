@@ -73,6 +73,11 @@ Route::get('/followcheck/show_all_reverse', 'ShowAllController@indexReverse')
 Route::get('/followcheck/show_keep', 'ShowKeepController@index')
     ->name('show_keep.index');
 
+// KEEP
+Route::get('/followcheck/keep', 'KeepController@index')
+    ->name(WebRoute::KEEP_INDEX);
+
+
 // メディア表示
 Route::get('/followcheck/media', 'MediaController@index')
     ->name('media.index');

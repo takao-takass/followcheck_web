@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Constants\ApiRoute;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,12 +75,18 @@ Route::post('/followcheck/oldtweets/list','OldTweetsController@list');
 
 
 
-# 観賞モードAPI
-Route::Post('/followcheck/show_all/keep','ShowAllApiController@keep')->name('api.show_all.keep');
+// 観賞モードAPI
+Route::Post('/followcheck/show_all/keep','ShowAllApiController@keep')
+    ->name('api.show_all.keep');
 
-# スライドショーAPI
-Route::Get('/followcheck/slideshow/image','SlideshowApiController@image')->name('api.slideshow.image');
+// KEEP API
+Route::Post('/followcheck/keep/entry','KeepApiController@entry')
+    ->name(ApiRoute::KEEP_ENTRY);
 
-# TwitterAccountsAPI
+// スライドショーAPI
+Route::Get('/followcheck/slideshow/image','SlideshowApiController@image')
+    ->name('api.slideshow.image');
+
+// TwitterAccountsAPI
 Route::post('/followcheck/api/twitter/accounts/{disp_name}/add','Account\TwitterAccountsApiController@add')
     ->name('api.twitter.account.add');
