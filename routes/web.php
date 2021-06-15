@@ -65,7 +65,7 @@ Route::post('/followcheck/tweetusers2/add', 'TweetUsers2Controller@add');
 //Route::get('/followcheck/show_user/{user_id}', 'ShowByUserController@index')
 //    ->name('show_user.index');
 Route::get('/followcheck/show_user/{user_id}', 'ShowAllController@indexByUser')
-    ->name('show_user.index');
+    ->name(WebRoute::SHOW_BY_USER);
 Route::get('/followcheck/show_all', 'ShowAllController@index')
     ->name('show_all.index');
 Route::get('/followcheck/show_all_reverse', 'ShowAllController@indexReverse')
@@ -74,8 +74,8 @@ Route::get('/followcheck/show_keep', 'ShowKeepController@index')
     ->name('show_keep.index');
 
 // KEEP
-Route::get('/followcheck/keep', 'KeepController@index')
-    ->name(WebRoute::KEEP_INDEX);
+Route::get('/followcheck/users/{user_id}/keep', 'KeepController@indexByUser')
+    ->name(WebRoute::KEEP_BY_USER);
 
 
 // メディア表示

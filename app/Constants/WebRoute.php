@@ -11,6 +11,8 @@ class WebRoute
 
     const TWEETUSER_INDEX = 'tweetuser.index';
 
+    const SHOW_BY_USER = 'show_user.index';
+
     const GROUP_INDEX = 'group.index';
     const GROUP_ADD = 'group.add';
     const GROUP_DELETE = 'group.delete';
@@ -19,6 +21,6 @@ class WebRoute
     const GROUP_MEMBER_LEAVE = 'group_member.leave';
     const GROUP_FREE_ACCOUNT_INDEX = 'group_free_account.index';
 
-    const KEEP_INDEX = "keep.index";
+    const KEEP_BY_USER = "keep.index";
 
 }

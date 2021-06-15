@@ -2,20 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use app\Exceptions\ParamInvalidException;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
 use App\DataModels\Tweets;
-use App\DataModels\TweetMedias;
 use App\DataModels\KeepTweets;
-use App\ViewModels\KeepByUserViewModel;
+use Illuminate\Http\Response;
 
 class KeepApiController extends Controller
 {
-    // TODO まとめてKEEPするAPIを実装してください
-    public function entry(array $tweet_ids)
+    /*
+     * まとめてKEEP
+     */
+    public function entry(array $tweet_ids): Response
     {
         $this->apiAuthentication();
+
+        $tweets = Tweets::select(
+                [
+                    'service_user_id',
+                    'tweet_id',
+                ]
+            )
+            ->Where('service_user_id', $this->session_user->service_user_id)
+            ->WhereIn('tweet_id', $tweet_ids)
+            ->get()
+            ->toArray();
+
+        foreach ($tweets as $tweet){
+            $keep_tweet = new KeepTweets();
+            $keep_tweet['service_user_id'] = $tweet['service_user_id'];
+            $keep_tweet['tweet_id'] = $tweet['tweet_id'];
+            $keep_tweet->save();
+        }
 
         return response('',200);
     }
