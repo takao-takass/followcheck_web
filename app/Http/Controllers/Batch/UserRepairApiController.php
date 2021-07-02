@@ -64,6 +64,7 @@ class UserRepairApiController extends Controller
                         'follow_count' => $response->friends_count,
                         'follower_count' => $response->followers_count,
                         'protected' => $response->protected,
+                        'thumbnail_url' => $response->profile_image_url_https,
                         'not_found' => 0
                     ]
                 );
