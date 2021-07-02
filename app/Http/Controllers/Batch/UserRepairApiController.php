@@ -15,11 +15,19 @@ class UserRepairApiController extends Controller
             return response(status: 404);
         }
 
+        $updatableUserIds = RelationalUsers::select(['user_id'])
+            ->where('disp_name', '<>', '　')
+            ->where('disp_name', '<>', 'wait...')
+            ->orderBy('update_datetime', 'asc')
+            ->take(400)
+            ->get()
+            ->toArray();
+
         $repairableUserIds = RelationalUsers::select(['user_id'])
             ->where('disp_name', '　')
             ->whereOr('disp_name', 'wait...')
             ->orderBy('update_datetime', 'asc')
-            ->take(50)
+            ->take(100)
             ->get()
             ->toArray();
 
@@ -30,7 +38,12 @@ class UserRepairApiController extends Controller
             config('app.access_token_secret')
         );
 
-        foreach (array_column( $repairableUserIds, 'user_id') as $user_id) {
+        $user_ids = array_merge(
+            array_column( $updatableUserIds, 'user_id'),
+            array_column( $repairableUserIds, 'user_id')
+        );
+
+        foreach ($user_ids as $user_id) {
 
             $response = $twitter_api->get("users/show", [
                 "user_id" => $user_id
@@ -51,6 +64,7 @@ class UserRepairApiController extends Controller
                         'follow_count' => $response->friends_count,
                         'follower_count' => $response->followers_count,
                         'protected' => $response->protected,
+                        'not_found' => 0
                     ]
                 );
         }
