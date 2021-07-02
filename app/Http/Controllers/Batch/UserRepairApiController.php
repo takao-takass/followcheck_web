@@ -4,20 +4,18 @@ namespace App\Http\Controllers\Batch;
 use Abraham\TwitterOAuth\TwitterOAuth;
 use App\Http\Controllers\Controller;
 use App\DataModels\RelationalUsers;
+use Illuminate\Http\Request;
 
 class UserRepairApiController extends Controller
 {
-    public function execute(string $token)
+    public function execute(Request $request)
     {
+        $token = $request['token'];
         if($token !== "folloWcheck_BatCh_01092123"){
             return response(status: 404);
         }
 
-        $repairableUserIds = RelationalUsers::select(
-                [
-                    'user_id'
-                ]
-            )
+        $repairableUserIds = RelationalUsers::select(['user_id'])
             ->where('disp_name', '　')
             ->whereOr('disp_name', 'wait...')
             ->orderBy('update_datetime', 'asc')
@@ -40,7 +38,7 @@ class UserRepairApiController extends Controller
 
             if (! property_exists($response, 'id_str')) {
                 RelationalUsers::where('user_id', $user_id)
-                    ->update(['name' => 'TWITTER_NOT_FOUND']);
+                    ->update(['not_found' => 1]);
                 continue;
             }
 
@@ -57,8 +55,6 @@ class UserRepairApiController extends Controller
                 );
         }
 
-        return response()->json([
-            'success' => True
-        ]);
+        return response()->json("SUCCESS!");
     }
 }
