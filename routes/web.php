@@ -45,9 +45,6 @@ Route::get('/followcheck/fleolist/{user_id}/{page}', 'FleolistController@index')
 // アカウント管理
 Route::get('/followcheck/accounts', 'AccountsController@index');
 
-// グループ
-Route::get('/followcheck/groups', 'GroupsController@index');
-
 // ユーザ
 Route::get('/followcheck/user/{user_id}', 'UserController@index')
     ->name('user.index');
@@ -105,6 +102,22 @@ Route::get('/followcheck/twitter/accounts', 'Account\TwitterAccountsController@i
     ->name(WebRoute::TWITTER_ACCOUNT_INDEX);
 Route::post('/followcheck/twitter/accounts', 'Account\TwitterAccountsController@add')
     ->name(WebRoute::TWITTER_ACCOUNT_ADD);
+
+// グループ
+Route::get('/followcheck/groups', 'Group\GroupController@index')
+    ->name(WebRoute::GROUP_INDEX);
+Route::post('/followcheck/groups/add', 'Group\GroupController@add')
+    ->name(WebRoute::GROUP_ADD);
+Route::post('/followcheck/groups/delete', 'Group\GroupController@delete')
+    ->name(WebRoute::GROUP_DELETE);
+Route::get('/followcheck/groups/{id}', 'Group\GroupMemberController@index')
+    ->name(WebRoute::GROUP_MEMBER_INDEX);
+Route::post('/followcheck/groups/{id}/join', 'Group\GroupMemberController@join')
+    ->name(WebRoute::GROUP_MEMBER_JOIN);
+Route::post('/followcheck/groups/{id}/leave', 'Group\GroupMemberController@leave')
+    ->name(WebRoute::GROUP_MEMBER_LEAVE);
+Route::get('/followcheck/groups/{id}/free_accounts', 'Group\GroupMemberController@free')
+    ->name(WebRoute::GROUP_FREE_ACCOUNT_INDEX);
 
 // テスト用
 Route::get('/followcheck/test', 'TestController@index')

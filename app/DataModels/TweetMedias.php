@@ -42,21 +42,4 @@ class TweetMedias extends Model
     // タイムスタンプの自動更新
     public $timestamps = false;
 
-    // カラム
-    public $service_user_id;
-    public $user_id;
-    public $tweet_id;
-    public $url;
-    public $type;
-    public $sizes;
-    public $bitrate;
-    public $file_name;
-    public $directory_path;
-    public $thumb_file_name;
-    public $thumb_directory_path;
-    public $download_error;
-    public $create_datetime;
-    public $update_datetime;
-    public $deleted;
-
 }

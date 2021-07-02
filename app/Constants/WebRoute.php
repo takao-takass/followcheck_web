@@ -1,9 +1,9 @@
 <?php
 /**
  * Constants for Routes.
- * 
+ *
  * PHP Version >= 8.0
- * 
+ *
  * @category Constants
  * @package  App\Constants
  * @author   Takahiro Tada <takao@takassoftware.com>
@@ -14,7 +14,7 @@ namespace App\Constants;
 
 /**
  * Class WebRoute
- * 
+ *
  * @category Constants
  * @package  App\Constants
  * @author   Takahiro Tada <takao@takassoftware.com>
@@ -29,4 +29,13 @@ class WebRoute
     const LOGIN_LOGOUT = 'login.logout';
 
     const TWEETUSER_INDEX = 'tweetuser.index';
+
+    const GROUP_INDEX = 'group.index';
+    const GROUP_ADD = 'group.add';
+    const GROUP_DELETE = 'group.delete';
+    const GROUP_MEMBER_INDEX = 'group_member.index';
+    const GROUP_MEMBER_JOIN = 'group_member.join';
+    const GROUP_MEMBER_LEAVE = 'group_member.leave';
+    const GROUP_FREE_ACCOUNT_INDEX = 'group_free_account.index';
+
 }

@@ -42,23 +42,4 @@ class RelationalUsers extends Model
     // タイムスタンプの自動更新
     public $timestamps = false;
 
-    // カラム
-    public $user_id;
-    public $disp_name;
-    public $name;
-    public $thumbnail_url;
-    public $description;
-    public $theme_color;
-    public $follow_count;
-    public $follower_count;
-    public $icecream;
-    public $icecream_datetime;
-    public $not_found;
-    public $protected;
-    public $verify_datetime;
-    public $create_datetime;
-    public $update_datetime;
-    public $deleted;
-
-
 }

@@ -37,13 +37,4 @@ class Code extends Model
     // タイムスタンプの自動更新
     public $timestamps = false;
 
-    // カラム
-    public $type;
-    public $value;
-    public $used_count;
-    public $disabled;
-    public $create_datetime;
-    public $update_datetime;
-    public $deleted;
-
 }

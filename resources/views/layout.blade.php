@@ -1,5 +1,9 @@
 <!doctype html>
 <html lang="ja">
+    <?php
+        use App\Constants\WebRoute;
+        use App\Constants\Invalid;
+    ?>
     <head>
         <!-- Required meta tags -->
         <meta charset="utf-8">
@@ -42,7 +46,7 @@
                         <a class="nav-item nav-link" href="{{ route('tweetuser.index') }}">ツイートを見る</a>
                         <a class="nav-item nav-link" href="{{ route('show_all.index') }}">全てのツイートを見る</a>
                         <a class="nav-item nav-link" href="{{ route('show_keep.index') }}">キープ観賞とスライドショー</a>
-                        <!--<a class="nav-item nav-link" href="{{ action('GroupsController@index') }}">グループ</a>-->
+                        <a class="nav-item nav-link" href="{{ route('group.index') }}">グループ</a>
                         <a class="nav-item nav-link" href="{{ route('config.index') }}">システムとコンフィグ</a>
                         <a class="nav-item nav-link" href="{{ action('LoginController@logout') }}">ログアウト</a>
                     </div>
