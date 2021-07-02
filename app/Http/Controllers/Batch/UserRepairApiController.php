@@ -49,25 +49,53 @@ class UserRepairApiController extends Controller
                 "user_id" => $user_id
             ]);
 
-            if (! property_exists($response, 'id_str')) {
+            if($twitter_api->getLastHttpCode() == 200){
+
+                if (! property_exists($response, 'id_str')) {
+                    RelationalUsers::where('user_id', $user_id)
+                        ->update(
+                            [
+                                'not_found' => 1
+                            ]
+                        );
+                    continue;
+                }
+
                 RelationalUsers::where('user_id', $user_id)
-                    ->update(['not_found' => 1]);
-                continue;
+                    ->update(
+                        [
+                            'disp_name' => $response->screen_name,
+                            'name' => $response->name,
+                            'description' => $response->description,
+                            'follow_count' => $response->friends_count,
+                            'follower_count' => $response->followers_count,
+                            'protected' => $response->protected,
+                            'thumbnail_url' => $response->profile_image_url_https,
+                            'not_found' => 0
+                        ]
+                    );
+
+            }else if ($twitter_api->getLastHttpCode() == 404) {
+
+                RelationalUsers::where('user_id', $user_id)
+                    ->update(
+                        [
+                            'not_found' => 1
+                        ]
+                    );
+
+            } else if($twitter_api->getLastHttpCode() == 403) {
+
+                RelationalUsers::where('user_id', $user_id)
+                    ->update(
+                        [
+                            'protected' => 1,
+                            'not_found' => 0
+                        ]
+                    );
+
             }
 
-            RelationalUsers::where('user_id', $user_id)
-                ->update(
-                    [
-                        'disp_name' => $response->screen_name,
-                        'name' => $response->name,
-                        'description' => $response->description,
-                        'follow_count' => $response->friends_count,
-                        'follower_count' => $response->followers_count,
-                        'protected' => $response->protected,
-                        'thumbnail_url' => $response->profile_image_url_https,
-                        'not_found' => 0
-                    ]
-                );
         }
 
         return response()->json("SUCCESS!");
