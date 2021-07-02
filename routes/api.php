@@ -1,5 +1,6 @@
 <?php
 
+use App\Constants\ApiRoute;
 use Illuminate\Http\Request;
 
 /*
@@ -83,3 +84,9 @@ Route::Get('/followcheck/slideshow/image','SlideshowApiController@image')->name(
 # TwitterAccountsAPI
 Route::post('/followcheck/api/twitter/accounts/{disp_name}/add','Account\TwitterAccountsApiController@add')
     ->name('api.twitter.account.add');
+
+
+### BATCH ###
+# ユーザ情報修復
+Route::Post('/followcheck/batch/UserRepair','Batch\UserRepairApiController@execute')
+    ->name(ApiRoute::BATCH_USER_REPAIR);
