@@ -1,9 +1,9 @@
 <?php
 /**
  * Controller class for "ツイートを見る"
- * 
+ *
  * PHP Version >= 8.0
- * 
+ *
  * @category TweetUsers
  * @package  App\Http\Controllers
  * @author   Takahiro Tada <takao@takassoftware.com>
@@ -13,6 +13,7 @@
 namespace App\Http\Controllers;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
+use App\DataModels\DeleteTweets;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\DataModels\TweetTakeUsers;
@@ -25,7 +26,7 @@ use App\Constants\Invalid;
 
 /**
  * Class TweetUsers2Controller
- * 
+ *
  * @category TweetUsers
  * @package  App\Http\Controllers
  * @author   Takahiro Tada <takao@takassoftware.com>
@@ -34,13 +35,13 @@ use App\Constants\Invalid;
  */
 class TweetUsers2Controller extends Controller
 {
-    const RECORDS_COUNT = 20;
+    const RECORDS_COUNT = 50;
 
     /**
      * Render Index.
      *
      * @param Request $request Request parameter.
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -100,7 +101,7 @@ class TweetUsers2Controller extends Controller
             ->whereIn('user_id', $user_ids)
             ->get()
             ->toArray();
-        
+
         // メディア閲覧の準備が出来ているツイート数
         $tweets = Tweets::
             select(
@@ -114,9 +115,25 @@ class TweetUsers2Controller extends Controller
             ->where('media_ready', 1)
             ->get()
             ->toArray();
-        $tweet_user_ids = array_column($tweets, 'user_id');
-        $tweet_user_count = array_count_values($tweet_user_ids);
-        
+        $tweet_user_count = array_count_values(
+            array_column($tweets, 'user_id')
+        );
+
+        // 既読のツイート数
+        $delete_tweets = DeleteTweets::
+            select(
+                [
+                    'user_id',
+                ]
+            )
+            ->where('service_user_id', $this->session_user->service_user_id)
+            ->whereIn('user_id', $user_ids)
+            ->get()
+            ->toArray();
+        $delete_tweet_user_count = array_count_values(
+            array_column($delete_tweets, 'user_id')
+        );
+
         // ユーザごとのViewModel作成
         $view_model->tweet_take_users = [];
         foreach ($tweet_take_users as $tweet_take_user) {
@@ -129,10 +146,16 @@ class TweetUsers2Controller extends Controller
                     )
                 )
             ];
+
+            // 未読のツイート数
             $tweet_ready_count = 0;
             if (array_key_exists($tweet_take_user['user_id'], $tweet_user_count)) {
                 $tweet_ready_count = $tweet_user_count[$tweet_take_user['user_id']];
             }
+            if (array_key_exists($tweet_take_user['user_id'], $delete_tweet_user_count)) {
+                $tweet_ready_count = $tweet_ready_count - $delete_tweet_user_count[$tweet_take_user['user_id']];
+            }
+
             array_push(
                 $view_model->tweet_take_users,
                 new TweetTakeUser(
@@ -156,7 +179,7 @@ class TweetUsers2Controller extends Controller
      * Add account, And redirect to Index.
      *
      * @param Request $request Request parameter.
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function add(Request $request)
