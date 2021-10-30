@@ -1,9 +1,9 @@
 <?php
 /**
  * Controller class for "全てのツイートを見る"
- * 
+ *
  * PHP Version >= 8.0
- * 
+ *
  * @category ShowAll
  * @package  App\Http\Controllers
  * @author   Takahiro Tada <takao@takassoftware.com>
@@ -24,7 +24,7 @@ use App\Constants\WebRoute;
 
 /**
  * Class ShowAllController
- * 
+ *
  * @category ShowAll
  * @package  App\Http\Controllers
  * @author   Takahiro Tada <takao@takassoftware.com>
@@ -33,13 +33,13 @@ use App\Constants\WebRoute;
  */
 class ShowAllController extends Controller
 {
-    const RECORDS_COUNT = 50;
+    const RECORDS_COUNT = 200;
 
     /**
      * Render Index.
      *
      * @param Request $request Request parameter.
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -58,7 +58,7 @@ class ShowAllController extends Controller
      * Render Index. Reversed list.
      *
      * @param Request $request Request parameter.
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function indexReverse(Request $request)
@@ -76,11 +76,11 @@ class ShowAllController extends Controller
     /**
      * Render Index. By User list.
      *
-     * @param string  $user_id 
+     * @param string  $user_id
      * @param Request $request Request parameter.
-     * 
+     *
      * @return \Illuminate\Http\Response
-     */    
+     */
     public function indexByUser(string $user_id, Request $request)
     {
         // 有効なトークンが無い場合はログイン画面に飛ばす
@@ -95,11 +95,11 @@ class ShowAllController extends Controller
 
     /**
      * Create Tweet medias data.
-     * 
-     * @param int     $sort 
-     * @param string  $user_id 
-     * @param Request $request 
-     * 
+     *
+     * @param int     $sort
+     * @param string  $user_id
+     * @param Request $request
+     *
      * @return \App\ViewModels\ShowThumbnailViewModel[]
      */
     private function _createViewParam(int $sort, string $user_id, Request $request)
