@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataModels\Tweets;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -24,15 +25,16 @@ class SlideshowController extends Controller
             return redirect(action('LoginController@logout'));
         }
 
-        $query = DB::table('keep_tweets')
-            ->join('tweet_medias','tweet_medias.tweet_id','=','keep_tweets.tweet_id')
+        $image_count = Tweets::join('tweet_medias','tweet_medias.tweet_id','=','Tweets.tweet_id')
             ->where('service_user_id', $this->session_user->service_user_id)
-            ->where('type','photo');
-
-        $image_count = $query
+            ->where('type','photo')
+            ->where('kept',1)
             ->count();
 
-        $media = $query
+        $media = Tweets::join('tweet_medias','tweet_medias.tweet_id','=','Tweets.tweet_id')
+            ->where('service_user_id', $this->session_user->service_user_id)
+            ->where('type','photo')
+            ->where('kept',1)
             ->skip( rand(0, $image_count-1) )
             ->take(1)
             ->first();

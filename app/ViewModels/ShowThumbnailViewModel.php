@@ -2,8 +2,6 @@
 
 namespace App\ViewModels;
 
-use App\Models\ShowThumbnail;
-
 class ShowThumbnailViewModel
 {
     public int $Page;

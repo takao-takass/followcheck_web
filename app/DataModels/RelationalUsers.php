@@ -1,9 +1,9 @@
 <?php
 /**
  * Data model for relational_users entity.
- * 
+ *
  * PHP Version >= 8.0
- * 
+ *
  * @category DataModel
  * @package  App\DataModels
  * @author   Takahiro Tada <takao@takassoftware.com>
@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class RelationalUsers
- * 
+ *
  * @category DataModel
  * @package  App\DataModels
  * @author   Takahiro Tada <takao@takassoftware.com>

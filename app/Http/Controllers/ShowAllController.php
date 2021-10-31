@@ -1,19 +1,8 @@
 <?php
-/**
- * Controller class for "全てのツイートを見る"
- *
- * PHP Version >= 8.0
- *
- * @category ShowAll
- * @package  App\Http\Controllers
- * @author   Takahiro Tada <takao@takassoftware.com>
- * @license  http://opensource.org/licenses/gpl-license.php GNU Public License
- * @link     None
- */
+
 namespace App\Http\Controllers;
 
 use App\Models\ShowThumbnail;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\ViewModels\ShowThumbnailViewModel;
 use App\DataModels\Tweets;
@@ -22,26 +11,10 @@ use App\DataModels\ShownTweets;
 use App\DataModels\UserConfig;
 use App\Constants\WebRoute;
 
-/**
- * Class ShowAllController
- *
- * @category ShowAll
- * @package  App\Http\Controllers
- * @author   Takahiro Tada <takao@takassoftware.com>
- * @license  http://opensource.org/licenses/gpl-license.php GNU Public License
- * @link     None
- */
 class ShowAllController extends Controller
 {
     const RECORDS_COUNT = 200;
 
-    /**
-     * Render Index.
-     *
-     * @param Request $request Request parameter.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
         // 有効なトークンが無い場合はログイン画面に飛ばす
@@ -54,13 +27,6 @@ class ShowAllController extends Controller
         );
     }
 
-    /**
-     * Render Index. Reversed list.
-     *
-     * @param Request $request Request parameter.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function indexReverse(Request $request)
     {
         // 有効なトークンが無い場合はログイン画面に飛ばす
@@ -73,14 +39,6 @@ class ShowAllController extends Controller
         );
     }
 
-    /**
-     * Render Index. By User list.
-     *
-     * @param string  $user_id
-     * @param Request $request Request parameter.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function indexByUser(string $user_id, Request $request)
     {
         // 有効なトークンが無い場合はログイン画面に飛ばす
@@ -93,69 +51,39 @@ class ShowAllController extends Controller
         );
     }
 
-    /**
-     * Create Tweet medias data.
-     *
-     * @param int     $sort
-     * @param string  $user_id
-     * @param Request $request
-     *
-     * @return \App\ViewModels\ShowThumbnailViewModel[]
-     */
-    private function _createViewParam(int $sort, string $user_id, Request $request)
+    private function _createViewParam(int $sort, string $user_id, Request $request): array
     {
         $page = $request->input('page');
         $viewModel = new ShowThumbnailViewModel();
         $viewModel->user_id = $user_id;
         $viewModel->Page = $page == null ? 0 : $page;
 
-        $remove_retweet = UserConfig::
-            where('service_user_id', $this->session_user->service_user_id)
+        $remove_retweet = UserConfig::where('service_user_id', $this->session_user->service_user_id)
             ->where('config_id', 1)
             ->first()
             ->getAttributes();
 
-        $filter_checked = UserConfig::
-            where('service_user_id', $this->session_user->service_user_id)
+        $filter_checked = UserConfig::where('service_user_id', $this->session_user->service_user_id)
             ->where('config_id', 4)
             ->first()
             ->getAttributes();
 
-        $query = Tweets::
-            select(
-                [
-                    'user_id',
-                    'tweet_id',
-                    'tweeted_datetime',
-                ]
-            )
-            ->Where('service_user_id', $this->session_user->service_user_id)
-            ->Where('is_media', 1)
-            ->Where('media_ready', 1)
-            ->Where('deleted', 0);
+        $query = Tweets::select(['user_id','tweet_id','tweeted_datetime'])
+            ->where('service_user_id', $this->session_user->service_user_id)
+            ->where('is_media', 1)
+            ->where('media_ready', 1)
+            ->where('deleted', 0);
 
         if ($filter_checked['value'] == 1) {
-            $query = $query->whereNotExists(
-                function ($sub_query) {
-                    $sub_query
-                        ->select(DB::raw(1))
-                        ->from('delete_tweets')
-                        ->where(
-                            'service_user_id',
-                            $this->session_user->service_user_id
-                        )
-                        ->whereRaw('delete_tweets.user_id = tweets.user_id')
-                        ->whereRaw('delete_tweets.tweet_id = tweets.tweet_id');
-                }
-            );
+            $query = $query->where('shown', 0);
         }
 
         if ($remove_retweet['value'] == 1) {
-            $query = $query->Where('retweeted', '=', 0);
+            $query = $query->where('retweeted', 0);
         }
 
         if (!empty($user_id)) {
-            $query = $query->Where('user_id', $user_id);
+            $query = $query->where('user_id', $user_id);
         }
 
         $viewModel->Count = $query->count();
@@ -173,15 +101,14 @@ class ShowAllController extends Controller
             ->get()
             ->toArray();
 
-        ShownTweets::
-            where('sign', $this->getToken())
+        ShownTweets::where('sign', $this->getToken())
             ->delete();
         $media_type = $request['media_type'];
         $tweet_medias = [];
         foreach ($tweets as $tweet) {
 
-            $query = TweetMedias::
-                select(
+            $query = TweetMedias::select
+                (
                     [
                         'tweet_id',
                         'thumb_directory_path',
@@ -194,20 +121,22 @@ class ShowAllController extends Controller
                 ->Where('service_user_id', $this->session_user->service_user_id)
                 ->Where('user_id', $tweet['user_id'])
                 ->where('tweet_id', $tweet['tweet_id']);
+
             if (!empty($media_type)) {
-                $query = $query
-                    ->where('type', $media_type);
+                $query = $query->where('type', $media_type);
             }
+
             $records = $query
                 ->get()
                 ->toArray();
 
             foreach ($records as $record) {
-                array_push($tweet_medias, $record);
+                $tweet_medias[] = $record;
             }
 
             if (count($records) > 0) {
-                ShownTweets::updateOrInsert(
+                ShownTweets::updateOrInsert
+                (
                     [
                         'sign' => $this->getToken(),
                         'user_id' => $tweet['user_id'],
@@ -221,25 +150,21 @@ class ShowAllController extends Controller
         $viewModel->show_thumbnails = [];
         foreach ($tweet_medias as $tweet_media) {
 
-            if (empty($tweet_media['thumb_directory_path'])
-                || empty($tweet_media['directory_path'])
-            ) {
+            if (empty($tweet_media['thumb_directory_path']) || empty($tweet_media['directory_path'])) {
                 continue;
             }
-            $split_thumb_path = explode("/", $tweet_media['thumb_directory_path']);
-            array_push(
-                $viewModel->show_thumbnails,
-                new ShowThumbnail(
-                    $tweet_media['tweet_id'],
-                    '/img/tweetmedia/' .
-                    $split_thumb_path[5] .
-                    '/' .
-                    $tweet_media['thumb_file_name'],
-                    $tweet_media['file_name'],
-                    $tweet_media['type'],
-                )
-            );
 
+            $split_thumb_path = explode("/", $tweet_media['thumb_directory_path']);
+
+            $viewModel->show_thumbnails[] = new ShowThumbnail(
+                $tweet_media['tweet_id'],
+                '/img/tweetmedia/' .
+                $split_thumb_path[5] .
+                '/' .
+                $tweet_media['thumb_file_name'],
+                $tweet_media['file_name'],
+                $tweet_media['type'],
+            );
         }
 
         $param['Thumbnails'] = $viewModel;

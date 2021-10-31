@@ -2,19 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\DataModels\Tweets;
+use App\DataModels\TweetMedias;
 use App\Models\ShowThumbnail;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\ViewModels\ShowThumbnailViewModel;
 
 class ShowKeepController extends Controller
 {
 
-    /**
-     * 画面表示
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
         // 有効なトークンが無い場合はログイン画面に飛ばす
@@ -26,10 +22,10 @@ class ShowKeepController extends Controller
         $viewModel = new ShowThumbnailViewModel();
         $viewModel->Page = $page == null ? 0 : $page;
 
-        $query = DB::table('keep_tweets')
-            ->Where('service_user_id', $this->session_user->service_user_id);
+        $query = Tweets::where('service_user_id', $this->session_user->service_user_id)
+            ->where('kept',1);
 
-        $viewModel->Count = $query->Count();
+        $viewModel->Count = $query->count();
         $viewModel->MaxPage = floor($viewModel->Count/300);
 
         $tweets = $query
@@ -40,12 +36,10 @@ class ShowKeepController extends Controller
 
         $tweet_ids = [];
         foreach ($tweets as $tweet) {
-            array_push($tweet_ids, $tweet->tweet_id);
+            $tweet_ids[] = $tweet->tweet_id;
         }
 
-        $tweet_medias =
-            DB::table('tweet_medias')
-            ->whereIn('tweet_id', $tweet_ids)
+        $tweet_medias = TweetMedias::whereIn('tweet_id', $tweet_ids)
             ->get();
 
         $viewModel->show_thumbnails = [];
@@ -54,14 +48,14 @@ class ShowKeepController extends Controller
             if(empty($tweet_media->thumb_directory_path) || empty($tweet_media->directory_path)){
                 continue;
             }
+
             $split_thumb_path = explode("/", $tweet_media->thumb_directory_path);
-            array_push($viewModel->show_thumbnails,
-                new ShowThumbnail(
-                    $tweet_media->tweet_id,
-                    '/img/tweetmedia/' . $split_thumb_path[5] . '/' . $tweet_media->thumb_file_name,
-                    $tweet_media->file_name,
-                    $tweet_media->type
-                )
+
+            $viewModel->show_thumbnails[] = new ShowThumbnail(
+                $tweet_media->tweet_id,
+                '/img/tweetmedia/' . $split_thumb_path[5] . '/' . $tweet_media->thumb_file_name,
+                $tweet_media->file_name,
+                $tweet_media->type
             );
 
         }
