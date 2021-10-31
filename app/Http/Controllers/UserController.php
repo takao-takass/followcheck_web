@@ -38,13 +38,13 @@ class UserController extends Controller
             ->where('tweets.media_ready',1)
             ->count();
         $param['media_checked_count'] = DB::table('tweets')
-            ->join('delete_tweets','tweets.tweet_id','=','delete_tweets.tweet_id')
             ->join('tweet_medias','delete_tweets.tweet_id','=','tweet_medias.tweet_id')
+            ->where('tweets.shown',1)
             ->where('tweets.user_id',$request['user_id'])
             ->where('tweets.service_user_id',$this->session_user->service_user_id)
             ->where('delete_tweets.service_user_id',$this->session_user->service_user_id)
             ->count();
-        
+
         // ユーザの投稿メディア
         $tweets = Tweets::select(['tweet_id'])
             ->orderBy('tweeted_datetime','desc')
