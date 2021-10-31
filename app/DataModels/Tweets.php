@@ -1,9 +1,9 @@
 <?php
 /**
  * Data model for tweets entity.
- * 
+ *
  * PHP Version >= 8.0
- * 
+ *
  * @category DataModel
  * @package  App\DataModels
  * @author   Takahiro Tada <takao@takassoftware.com>
@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Tweets
- * 
+ *
  * @category DataModel
  * @package  App\DataModels
  * @author   Takahiro Tada <takao@takassoftware.com>
@@ -34,7 +34,7 @@ class Tweets extends Model
     // モデルと関連しているテーブル
     protected $table = self::TABLE_NAME;
     // テーブルの主キー
-    protected $primaryKey = ['service_user_id','user_id'];
+    protected $primaryKey = ['service_user_id','user_id','tweet_id'];
     // IDが自動増分
     public $incrementing = false;
     // 主キーの型
@@ -44,7 +44,7 @@ class Tweets extends Model
 
     /**
      * Relational for tweet_medias entity.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function tweetMedias()

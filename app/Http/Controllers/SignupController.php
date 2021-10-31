@@ -11,19 +11,12 @@ use Carbon\Carbon;
 
 class SignupController extends Controller
 {
-    /**
-     * 画面表示
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         return view('signup');
     }
 
-    /**
-     * ユーザー登録
-     */
     public function entry(Request $request)
     {
         // 入力情報を取得
@@ -42,15 +35,16 @@ class SignupController extends Controller
         $user->name = substr($user->email, 0, 50);
 
         // ユーザマスタに登録
-        $dbUserMaster->insert(
-                [
-                    'service_user_id' => $user->id,
-                    'name' => $user->name,
-                    'mailaddress' => $user->email,
-                    'password'=> password_hash($user->password, PASSWORD_BCRYPT, ['cost' => 12]),
-                    'create_datetime'=>NOW(),
-                    'update_datetime'=>NOW()
-                ]
+        $dbUserMaster->insert
+        (
+            [
+                'service_user_id' => $user->id,
+                'name' => $user->name,
+                'mailaddress' => $user->email,
+                'password'=> password_hash($user->password, PASSWORD_BCRYPT, ['cost' => 12]),
+                'create_datetime'=>NOW(),
+                'update_datetime'=>NOW()
+            ]
         );
 
         // トークンを生成する
@@ -74,9 +68,6 @@ class SignupController extends Controller
         return response('',200);
     }
 
-    /**
-     * ユーザー登録前のチェック処理
-     */
     private function checkParam(UserEntry $user){
 
         // 更新パラメータにNULLが含まれていればエラー

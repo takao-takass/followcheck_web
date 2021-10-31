@@ -12,10 +12,11 @@ class SlideshowApiController extends Controller
             return response(401);
         }
 
-        $query = DB::table('keep_tweets')
-            ->join('tweet_medias','tweet_medias.tweet_id','=','keep_tweets.tweet_id')
+        $query = DB::table('tweets')
+            ->join('tweet_medias','tweet_medias.tweet_id','=','tweets.tweet_id')
             ->where('service_user_id', $this->session_user->service_user_id)
-            ->where('type','photo');
+            ->where('type','photo')
+            ->where('kept',1);
 
         $image_count = $query
             ->count();
