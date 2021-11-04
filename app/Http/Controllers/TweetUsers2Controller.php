@@ -178,26 +178,28 @@ class TweetUsers2Controller extends Controller
                 'service_user_id' => $this->session_user->service_user_id,
                 'user_id' => $response->id_str,
                 'status' => '0',
-                'create_datetime' => NOW(),
-                'update_datetime' => NOW(),
                 'deleted' => '0'
             ]
         );
 
-        RelationalUsers::updateOrInsert(
-            [
-                'user_id' => $response->id_str,
-                'disp_name' => $response->screen_name,
-                'name' => $response->name,
-                'description' => $response->description,
-                'theme_color' => '',
-                'follow_count' => $response->followers_count,
-                'follower_count' => $response->friends_count,
-                'create_datetime' => NOW(),
-                'update_datetime' => NOW(),
-                'deleted' => '0'
-            ]
-        );
+        $relational_user = RelationalUsers::where('user_id', $response->id_str)
+            ->first();
+
+        if($relational_user==null){
+
+            RelationalUsers::insert(
+                [
+                    'user_id' => $response->id_str,
+                    'disp_name' => $response->screen_name,
+                    'name' => $response->name,
+                    'description' => $response->description,
+                    'theme_color' => '',
+                    'follow_count' => $response->followers_count,
+                    'follower_count' => $response->friends_count,
+                    'deleted' => '0'
+                ]
+            );
+        }
 
         return redirect()->route(WebRoute::TWEETUSER_INDEX);
     }
