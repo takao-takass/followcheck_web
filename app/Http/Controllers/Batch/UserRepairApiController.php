@@ -11,8 +11,8 @@ class UserRepairApiController extends Controller
     public function execute(Request $request)
     {
         $token = $request['token'];
-        if($token !== "folloWcheck_BatCh_01092123"){
-            return response(status: 404);
+        if($token !== config('app.batch_token')){
+            return response(status: 401);
         }
 
         $updatableUserIds = RelationalUsers::select(['user_id'])
