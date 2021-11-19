@@ -13,7 +13,7 @@ class UpdateUsersApiController extends Controller
     public function execute(Request $request)
     {
         $token = $request['token'];
-        if($token !== "folloWcheck_BatCh_01092123"){
+        if($token !== config('app.batch_token')){
             return response(status: 401);
         }
 
