@@ -90,3 +90,5 @@ Route::post('/followcheck/api/twitter/accounts/{disp_name}/add','Account\Twitter
 # ユーザ情報修復
 Route::Get('/followcheck/batch/UserRepair','Batch\UserRepairApiController@execute')
     ->name(ApiRoute::BATCH_USER_REPAIR);
+Route::Post('/followcheck/batch/UpdateUsers','Batch\UpdateUsersApiController@execute')
+    ->name(ApiRoute::BATCH_UPDATE_USERS);
