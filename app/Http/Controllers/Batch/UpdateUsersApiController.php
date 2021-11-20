@@ -16,6 +16,7 @@ class UpdateUsersApiController extends Controller
         if($token !== config('app.batch_token')){
             return response(status: 401);
         }
+        dump(mb_substr("おﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞ", 0, 100));
 
         $twitter_api = new TwitterOAuth(
             config('app.consumer_key'),
@@ -98,7 +99,7 @@ class UpdateUsersApiController extends Controller
                             'theme_color' => $response_users[$index]->profile_link_color,
                             'follow_count' => $response_users[$index]->friends_count,
                             'follower_count' => $response_users[$index]->followers_count,
-                            'location' => $response_users[$index]->location,
+                            'location' => mb_substr($response_users[$index]->location, 0, 100),
                             'icecream' => 0,
                             'icecream_datetime' => null,
                             'verify_datetime' => null,
