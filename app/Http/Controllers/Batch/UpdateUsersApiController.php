@@ -16,7 +16,6 @@ class UpdateUsersApiController extends Controller
         if($token !== config('app.batch_token')){
             return response(status: 401);
         }
-        dump(mb_substr("おﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞおﾞぉﾞんﾞ", 0, 100));
 
         $twitter_api = new TwitterOAuth(
             config('app.consumer_key'),
