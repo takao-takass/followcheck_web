@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 //set_include_path(config('app.vendor_path'));
 //require "vendor/autoload.php";
 
+use App\DataModels\Tweets;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -22,8 +23,9 @@ class UserConfigController extends Controller
             ->orderBy('config_id')
             ->get();
 
-        $param['system_deletable_count'] = DB::table('delete_tweets')
-            ->where('service_user_id', $this->session_user->service_user_id)
+        $param['system_deletable_count'] = Tweets::where('service_user_id', $this->session_user->service_user_id)
+            ->where('shown', 1)
+            ->where('kept', 0)
             ->count();
 
         return response()
