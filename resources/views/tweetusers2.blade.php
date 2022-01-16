@@ -71,7 +71,7 @@
 
         <!-- ユーザ一覧 -->
         <div class="row">
-        
+
 
             @foreach ($Users->tweet_take_users as $tweet_take_user)
                 @if (in_array($tweet_take_user->status, array('5','6','9')))
@@ -115,6 +115,7 @@
                                 </div>
                                 <div>
                                     <label style='color: red;'>ダウンロード中...</label>
+                                    <a class="ml-2" href="{{ route('user.index', ['user_id' => $tweet_take_user->user_id] ) }}">プロフィール</a>
                                 </div>
                             </div>
                         </div>
