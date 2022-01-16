@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
-use App\DataModels\DeleteTweets;
-use App\DataModels\ShownTweets;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\DataModels\TweetTakeUsers;
@@ -25,17 +23,19 @@ class TweetUsers2Controller extends Controller
             return redirect()->route(WebRoute::LOGIN_LOGOUT);
         }
 
+        // エラー情報
         $param['error'] = null;
-        if (property_exists($request, 'error')) {
-            $param['error'] = match ($request['error']) {
+        $error = $request->input('error');
+        if ($error != null) {
+            $param['error'] = match ($error) {
                 Invalid::NOT_FOUND => 'Twitterに登録されていないユーザです。',
                 Invalid::REQUIRED => 'ユーザ名を入力してください。',
                 Invalid::DUPULICATED => '既に登録されているユーザです。',
             };
         }
-        $page = $request->input('page');
 
         // ページング情報
+        $page = $request->input('page');
         $view_model = new TweetUsersViewModel();
         $view_model->page = $page == null ? 0 : $page;
         $view_model->count = TweetTakeUsers::select(['user_id'])
