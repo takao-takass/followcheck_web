@@ -51,8 +51,22 @@ class TweetUsers2Controller extends Controller
             ->take(self::RECORDS_COUNT)
             ->get()
             ->toArray();
+
+        $additional_user_id = $request->input('additional_user_id');
+        if($additional_user_id != null) {
+
+            $additional_user = TweetTakeUsers::select(['user_id','status'])
+                ->where('service_user_id', $this->session_user->service_user_id)
+                ->where('user_id', $request['additional_user_id'])
+                ->get()
+                ->toArray();
+            $tweet_take_users = array_merge($additional_user, $tweet_take_users);
+
+        }
+
         $user_ids = array_column($tweet_take_users, 'user_id');
 
+        // ユーザの表示情報を取得
         $user_details = RelationalUsers::select
             (
                 [
@@ -164,11 +178,13 @@ class TweetUsers2Controller extends Controller
         }
 
         // 既に登録されているアカウントはエラー
-        $exists = DB::table('tweet_take_users')->where('user_id', $response->id_str)
+        $exists = DB::table('tweet_take_users')
+            ->where('user_id', $response->id_str)
             ->where('service_user_id', $this->session_user->service_user_id)
             ->count();
         if ($exists > 0) {
             $param['error'] = Invalid::DUPULICATED;
+            $param['additional_user_id'] = $response->id_str;
             return redirect()->route(WebRoute::TWEETUSER_INDEX, $param);
         }
 
