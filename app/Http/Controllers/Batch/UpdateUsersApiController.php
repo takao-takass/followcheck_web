@@ -82,7 +82,8 @@ class UpdateUsersApiController extends Controller
                             'icecream' => 0,
                             'icecream_datetime' => null,
                             'verify_datetime' => null,
-                            'not_found' => 1
+                            'not_found' => 1,
+                            'update_datetime' => NOW(),
                         ]
                     );
                 array_push($log, new BatchLog(NOW(), LogClasses::INFO, "Update users", "{$requested_user_id} was not found."));
@@ -103,7 +104,8 @@ class UpdateUsersApiController extends Controller
                             'icecream_datetime' => null,
                             'verify_datetime' => null,
                             'not_found' => 0,
-                            'protected' => $response_users[$index]->protected ? 1 : 0
+                            'protected' => $response_users[$index]->protected ? 1 : 0,
+                            'update_datetime' => NOW(),
                         ]
                     );
                 array_push($log, new BatchLog(NOW(), LogClasses::INFO, "Update users", "{$requested_user_id} was updated."));
