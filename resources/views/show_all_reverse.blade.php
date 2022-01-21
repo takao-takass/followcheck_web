@@ -60,21 +60,29 @@
 
         <!-- ツイート一覧 -->
         <div class="row contents">
+
             @foreach ( $Thumbnails->show_thumbnails as $show_thumbnail )
+
                 <div class='col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-1'>
-                    <a href="{{ route('media.index',['tweet_id'=>$show_thumbnail->tweet_id, 'file_name'=>$show_thumbnail->file_name, 'show_type'=>'all_reverse', 'sort'=>1]) }}">
+                    <a  onclick="keep('{{$show_thumbnail->tweet_id}}')">
                         <img alt="" class='mr-3 thumb-radius thumb-back async-load tweet-{{$show_thumbnail->tweet_id}}' style='width:100%;' src="{{asset('./img/media_default.jpg')}}" data-async-load='{{$show_thumbnail->thumbnail_url}}'>
                     </a>
-                    <button type="button" class="btn btn-outline-secondary btn-sm" style='width: 100%;' onclick="keep('{{$show_thumbnail->tweet_id}}')">KEEP</button>
+                    <a href="{{ route('media.index',['tweet_id'=>$show_thumbnail->tweet_id, 'file_name'=>$show_thumbnail->file_name, 'show_type'=>'all_reverse', 'sort'=>1]) }}" type="button" class="btn btn-outline-secondary btn-sm" style='width: 100%;'>
+                        DETAIL
+                    </a>
                 </div>
+
             @endforeach
+
             @if($Thumbnails->Page <> $Thumbnails->MaxPage)
+
                 <div class='col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-1'>
                     <a href="#" onclick="page({{ $Thumbnails->Page + 1 }});">
                         <img alt="" class='mr-3 thumb-radius thumb-back' style='width:100%;' src='{{ asset('/img/media_next.jpg') }}'>
                     </a>
                 </div>
             @endif
+
         </div>
 
         <!-- ページ下部のスペーサ -->
