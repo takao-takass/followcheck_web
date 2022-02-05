@@ -12,33 +12,9 @@
 @section('content')
 
     <!-- メインコンテンツ -->
-    <div class="container-fluid">
+    <div class="row mt-3"></div>
 
-        <!-- ページ切り替えフォーム -->
-        <div class="row" style="margin-top:2em;">
-            <div class="col">
-                <form action="{{ route('gallery.all') }}" method="get">
-                    @csrf
-                    <div class="d-flex justify-content-center">
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination justify-content-end">
-                                @if($viewModel->page > 0)
-                                    <li class="page-item"><a class="page-link" href="#" onclick="page(0);">&lt;&lt;</a></li>
-                                    <li class="page-item"><a class="page-link" href="#" onclick="page({{$viewModel->page - 1}});">&lt;</a></li>
-                                @else
-                                    <li class="page-item disabled"><a class="page-link" href="#">&lt;&lt;</a></li>
-                                    <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
-                                @endif
-                                
-                                <li class="page-item"><a class="page-link" href="#" onclick="page({{ $viewModel->page + 1 }});">&gt;</a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                    <input type="hidden" name="page" id="pageNumber" value="{{$viewModel->page}}">
-                    <button type="submit" id="pageSubmit" style="display:none;"></button>
-                </form>
-            </div>
-        </div>
+    <div class="container-fluid">
 
         <!-- ツイート一覧 -->
         <div class="row contents">
@@ -46,7 +22,7 @@
             @foreach ( $viewModel->items as $item )
 
             <div class='col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-1'>
-                <a onclick="keep('{{$item->tweet_id}}')">
+                <a onclick="keep('{{$item->user_id}}', '{{$item->tweet_id}}')">
                     <img
                         alt=""
                         class='mr-3 thumb-radius thumb-back async-load tweet-{{$item->tweet_id}}'
@@ -59,7 +35,7 @@
                     type="button"
                     class="btn btn-outline-secondary btn-sm"
                     style='width: 100%;'
-                    onclick='modal("{{$item->tweet_id}}", "{{$item->user_id}}")'>
+                    onclick='modal("{{$item->tweet_id}}", "{{$item->user_id}}", "{{$item->media_name}}")'>
 
                     @if($item->type == 'video')
                         Video DETAIL
@@ -94,24 +70,24 @@
 
     <!-- Modal -->
     <div class="modal fade" id="mediaModal" tabindex="-1" role="dialog" aria-labelledby="userName" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="userName"></h5>
-            <label id="tweetText"></label>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userName"></h5>
+                    <label id="tweetText"></label>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <a id="originalLink" href="#" target="_blank" rel="noopener noreferrer"><img id="originalMedia" alt="メディアにアクセス" src=""/></a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <a href="#" id="twitterLink"  target="_blank" rel="noopener noreferrer" type="button" class="btn btn-primary">Twitterで表示</a>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-            <a id="originarlLink" href="#" target="_blank" rel="noopener noreferrer"><img id="originalMedia" alt="メディアにアクセス" src=""/></a>
-        </div>
-        <div class="modal-footer">
-            <ba type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <a href="#" type="button" class="btn btn-primary">Twitterで表示</button>
-        </div>
-        </div>
-    </div>
     </div>
 
 
@@ -121,27 +97,59 @@
     <!-- Business JavaScript -->
     <script>
     
+        let tweetIds = "{{ implode(',', array_column($viewModel->items, 'tweet_id')) }}";
+        let userIds = "{{ implode(',', array_column($viewModel->items, 'user_id')) }}";
+    
         $(function(){
             $('[data-toggle="tooltip"]').tooltip();
             asyncLoad();
         });
 
-        function keep(tweet_id){
-            $.post("{{ route('api.show_all.keep') }}",{ tweet_id: tweet_id },function(){
-                $('.tweet-'+tweet_id).addClass('img-opacity');
+        function keep(userId, tweetId){
+
+            let param = {
+                user_id: userId,
+                tweet_id: tweetId
+            }
+
+            $.post("{{ route('api.gallery_all.keep') }}", param, function(){
+                $('.tweet-'+tweetId).addClass('img-opacity');
             });
         }
 
         function checked(){
 
+            let param = {
+                user_ids: userIds,
+                tweet_ids: tweetIds,
+            }
+
+            $.post("{{ route('api.gallery_all.checked') }}", param, function(){
+                window.scroll({top: 0});
+                location.reload();
+            });
+
         }
 
-        function modal(tweetId, userId){
-            $("#userName").text("えうぅんｍｎ");
-            $("#tweetText").text("");
-            $("#originalLink").attr("href", "");
-            $("#originalMedia").attr("src", "");
-            $('#mediaModal').modal();
+        function modal(tweetId, userId, mediaName){
+
+            let param = {
+                tweet_id: tweetId,
+                user_id: userId,
+                media_name: mediaName,
+            }
+
+            $.get("{{ route('api.gallery_all.mediadetail') }}", param, function(response){
+                $("#userName").text(response.name);
+                $("#tweetText").text(response.tweet_text);
+                $("#originalLink").attr("href", response.media_url);
+                $("#originalMedia").attr("src", response.media_url);
+                $("#twitterLink").attr("href", response.twitter_url);
+                $('#mediaModal').modal();
+            });
+
+
+
         }
     </script>
 @endsection
