@@ -80,7 +80,7 @@ class GalleryAllManager
             $model = new GalleryAllItemModel(
                 $tweet_id,
                 $tweet_media['user_id'],
-                '/img/tweetmedia/${thumb_directory}/${thumb_file}',
+                "/img/tweetmedia/{$thumb_directory}/{$thumb_file}",
                 $tweet_media['type'],
                 $tweets[$tweets_index]['body']
             );
