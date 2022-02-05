@@ -8,6 +8,7 @@ class GalleryAllItemModel
         public string $user_id,
         public string $tweet_id,
         public string $thumbnail_url,
+        public string $media_name,
         public string $type,
         public string $tweet_text
     ) {

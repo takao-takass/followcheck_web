@@ -86,6 +86,19 @@ Route::post('/followcheck/api/twitter/accounts/{disp_name}/add','Account\Twitter
     ->name('api.twitter.account.add');
 
 
+
+
+
+# キャラリーAPI
+Route::Post('/followcheck/api/gallery/keep','Api\Gallery\GalleryAllApiController@keep')
+    ->name(ApiRoute::GALLERY_ALL_KEEP);
+Route::Post('/followcheck/api/gallery/checked','Api\Gallery\GalleryAllApiController@checked')
+    ->name(ApiRoute::GALLERY_ALL_CHECKED);
+Route::Get('/followcheck/api/gallery/mediaDetail','Api\Gallery\GalleryAllApiController@mediaDetail')
+    ->name(ApiRoute::GALLERY_ALL_MEDIADETAIL);
+
+
+
 ### BATCH ###
 # ユーザ情報修復
 Route::Get('/followcheck/batch/UserRepair','Batch\UserRepairApiController@execute')
