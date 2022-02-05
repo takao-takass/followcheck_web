@@ -56,6 +56,14 @@ Route::get('/followcheck/keywords/{page?}', 'KeywordsController@index');
 
 
 
+
+// ギャラリー
+Route::get('/followcheck/gallery/all', 'Gallery\GalleryAllController@index')
+    ->name(WebRoute::GALLERY_ALL);
+
+
+
+
 // New ツイートを見る
 Route::get('/followcheck/tweetusers2', 'TweetUsers2Controller@index')
     ->name('tweetuser.index');
