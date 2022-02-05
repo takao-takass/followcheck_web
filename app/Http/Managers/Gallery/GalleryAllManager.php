@@ -33,7 +33,7 @@ class GalleryAllManager
                 ->where('media_ready', 1)
                 ->where('deleted', 0)
                 ->where('shown', 0)
-                ->orderBy('tweeted_datetime')
+                ->orderByDesc('tweeted_datetime')
                 ->skip($page * self::RECORDS_COUNT)
                 ->take(self::RECORDS_COUNT);
         } else {
@@ -42,7 +42,7 @@ class GalleryAllManager
                 ->where('is_media', 1)
                 ->where('media_ready', 1)
                 ->where('deleted', 0)
-                ->orderBy('tweeted_datetime')
+                ->orderByDesc('tweeted_datetime')
                 ->skip($page * self::RECORDS_COUNT)
                 ->take(self::RECORDS_COUNT);
         }
