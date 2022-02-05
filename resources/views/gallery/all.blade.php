@@ -70,7 +70,7 @@
 
     <!-- Modal -->
     <div class="modal fade" id="mediaModal" tabindex="-1" role="dialog" aria-labelledby="userName" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="userName"></h5>
@@ -80,7 +80,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <a id="originalLink" href="#" target="_blank" rel="noopener noreferrer"><img id="originalMedia" alt="メディアにアクセス" src=""/></a>
+                    <a id="originalLink" href="#" target="_blank" rel="noopener noreferrer"><img id="originalMedia" style="width: 100%;" alt="メディアにアクセス" src=""/></a>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
