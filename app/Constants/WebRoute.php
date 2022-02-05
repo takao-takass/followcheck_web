@@ -38,4 +38,6 @@ class WebRoute
     const GROUP_MEMBER_LEAVE = 'group_member.leave';
     const GROUP_FREE_ACCOUNT_INDEX = 'group_free_account.index';
 
+    const GALLERY_ALL = 'gallery.all';
+
 }
