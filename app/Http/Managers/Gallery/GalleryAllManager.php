@@ -71,6 +71,10 @@ class GalleryAllManager
         $models = [];
         foreach ($tweet_medias as $tweet_media) {
 
+            if ($tweet_media['thumb_directory_path'] == "") {
+                continue;
+            }
+
             $tweet_id = $tweet_media['tweet_id'];
             $tweets_index = array_search($tweet_id, $tweet_ids);
 
