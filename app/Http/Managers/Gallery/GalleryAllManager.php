@@ -14,7 +14,7 @@ use App\Models\Gallery\MediaDetailModel;
  */
 class GalleryAllManager
 {
-    const RECORDS_COUNT = 70;
+    const RECORDS_COUNT = 200;
 
     /**
      * 観賞画面（新しいツイート順）をフェッチする
