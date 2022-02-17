@@ -112,7 +112,7 @@
                 tweet_id: tweetId
             }
 
-            $.post("{{ route('api.gallery_all.keep') }}", param, function(){
+            $.post("{{ route('api.gallery.keep') }}", param, function(){
                 $('.tweet-'+tweetId).addClass('img-opacity');
             });
         }
@@ -124,7 +124,7 @@
                 tweet_ids: tweetIds,
             }
 
-            $.post("{{ route('api.gallery_all.checked') }}", param, function(){
+            $.post("{{ route('api.gallery.checked') }}", param, function(){
                 window.scroll({top: 0});
                 location.reload();
             });
@@ -139,7 +139,7 @@
                 media_name: mediaName,
             }
 
-            $.get("{{ route('api.gallery_all.mediadetail') }}", param, function(response){
+            $.get("{{ route('api.gallery.mediadetail') }}", param, function(response){
                 $("#userName").text(response.name);
                 $("#tweetText").text(response.tweet_text);
                 $("#originalLink").attr("href", response.media_url);
