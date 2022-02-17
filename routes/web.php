@@ -58,8 +58,10 @@ Route::get('/followcheck/keywords/{page?}', 'KeywordsController@index');
 
 
 // ギャラリー
-Route::get('/followcheck/gallery/all', 'Gallery\GalleryAllController@index')
+Route::get('/followcheck/gallery/all', 'Gallery\GalleryController@all')
     ->name(WebRoute::GALLERY_ALL);
+Route::get('/followcheck/gallery/user', 'Gallery\GalleryController@user')
+    ->name(WebRoute::GALLERY_USER);
 
 
 

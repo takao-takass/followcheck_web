@@ -39,5 +39,6 @@ class WebRoute
     const GROUP_FREE_ACCOUNT_INDEX = 'group_free_account.index';
 
     const GALLERY_ALL = 'gallery.all';
+    const GALLERY_USER = 'gallery.user';
 
 }

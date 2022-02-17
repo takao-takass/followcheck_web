@@ -90,12 +90,12 @@ Route::post('/followcheck/api/twitter/accounts/{disp_name}/add','Account\Twitter
 
 
 # キャラリーAPI
-Route::Post('/followcheck/api/gallery/keep','Api\Gallery\GalleryAllApiController@keep')
-    ->name(ApiRoute::GALLERY_ALL_KEEP);
-Route::Post('/followcheck/api/gallery/checked','Api\Gallery\GalleryAllApiController@checked')
-    ->name(ApiRoute::GALLERY_ALL_CHECKED);
-Route::Get('/followcheck/api/gallery/mediaDetail','Api\Gallery\GalleryAllApiController@mediaDetail')
-    ->name(ApiRoute::GALLERY_ALL_MEDIADETAIL);
+Route::Post('/followcheck/api/gallery/keep','Api\Gallery\GalleryApiController@keep')
+    ->name(ApiRoute::GALLERY_KEEP);
+Route::Post('/followcheck/api/gallery/checked','Api\Gallery\GalleryApiController@checked')
+    ->name(ApiRoute::GALLERY_CHECKED);
+Route::Get('/followcheck/api/gallery/mediaDetail','Api\Gallery\GalleryApiController@mediaDetail')
+    ->name(ApiRoute::GALLERY_MEDIADETAIL);
 
 
 

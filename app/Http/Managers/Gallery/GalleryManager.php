@@ -6,46 +6,45 @@ use App\DataModels\RelationalUsers;
 use App\DataModels\Tweets;
 use App\DataModels\TweetMedias;
 use App\DataModels\UserConfig;
-use App\Models\Gallery\GalleryAllItemModel;
+use App\Models\Gallery\GalleryItemModel;
 use App\Models\Gallery\MediaDetailModel;
 
 /**
  * 観賞画面（新しいツイート順）
  */
-class GalleryAllManager
+class GalleryManager
 {
-    const RECORDS_COUNT = 200;
+    const RECORDS_COUNT = 75;
 
     /**
      * 観賞画面（新しいツイート順）をフェッチする
      */
-    public function fetch(string $service_user_id, int $page): array
+    public function fetch(string $service_user_id, int $page, string $user_id = null)
+        : array
     {
         $filter_checked = UserConfig::where('service_user_id', $service_user_id)
             ->where('config_id', 4)
             ->first()
             ->getAttributes();
 
-        if ($filter_checked['value'] == 1) {
-            $query = Tweets::select(['user_id','tweet_id','body'])
-                ->where('service_user_id', $service_user_id)
-                ->where('is_media', 1)
-                ->where('media_ready', 1)
-                ->where('deleted', 0)
-                ->where('shown', 0)
-                ->orderByDesc('tweeted_datetime')
-                ->skip($page * self::RECORDS_COUNT)
-                ->take(self::RECORDS_COUNT);
-        } else {
-            $query = Tweets::select(['user_id','tweet_id','body'])
-                ->where('service_user_id', $service_user_id)
-                ->where('is_media', 1)
-                ->where('media_ready', 1)
-                ->where('deleted', 0)
-                ->orderByDesc('tweeted_datetime')
-                ->skip($page * self::RECORDS_COUNT)
-                ->take(self::RECORDS_COUNT);
+        $query = Tweets::select(['user_id','tweet_id','body'])
+            ->where('service_user_id', $service_user_id)
+            ->where('is_media', 1)
+            ->where('media_ready', 1)
+            ->where('deleted', 0);
+
+        if ($user_id != null) {
+            $query = $query->where('user_id', $user_id);
         }
+
+        if ($filter_checked['value'] == 1) {
+            $query = $query->where('shown', 0);
+        }
+
+        $query = $query
+            ->orderByDesc('tweeted_datetime')
+            ->skip($page * self::RECORDS_COUNT)
+            ->take(self::RECORDS_COUNT);
 
         $tweets = $query->get()->toArray();
         $user_ids = array_column($tweets, 'user_id');
@@ -81,7 +80,7 @@ class GalleryAllManager
             $thumb_directory = explode("/", $tweet_media['thumb_directory_path'])[5];
             $thumb_file = $tweet_media['thumb_file_name'];
 
-            $model = new GalleryAllItemModel(
+            $model = new GalleryItemModel(
                 $tweet_media['user_id'],
                 $tweet_id,
                 "/img/tweetmedia/{$thumb_directory}/{$thumb_file}",

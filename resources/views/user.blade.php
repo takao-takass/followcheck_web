@@ -24,12 +24,8 @@
                         <h6 class="card-title">メディア数：{{$media_ready_count}} READY / {{$media_checked_count}} CHECKED / {{$media_count}} TOTAL</h6>
                         <h6 class="card-title">- - - - - - - - - - -</h6>
                         <h6 class="card-title mt-2">{{$tweet_taking ? '〇' : '－'}} ツイート取得対象</h6>
-                        <h6 class="card-title mt-2">{{$follow_taked ? '〇' : '－'}} フォロイー取得対象</h6>
-                        <h6 class="card-title mt-2">{{$favorite_taked ? '〇' : '－'}} いいねツイート取得対象</h6>
                         <h6 class="card-title">- - - - - - - - - - -</h6>
-                        <a class='mt-2' href="{{ route('show_user.index', ['user_id' => $user->user_id]) }}"><input type="button" class="btn btn-primary form-control" value="観賞モード" /></a>
-                        <a class='mt-2' href=""><input type="button" class="btn btn-primary form-control" value="フォロー一覧" /></a>
-                        <a class='mt-2' href=""><input type="button" class="btn btn-primary form-control" value="いいね一覧" /></a>
+                        <a class='mt-2' href="{{ route('gallery.user', ['user_id' => $user->user_id]) }}"><input type="button" class="btn btn-primary form-control" value="観賞モード" /></a>
                     </div>
                 </div>
             </div>

@@ -2,7 +2,7 @@
 
 namespace App\Models\Gallery;
 
-class GalleryAllItemModel
+class GalleryItemModel
 {
     public function __construct(
         public string $user_id,

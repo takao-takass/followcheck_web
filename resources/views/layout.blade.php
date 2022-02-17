@@ -42,11 +42,9 @@
                 <div class="collapse navbar-collapse" id="navmenu">
                     <div class="navbar-nav">
                         <a class="nav-item nav-link" href="{{ action('RemlistController@init') }}">リムられリスト</a>
-                        <!--<a class="nav-item nav-link" href="{{ route('twitter.account.index') }}">全てのアカウント</a>-->
                         <a class="nav-item nav-link" href="{{ route('tweetuser.index') }}">ツイートを見る</a>
-                        <a class="nav-item nav-link" href="{{ route('show_all.index') }}">全てのツイートを見る</a>
-                        <a class="nav-item nav-link" href="{{ route('show_keep.index') }}">キープ観賞とスライドショー</a>
                         <a class="nav-item nav-link" href="{{ route('gallery.all') }}">ギャラリー</a>
+                        <a class="nav-item nav-link" href="{{ route('show_keep.index') }}">キープ観賞とスライドショー</a>
                         <!--<a class="nav-item nav-link" href="{{ route('group.index') }}">グループ</a>-->
                         <a class="nav-item nav-link" href="{{ route('config.index') }}">システムとコンフィグ</a>
                         <a class="nav-item nav-link" href="{{ action('LoginController@logout') }}">ログアウト</a>
