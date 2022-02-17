@@ -2,7 +2,7 @@
 
 namespace App\ViewModels\Gallery;
 
-class GalleryAllViewModel
+class GalleryViewModel
 {
     public function __construct(
         public int $page,

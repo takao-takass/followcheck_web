@@ -78,13 +78,13 @@
                     <div class="col-12 mt-2">
                         <div class="d-flex p-3" style="background-color:#F6F6F6;">
                             <div class="d-inline-flex" style="height: 75px; min-height: 75px; min-width:75px; width: 75px;">
-                                <a href="{{ route('show_user.index', ['user_id' => $tweet_take_user->user_id]) }}">
+                                <a href="{{ route('gallery.user', ['user_id' => $tweet_take_user->user_id]) }}">
                                     <img class='img-radius img-fluid async-load' src="{{asset('./img/usericon1.jpg')}}" data-async-load="{{$tweet_take_user->thumbnail_url}}">
                                 </a>
                             </div>
                             <div class="d-inline-flex d-flex flex-column ml-4">
                                 <div>
-                                    <a href="{{ route('show_user.index', ['user_id' => $tweet_take_user->user_id]) }}">
+                                    <a href="{{ route('gallery.user', ['user_id' => $tweet_take_user->user_id]) }}">
                                         <label><strong>{{$tweet_take_user->name}}</strong></label>
                                     </a>
                                     <label class="ml-4" style="color: gray;"><strong>@ {{$tweet_take_user->disp_name}}</strong></label>

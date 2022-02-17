@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api\Gallery;
 
 use App\Http\Controllers\Controller;
-use App\Http\Managers\Gallery\GalleryAllManager;
+use App\Http\Managers\Gallery\GalleryManager;
 use Illuminate\Http\Request;
 
-class GalleryAllApiController extends Controller
+class GalleryApiController extends Controller
 {
 
     public function mediaDetail(Request $request)
@@ -34,7 +34,7 @@ class GalleryAllApiController extends Controller
 
         $service_user_id = $this->session_user->service_user_id;
 
-        $manager = new GalleryAllManager();
+        $manager = new GalleryManager();
         $result = $manager->mediaDetail(
             $service_user_id,
             $user_id,
@@ -80,7 +80,7 @@ class GalleryAllApiController extends Controller
         }
         $service_user_id = $this->session_user->service_user_id;
 
-        $manager = new GalleryAllManager();
+        $manager = new GalleryManager();
         $result = $manager->checked($service_user_id, $user_ids, $tweet_ids);
 
         if ($result == false) {
@@ -110,7 +110,7 @@ class GalleryAllApiController extends Controller
 
         $service_user_id = $this->session_user->service_user_id;
 
-        $manager = new GalleryAllManager();
+        $manager = new GalleryManager();
         $result = $manager->keep($service_user_id, $user_id, $tweet_id);
 
         if ($result == false) {
