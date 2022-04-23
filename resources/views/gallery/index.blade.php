@@ -174,22 +174,25 @@
 
             $.get("{{ route('api.gallery.mediadetail') }}", param, function(response){
 
+                
+                $('#videoarea').remove();
+
                 if(response.media_type === "video") {
                     $('#imageDetail').hide();
                     $('#videoDetail').show();
                     $('#videoDetail').append(
-                        "<video>"+
-                        "<source id='videoSource' src='"+response.media_url+"' type='video/mp4'>"+
+                        "<video id='videoarea' style='max-witdh:100%'>"+
+                        "<source id='videoSource' src='"+response.media_url+"' autoplay controls type='video/mp4'>"+
                         "<p>ご使用のブラウザでは動画再生に対応していません</p>"+
                         "</video>"
                     );
-                    $("#videoLink").attr("src", response.media_url);
+                    $("#videoLink").attr("href", response.media_url);
                     $("#originalMedia").attr("src", "");
                 } else {
                     $('#imageDetail').show();
                     $('#videoDetail').hide();
                     $("#videoSource").attr("src", "");
-                    $("#videoLink").attr("src", "");
+                    $("#videoLink").attr("href", "");
                     $("#originalMedia").attr("src", response.media_url);
                 }
 
