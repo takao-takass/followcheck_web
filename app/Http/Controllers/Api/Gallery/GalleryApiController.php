@@ -101,20 +101,20 @@ class GalleryApiController extends Controller
             return response(401);
         }
 
-        $tweet_id = $request->input('tweet_id');
-        if ($tweet_id == null) {
+        $tweet_ids = $request->input('tweet_ids');
+        if ($tweet_ids == null) {
             return response(400);
         }
 
-        $user_id = $request->input('user_id');
-        if ($user_id == null) {
+        $user_ids = $request->input('user_ids');
+        if ($user_ids == null) {
             return response(400);
         }
 
         $service_user_id = $this->session_user->service_user_id;
 
         $manager = new GalleryManager();
-        $result = $manager->keep($service_user_id, $user_id, $tweet_id);
+        $result = $manager->keep($service_user_id, $tweet_ids, $user_ids);
 
         if ($result == false) {
             return response(400);
