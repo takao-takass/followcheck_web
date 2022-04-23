@@ -190,12 +190,15 @@ class GalleryManager
     /**
      * ツイートをKEEPする
      */
-    public function keep(string $service_user_id, string $user_id, string $tweet_id): bool
+    public function keep(string $service_user_id, string $raw_user_ids, string $raw_tweet_ids): bool
     {
 
+        $user_ids = explode(",", $raw_user_ids);
+        $tweet_ids = explode(",", $raw_tweet_ids);
+
         $count = Tweets::where('service_user_id', $service_user_id)
-            ->where('user_id', $user_id)
-            ->where('tweet_id', $tweet_id)
+            ->whereIn('user_id', $user_ids)
+            ->whereIn('tweet_id', $tweet_ids)
             ->update(['kept'=>1,'shown'=>1]);
 
         if ($count == 0) {

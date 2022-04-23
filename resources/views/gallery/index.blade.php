@@ -53,7 +53,7 @@
                 <a onclick="keep('{{$item->user_id}}', '{{$item->tweet_id}}')">
                     <img
                         alt=""
-                        class='mr-3 thumb-radius thumb-back async-load tweet-{{$item->tweet_id}}'
+                        class='mr-3 thumb-radius thumb-back async-load tweet-media tweet-{{$item->tweet_id}}'
                         data-toggle="tooltip" data-placement="top" title="{{$item->tweet_text}}"
                         style='width:100%;'
                         src="{{asset('./img/media_default.jpg')}}"
@@ -78,6 +78,10 @@
 
             <div class='{{$layout_cols}} mb-1'>
                 <button type="button" class="btn btn-primary" style="width:100%; height:100%;" onclick="checked()">ページを既読</button>
+            </div>
+
+            <div class='{{$layout_cols}} mb-1'>
+                <button type="button" class="btn btn-warning" style="width:100%; height:100%;" onclick="keepAll()">すべてKEEP</button>
             </div>
 
         </div>
@@ -137,12 +141,24 @@
         function keep(userId, tweetId){
 
             let param = {
-                user_id: userId,
-                tweet_id: tweetId
+                user_ids: userId,
+                tweet_ids: tweetId
             }
 
             $.post("{{ route('api.gallery.keep') }}", param, function(){
                 $('.tweet-'+tweetId).addClass('img-opacity');
+            });
+        }
+        
+        function keepAll(){
+
+            let param = {
+                user_ids: userIds,
+                tweet_ids: tweetIds,
+            }
+
+            $.post("{{ route('api.gallery.keep') }}", param, function(){
+                $('.tweet-media').addClass('img-opacity');
             });
         }
 
