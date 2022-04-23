@@ -174,9 +174,6 @@
 
             $.get("{{ route('api.gallery.mediadetail') }}", param, function(response){
 
-                
-                $('#videoSource').remove();
-
                 if(response.media_type === "video") {
                     $('#imageDetail').hide();
                     $('#videoDetail').show();
@@ -206,6 +203,10 @@
             });
 
         }
+
+        $('#mediaModal').on('hidden.bs.modal', function (e) {
+            $('#videoSource').remove();
+        });
 
         function keepByModal(){
             let userId = $("#modalUserId").val();
