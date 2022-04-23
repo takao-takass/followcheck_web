@@ -18,6 +18,40 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
+# キャラリーAPI
+Route::Post('/followcheck/api/gallery/keep','Api\Gallery\GalleryApiController@keep')
+    ->name(ApiRoute::GALLERY_KEEP);
+Route::Post('/followcheck/api/gallery/checked','Api\Gallery\GalleryApiController@checked')
+    ->name(ApiRoute::GALLERY_CHECKED);
+Route::Get('/followcheck/api/gallery/mediaDetail','Api\Gallery\GalleryApiController@mediaDetail')
+    ->name(ApiRoute::GALLERY_MEDIADETAIL);
+Route::Post('/followcheck/api/gallery/change_thumbnailsize','Api\Gallery\GalleryApiController@changeThumbnailSize')
+    ->name(ApiRoute::GALLERY_CHANGE_THUMBNAILSIZE);
+
+
+
+# ユーザ情報修復バッチ
+Route::Get('/followcheck/batch/UserRepair','Batch\UserRepairApiController@execute')
+    ->name(ApiRoute::BATCH_USER_REPAIR);
+Route::Post('/followcheck/batch/UpdateUsers','Batch\UpdateUsersApiController@execute')
+    ->name(ApiRoute::BATCH_UPDATE_USERS);
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
 # ログイン
 # - 認証API
 Route::post('/followcheck/login/auth','LoginController@auth');
@@ -86,22 +120,3 @@ Route::post('/followcheck/api/twitter/accounts/{disp_name}/add','Account\Twitter
     ->name('api.twitter.account.add');
 
 
-
-
-
-# キャラリーAPI
-Route::Post('/followcheck/api/gallery/keep','Api\Gallery\GalleryApiController@keep')
-    ->name(ApiRoute::GALLERY_KEEP);
-Route::Post('/followcheck/api/gallery/checked','Api\Gallery\GalleryApiController@checked')
-    ->name(ApiRoute::GALLERY_CHECKED);
-Route::Get('/followcheck/api/gallery/mediaDetail','Api\Gallery\GalleryApiController@mediaDetail')
-    ->name(ApiRoute::GALLERY_MEDIADETAIL);
-
-
-
-### BATCH ###
-# ユーザ情報修復
-Route::Get('/followcheck/batch/UserRepair','Batch\UserRepairApiController@execute')
-    ->name(ApiRoute::BATCH_USER_REPAIR);
-Route::Post('/followcheck/batch/UpdateUsers','Batch\UpdateUsersApiController@execute')
-    ->name(ApiRoute::BATCH_UPDATE_USERS);

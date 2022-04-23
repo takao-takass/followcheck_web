@@ -10,4 +10,5 @@ class ApiRoute
     const GALLERY_KEEP = 'api.gallery.keep';
     const GALLERY_CHECKED = 'api.gallery.checked';
     const GALLERY_MEDIADETAIL = 'api.gallery.mediadetail';
+    const GALLERY_CHANGE_THUMBNAILSIZE = 'api.gallery.change_thumbnailsize';
 }

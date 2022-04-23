@@ -11,6 +11,7 @@ class MediaDetailModel
         public string $disp_name,
         public string $user_icon_url,
         public string $media_url,
+        public string $media_type,
         public string $tweet_text,
         public int $favolite_count,
         public int $retweet_count,

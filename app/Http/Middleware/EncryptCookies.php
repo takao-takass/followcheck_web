@@ -14,5 +14,6 @@ class EncryptCookies extends Middleware
     protected $except = [
         // 暗号化しないCookie
         'sign',
+        'thumbnail_size'
     ];
 }

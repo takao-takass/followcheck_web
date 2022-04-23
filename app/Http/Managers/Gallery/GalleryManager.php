@@ -124,7 +124,8 @@ class GalleryManager
         $tweet_media = TweetMedias::select(
             [
                 'directory_path',
-                'file_name'
+                'file_name',
+                'type'
             ]
         )
             ->where('service_user_id', $service_user_id)
@@ -154,6 +155,7 @@ class GalleryManager
             $relational_user['disp_name'],
             $relational_user['thumbnail_url'],
             "/img/tweetmedia/{$media_directory}/{$media_file}",
+            $tweet_media['type'],
             $tweet['body'],
             $tweet['favolite_count'],
             $tweet['retweet_count'],

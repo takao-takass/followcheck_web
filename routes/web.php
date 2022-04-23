@@ -45,10 +45,6 @@ Route::get('/followcheck/fleolist/{user_id}/{page}', 'FleolistController@index')
 // アカウント管理
 Route::get('/followcheck/accounts', 'AccountsController@index');
 
-// ユーザ
-Route::get('/followcheck/user/{user_id}', 'UserController@index')
-    ->name('user.index');
-
 // キーワード検索
 Route::get('/followcheck/keywords/{page?}', 'KeywordsController@index');
 
@@ -63,17 +59,16 @@ Route::get('/followcheck/gallery/all', 'Gallery\GalleryController@all')
 Route::get('/followcheck/gallery/user', 'Gallery\GalleryController@user')
     ->name(WebRoute::GALLERY_USER);
 
-
-
-
 // New ツイートを見る
 Route::get('/followcheck/tweetusers2', 'TweetUsers2Controller@index')
     ->name('tweetuser.index');
 Route::post('/followcheck/tweetusers2/add', 'TweetUsers2Controller@add');
 
+// ユーザ
+Route::get('/followcheck/user/{user_id}', 'UserController@index')
+    ->name(WebRoute::USER_DETAIL);
+
 // New 観賞モード
-//Route::get('/followcheck/show_user/{user_id}', 'ShowByUserController@index')
-//    ->name('show_user.index');
 Route::get('/followcheck/show_user/{user_id}', 'ShowAllController@indexByUser')
     ->name('show_user.index');
 Route::get('/followcheck/show_all', 'ShowAllController@index')

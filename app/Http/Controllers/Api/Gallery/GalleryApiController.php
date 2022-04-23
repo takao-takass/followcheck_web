@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api\Gallery;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use App\Http\Controllers\Controller;
 use App\Http\Managers\Gallery\GalleryManager;
-use Illuminate\Http\Request;
+use App\Constants\MediaThumbnailSize;
 
 class GalleryApiController extends Controller
 {
@@ -50,6 +52,7 @@ class GalleryApiController extends Controller
                 'disp_name' => $result->disp_name,
                 'user_icon_url' => $result->user_icon_url,
                 'media_url' => $result->media_url,
+                'media_type' => $result->media_type,
                 'tweet_text' => $result->tweet_text,
                 'favolite_count' => $result->favolite_count,
                 'retweet_count' => $result->retweet_count,
@@ -118,5 +121,32 @@ class GalleryApiController extends Controller
         }
 
         return response(200);
+    }
+
+    public function changeThumbnailSize(Request $request)
+    {
+        if (!$this->isValidToken()) {
+            return response(401);
+        }
+        
+        $thumnbail_size = $request->input('thumnbail_size');
+        $set_size = '';
+        switch ($thumnbail_size) {
+            case MediaThumbnailSize::SMALL:
+                $set_size = MediaThumbnailSize::MEDIUM;
+                // Cookie::queue(Cookie::make('thumbnail_size', MediaThumbnailSize::MEDIUM, 525600)); // cookie of 1 year.
+                break;
+            case MediaThumbnailSize::LARGE:
+                $set_size = MediaThumbnailSize::SMALL;
+                // Cookie::queue(Cookie::make('thumbnail_size', MediaThumbnailSize::SMALL, 525600)); // cookie of 1 year.
+                break;
+            case MediaThumbnailSize::MEDIUM:
+            default:
+                $set_size = MediaThumbnailSize::LARGE;
+                // Cookie::queue(Cookie::make('thumbnail_size', MediaThumbnailSize::LARGE, 525600)); // cookie of 1 year.
+                break;
+        }
+
+        return response($set_size, 200)->cookie('thumbnail_size', $set_size, 60*24*365);
     }
 }
