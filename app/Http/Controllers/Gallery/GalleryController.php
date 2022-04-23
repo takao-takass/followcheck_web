@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Gallery;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cookie;
 use App\Http\Controllers\Controller;
 use App\Http\Managers\Gallery\GalleryManager;
 use App\ViewModels\Gallery\GalleryViewModel;
 use App\Constants\WebRoute;
+use App\Constants\MediaThumbnailSize;
 
 class GalleryController extends Controller
 {
@@ -24,9 +27,17 @@ class GalleryController extends Controller
         $manager = new GalleryManager();
         $items = $manager->fetch($service_user_id, $page);
 
-        $param['viewModel'] = new GalleryViewModel($page, $items);
+        
+        $thumbnail_size = $request->Cookie('thumbnail_size');
+        if ($thumbnail_size == null) {
+            $thumbnail_size = MediaThumbnailSize::MEDIUM;
+        }
 
-        return  response()->view('gallery.index', $param);
+        $param['viewModel'] = new GalleryViewModel($page, $thumbnail_size, $items);
+
+        return  response()
+            ->view('gallery.index', $param)
+            ->cookie('thumbnail_size', $thumbnail_size, 60*24*365);
     }
 
     public function user(Request $request)
@@ -47,10 +58,16 @@ class GalleryController extends Controller
 
         $manager = new GalleryManager();
         $items = $manager->fetch($service_user_id, $page, $user_id);
+        
+        $thumbnail_size = $request->Cookie('thumbnail_size');
+        if ($thumbnail_size == null) {
+            $thumbnail_size = MediaThumbnailSize::MEDIUM;
+        }
 
-        $param['viewModel'] = new GalleryViewModel($page, $items);
+        $param['viewModel'] = new GalleryViewModel($page, $thumbnail_size, $items);
 
-        return  response()->view('gallery.index', $param);
+        return  response()
+            ->view('gallery.index', $param)
+            ->cookie('thumbnail_size', $thumbnail_size, 60*24*365);
     }
-
 }

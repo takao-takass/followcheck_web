@@ -28,6 +28,8 @@ class WebRoute
 
     const LOGIN_LOGOUT = 'login.logout';
 
+    const USER_DETAIL = 'user.index';
+
     const TWEETUSER_INDEX = 'tweetuser.index';
 
     const GROUP_INDEX = 'group.index';
