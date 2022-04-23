@@ -174,14 +174,11 @@
 
             $.get("{{ route('api.gallery.mediadetail') }}", param, function(response){
 
-                
-                $('#videoSource').remove();
-
                 if(response.media_type === "video") {
                     $('#imageDetail').hide();
                     $('#videoDetail').show();
                     $('#videoDetail').append(
-                        "<video id='videoSource' style='max-width:100%' src='"+response.media_url+"' autoplay controls type='video/mp4'>"+
+                        "<video id='videoSource' style='max-width:100%' src='"+response.media_url+"' autoplay muted controls type='video/mp4'>"+
                         "<p>ご使用のブラウザでは動画再生に対応していません</p>"+
                         "</video>"
                     );
@@ -206,6 +203,10 @@
             });
 
         }
+
+        $('#mediaModal').on('hidden.bs.modal', function (e) {
+            $('#videoSource').remove();
+        });
 
         function keepByModal(){
             let userId = $("#modalUserId").val();
