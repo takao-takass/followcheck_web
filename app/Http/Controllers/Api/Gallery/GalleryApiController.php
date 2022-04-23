@@ -114,7 +114,7 @@ class GalleryApiController extends Controller
         $service_user_id = $this->session_user->service_user_id;
 
         $manager = new GalleryManager();
-        $result = $manager->keep($service_user_id, $tweet_ids, $user_ids);
+        $result = $manager->keep($service_user_id, $user_ids, $tweet_ids);
 
         if ($result == false) {
             return response(400);
