@@ -105,11 +105,7 @@
                     <a id="originalLink" href="#" target="_blank" rel="noopener noreferrer"><img id="originalMedia" style="width: 100%;" alt="新しいタブで表示" src=""/></a>
                 </div>
                 <div id="videoDetail" class="modal-body">
-                    <video>
-                        <source id="videoSource" src="" type="video/mp4">
-                        <p>ご使用のブラウザでは動画再生に対応していません</p>
-                    </video>
-                    <a href="#" target="_blank" rel="noopener noreferrer">新しいタブで再生</a>
+                    <a id="videoLink" href="#" target="_blank" rel="noopener noreferrer">新しいタブで再生</a>
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" id="modalUserId">
@@ -181,12 +177,19 @@
                 if(response.media_type === "video") {
                     $('#imageDetail').hide();
                     $('#videoDetail').show();
-                    $("#videoSource").attr("src", response.media_url);
+                    $('#videoDetail').append(
+                        "<video>"+
+                        "<source id='videoSource' src='"+response.media_url+"' type='video/mp4'>"+
+                        "<p>ご使用のブラウザでは動画再生に対応していません</p>"+
+                        "</video>"
+                    );
+                    $("#videoLink").attr("src", response.media_url);
                     $("#originalMedia").attr("src", "");
                 } else {
                     $('#imageDetail').show();
                     $('#videoDetail').hide();
                     $("#videoSource").attr("src", "");
+                    $("#videoLink").attr("src", "");
                     $("#originalMedia").attr("src", response.media_url);
                 }
 

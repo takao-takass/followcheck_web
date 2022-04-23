@@ -29,8 +29,8 @@
                         <h6 class="card-title">- - - - - - - - - - -</h6>
                         <h6 class="card-title mt-2">{{$tweet_taking ? '〇' : '－'}} ツイート取得対象</h6>
                         <h6 class="card-title">- - - - - - - - - - -</h6>
-                        <a class='mt-2' href="{{ route('gallery.user', ['user_id' => $user->user_id]) }}"><input type="button" class="btn btn-primary form-control" value="Twitter" /></a>
-                        <a class='mt-2' href="https://twitter.com/{{$user->disp_name}}"><input type="button" class="btn btn-primary form-control" value="ギャラリー" /></a>
+                        <a class='mt-2' href="https://twitter.com/{{$user->disp_name}}"><input type="button" class="btn btn-primary form-control" value="Twitter" /></a>
+                        <a class='mt-2' href="{{ route('gallery.user', ['user_id' => $user->user_id]) }}"><input type="button" class="btn btn-primary form-control" value="ギャラリー" /></a>
                     </div>
                 </div>
             </div>
