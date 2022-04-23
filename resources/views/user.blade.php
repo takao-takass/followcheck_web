@@ -25,7 +25,7 @@
                         <h6 class="card-title">フォロー：{{$user->follow_count}}　フォロワー：{{$user->follower_count}}</h6>
                         <h6 class="card-title">- - - - - - - - - - -</h6>
                         <h6 class="card-title">ツイート数：{{$tweet_count}}</h6>
-                        <h6 class="card-title">メディア数：{{$media_ready_count}} READY / {{$media_checked_count}} CHECKED / {{$media_count}} TOTAL</h6>
+                        <h6 class="card-title">メディア数：{{$media_ready_count}} READY / {{$media_count}} TOTAL / {{$media_checked_count}} CHECKED / {{$media_kept_count}} KEPT</h6>
                         <h6 class="card-title">- - - - - - - - - - -</h6>
                         <h6 class="card-title mt-2">{{$tweet_taking ? '〇' : '－'}} ツイート取得対象</h6>
                         <h6 class="card-title">- - - - - - - - - - -</h6>

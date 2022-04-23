@@ -43,6 +43,12 @@ class UserController extends Controller
             ->where('tweets.user_id',$request['user_id'])
             ->where('tweets.service_user_id',$this->session_user->service_user_id)
             ->count();
+        $param['media_kept_count'] = DB::table('tweets')
+            ->join('tweet_medias','tweets.tweet_id','=','tweet_medias.tweet_id')
+            ->where('tweets.kept',1)
+            ->where('tweets.user_id',$request['user_id'])
+            ->where('tweets.service_user_id',$this->session_user->service_user_id)
+            ->count();
 
         // ユーザの投稿メディア
         $tweets = Tweets::select(['tweet_id'])
