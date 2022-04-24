@@ -36,8 +36,11 @@
     padding-left: 10%;
     bottom: 0px;
     right: 0px;
+    font-weight: 800;
     background-color: #ad1e42;
     color: white;
+    border-bottom-left-radius: 9999px;
+    border-top-left-radius: 9999px;
 }
 
 
