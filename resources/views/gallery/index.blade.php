@@ -96,7 +96,7 @@
                         src="{{asset('./img/media_default.jpg')}}"
                         data-async-load='{{$item->thumbnail_url}}'>
                     </a>
-                    <p class="keep-label keep-label-{{$item->tweet_id}}">♥</p>
+                    <p class="keep-label keep-label-{{$item->tweet_id}}">K</p>
                     @elseif (!$item->kept && $item->shown)
                     <a onclick="keep('{{$item->user_id}}', '{{$item->tweet_id}}')">
                     <img
@@ -107,7 +107,7 @@
                         src="{{asset('./img/media_default.jpg')}}"
                         data-async-load='{{$item->thumbnail_url}}'>
                     </a>
-                    <p class="keep-label keep-label-{{$item->tweet_id}}" style="display: none;">♥</p>
+                    <p class="keep-label keep-label-{{$item->tweet_id}}" style="display: none;">K</p>
                     @else
                     <a onclick="keep('{{$item->user_id}}', '{{$item->tweet_id}}')">
                     <img
