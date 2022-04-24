@@ -35,6 +35,9 @@
 
             @php
             switch ($viewModel->thumbnail_size) {
+                case MediaThumbnailSize::XSMALL :
+                    $layout_cols = 'col-xl-1 col-lg-1 col-md-2 col-sm-3 col-4';
+                    break;
                 case MediaThumbnailSize::SMALL :
                     $layout_cols = 'col-xl-1 col-lg-2 col-md-3 col-sm-4 col-6';
                     break;

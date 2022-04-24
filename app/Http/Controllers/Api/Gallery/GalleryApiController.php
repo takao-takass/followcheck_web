@@ -184,11 +184,14 @@ class GalleryApiController extends Controller
         $thumnbail_size = $request->input('thumnbail_size');
         $set_size = '';
         switch ($thumnbail_size) {
+            case MediaThumbnailSize::XSMALL:
+                $set_size = MediaThumbnailSize::SMALL;
+                break;
             case MediaThumbnailSize::SMALL:
                 $set_size = MediaThumbnailSize::MEDIUM;
                 break;
             case MediaThumbnailSize::LARGE:
-                $set_size = MediaThumbnailSize::SMALL;
+                $set_size = MediaThumbnailSize::XSMALL;
                 break;
             case MediaThumbnailSize::MEDIUM:
             default:
