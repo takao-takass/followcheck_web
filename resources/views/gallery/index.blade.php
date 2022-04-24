@@ -118,7 +118,7 @@
                         src="{{asset('./img/media_default.jpg')}}"
                         data-async-load='{{$item->thumbnail_url}}'>
                     </a>
-                    <p class="keep-label keep-label-{{$item->tweet_id}}" style="display: none;">♥</p>
+                    <p class="keep-label keep-label-{{$item->tweet_id}}" style="display: none;">K</p>
                     @endif
                 </div>
                 <button 
@@ -128,9 +128,9 @@
                     onclick='modal("{{$item->tweet_id}}", "{{$item->user_id}}", "{{$item->media_name}}")'>
 
                     @if($item->type == 'video')
-                        Video
+                        ▶ 再生
                     @else
-                        Photo
+                        詳細
                     @endif
                     
                 </button>
