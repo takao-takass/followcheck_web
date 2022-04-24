@@ -6,8 +6,10 @@ use App\DataModels\RelationalUsers;
 use App\DataModels\Tweets;
 use App\DataModels\TweetMedias;
 use App\DataModels\UserConfig;
+use App\DataModels\TweetTakeUsers;
 use App\Models\Gallery\GalleryItemModel;
 use App\Models\Gallery\MediaDetailModel;
+use App\Models\TweetTakeUser;
 
 /**
  * 観賞画面（新しいツイート順）
@@ -22,23 +24,29 @@ class GalleryManager
     public function fetch(string $service_user_id, int $page, string $user_id = null)
         : array
     {
-        $filter_checked = UserConfig::where('service_user_id', $service_user_id)
-            ->where('config_id', 4)
-            ->first()
-            ->getAttributes();
 
-        $query = Tweets::select(['user_id','tweet_id','body'])
+        $query = Tweets::select(['user_id','tweet_id','body','kept', 'shown'])
             ->where('service_user_id', $service_user_id)
             ->where('is_media', 1)
             ->where('media_ready', 1)
             ->where('deleted', 0);
 
         if ($user_id != null) {
-            $query = $query->where('user_id', $user_id);
-        }
 
-        if ($filter_checked['value'] == 1) {
+            $query = $query->where('user_id', $user_id);
+
+            $show_kept = TweetTakeUsers::select(['show_kept'])
+                ->where('service_user_id', $service_user_id)
+                ->where('user_id', $user_id)
+                ->first();
+            if ($show_kept['show_kept'] == 0) {
+                $query = $query->where('shown', 0);
+            }
+
+        } else {
+
             $query = $query->where('shown', 0);
+
         }
 
         $query = $query
@@ -86,7 +94,9 @@ class GalleryManager
                 "/img/tweetmedia/{$thumb_directory}/{$thumb_file}",
                 $tweet_media['file_name'],
                 $tweet_media['type'],
-                $tweets[$tweets_index]['body']
+                $tweets[$tweets_index]['body'],
+                $tweets[$tweets_index]['kept'] == '1' ? true : false,
+                $tweets[$tweets_index]['shown'] == '1' ? true : false,
             );
 
             array_push($models, $model);
@@ -200,6 +210,52 @@ class GalleryManager
             ->whereIn('user_id', $user_ids)
             ->whereIn('tweet_id', $tweet_ids)
             ->update(['kept'=>1,'shown'=>1]);
+
+        if ($count == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function unkeep(string $service_user_id, string $raw_user_ids, string $raw_tweet_ids): bool
+    {
+
+        $user_ids = explode(",", $raw_user_ids);
+        $tweet_ids = explode(",", $raw_tweet_ids);
+
+        $count = Tweets::where('service_user_id', $service_user_id)
+            ->whereIn('user_id', $user_ids)
+            ->whereIn('tweet_id', $tweet_ids)
+            ->update(['kept'=>0,'shown'=>0]);
+
+        if ($count == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function changeShowKept(string $service_user_id, string $user_id): bool
+    {
+
+        $tweet_take_user = TweetTakeUsers::select(['show_kept'])
+            ->where('service_user_id', $service_user_id)
+            ->where('user_id', $user_id)
+            ->first();
+
+        $current_show_kept = $tweet_take_user['show_kept'] == 1 ? true : false;
+
+        $count = 0;
+        if ($current_show_kept) {
+            $count = TweetTakeUsers::where('service_user_id', $service_user_id)
+                ->where('user_id', $user_id)
+                ->update(['show_kept'=>0]);
+        } else {
+            $count = TweetTakeUsers::where('service_user_id', $service_user_id)
+                ->where('user_id', $user_id)
+                ->update(['show_kept'=>1]);
+        }
 
         if ($count == 0) {
             return false;
