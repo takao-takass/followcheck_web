@@ -8,6 +8,8 @@ class ApiRoute
     const BATCH_UPDATE_USERS = 'batch.update_users';
 
     const GALLERY_KEEP = 'api.gallery.keep';
+    const GALLERY_UNKEEP = 'api.gallery.unkeep';
+    const GALLERY_CHANGE_SHOWKEPT = 'api.gallery.change_showkept';
     const GALLERY_CHECKED = 'api.gallery.checked';
     const GALLERY_MEDIADETAIL = 'api.gallery.mediadetail';
     const GALLERY_CHANGE_THUMBNAILSIZE = 'api.gallery.change_thumbnailsize';

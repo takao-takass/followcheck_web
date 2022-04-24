@@ -7,7 +7,12 @@
 @extends('layout')
 
 @section('title')
-    <title>ギャラリー / followcheck</title>
+        
+    @if ($viewModel->user_id == '')
+        <title>ギャラリー / followcheck</title>
+    @else
+        <title>{{$viewModel->user_name}} - ギャラリー / followcheck</title>
+    @endif
 @endsection
 
 @section('style')
@@ -46,11 +51,62 @@
             <div class='{{$layout_cols}} mb-1'>
                 <button type="button" class="btn btn-secondary" style="width:100%; height:100%;" onclick="changeThumbnailSize('{{$viewModel->thumbnail_size}}')">サイズ変更</button>
             </div>
+        
+            @if ($viewModel->user_id != '')
+            <div class='{{$layout_cols}} mb-1'>
+                <button type="button" class="btn btn-secondary" style="width:100%; height:100%;" onclick="changeShowKept('{{$viewModel->user_id}}')">KEEP表示切替</button>
+            </div>
+            @endif
+
+            @if ($viewModel->page > 0)
+            <div class='{{$layout_cols}} mb-1'>
+                @php
+                    $url_thispage = '';
+                    if ($viewModel->user_id == '') {
+                        $url_thispage = route(WebRoute::GALLERY_ALL,
+                        [
+                            'page' => $viewModel->page - 1
+                        ]);
+                    } else {
+                        $url_thispage = route(WebRoute::GALLERY_USER, 
+                        [
+                            'user_id' => $viewModel->user_id,
+                            'page' => $viewModel->page - 1
+                        ]);
+                    }
+                @endphp
+                <a class="btn btn-info" style="width:100%; height:100%;" href="{{$url_thispage}}">前のページ<br>◀</a>
+            </div>
+            @endif
 
             @foreach ( $viewModel->items as $item )
 
             <div class='{{$layout_cols}} mb-1'>
-                <a onclick="keep('{{$item->user_id}}', '{{$item->tweet_id}}')">
+                <div class="thumbnail-box">
+                    @if ($item->kept)
+                    <a onclick="keep('{{$item->user_id}}', '{{$item->tweet_id}}')">
+                    <img
+                        alt=""
+                        class='mr-3 thumb-radius thumb-back async-load tweet-media tweet-{{$item->tweet_id}} kept'
+                        data-toggle="tooltip" data-placement="top" title="{{$item->tweet_text}}"
+                        style='width:100%;'
+                        src="{{asset('./img/media_default.jpg')}}"
+                        data-async-load='{{$item->thumbnail_url}}'>
+                    </a>
+                    <p class="keep-label keep-label-{{$item->tweet_id}}">♥</p>
+                    @elseif (!$item->kept && $item->shown)
+                    <a onclick="keep('{{$item->user_id}}', '{{$item->tweet_id}}')">
+                    <img
+                        alt=""
+                        class='mr-3 thumb-radius thumb-back async-load tweet-media tweet-{{$item->tweet_id}} img-opacity'
+                        data-toggle="tooltip" data-placement="top" title="{{$item->tweet_text}}"
+                        style='width:100%;'
+                        src="{{asset('./img/media_default.jpg')}}"
+                        data-async-load='{{$item->thumbnail_url}}'>
+                    </a>
+                    <p class="keep-label keep-label-{{$item->tweet_id}}" style="display: none;">♥</p>
+                    @else
+                    <a onclick="keep('{{$item->user_id}}', '{{$item->tweet_id}}')">
                     <img
                         alt=""
                         class='mr-3 thumb-radius thumb-back async-load tweet-media tweet-{{$item->tweet_id}}'
@@ -58,7 +114,10 @@
                         style='width:100%;'
                         src="{{asset('./img/media_default.jpg')}}"
                         data-async-load='{{$item->thumbnail_url}}'>
-                </a>
+                    </a>
+                    <p class="keep-label keep-label-{{$item->tweet_id}}" style="display: none;">♥</p>
+                    @endif
+                </div>
                 <button 
                     type="button"
                     class="btn btn-outline-secondary btn-sm"
@@ -75,15 +134,35 @@
             </div>
 
             @endforeach
+            
+            <div class='{{$layout_cols}} mb-1'>
+                @php
+                    $url_thispage = '';
+                    if ($viewModel->user_id == '') {
+                        $url_thispage = route(WebRoute::GALLERY_ALL,
+                        [
+                            'page' => $viewModel->page + 1
+                        ]);
+                    } else {
+                        $url_thispage = route(WebRoute::GALLERY_USER, 
+                        [
+                            'user_id' => $viewModel->user_id,
+                            'page' => $viewModel->page + 1
+                        ]);
+                    }
+                @endphp
+                <a type="button" class="btn btn-info" style="width:100%; height:100%;" href="{{$url_thispage}}">次のページ<br/>▶</a>
+            </div>
 
+        </div>
+        
+        <div class="row mt-4">
             <div class='{{$layout_cols}} mb-1'>
                 <button type="button" class="btn btn-primary" style="width:100%; height:100%;" onclick="checked()">ページを既読</button>
             </div>
-
             <div class='{{$layout_cols}} mb-1'>
                 <button type="button" class="btn btn-warning" style="width:100%; height:100%;" onclick="keepAll()">すべてKEEP</button>
             </div>
-
         </div>
         
         <!-- ページ下部のスペーサ -->
@@ -116,8 +195,8 @@
                     <input type="hidden" id="modalTweetId">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-warning" onclick="keepByModal()">KEEP</button>
-                    <a href="#" id="userpageLink"  target="_blank" rel="noopener noreferrer" type="button" class="btn btn-primary">ユーザ</a>
-                    <a href="#" id="twitterLink"  target="_blank" rel="noopener noreferrer" type="button" class="btn btn-primary">Twitter</a>
+                    <a href="#" id="userpageLink" target="_blank" rel="noopener noreferrer" type="button" class="btn btn-primary">ユーザ</a>
+                    <a href="#" id="twitterLink" target="_blank" rel="noopener noreferrer" type="button" class="btn btn-primary">Twitter</a>
                 </div>
             </div>
         </div>
@@ -145,9 +224,18 @@
                 tweet_ids: tweetId
             }
 
-            $.post("{{ route('api.gallery.keep') }}", param, function(){
-                $('.tweet-'+tweetId).addClass('img-opacity');
-            });
+            if ($('.tweet-'+tweetId).first().hasClass('kept')) {
+                $.post("{{ route('api.gallery.unkeep') }}", param, function(){
+                    $('.tweet-'+tweetId).removeClass('kept');
+                    $('.keep-label-'+tweetId).hide();
+                });
+            } else {
+                $.post("{{ route('api.gallery.keep') }}", param, function(){
+                    $('.tweet-'+tweetId).addClass('kept');
+                    $('.keep-label-'+tweetId).show();
+                });
+            }
+
         }
         
         function keepAll(){
@@ -158,7 +246,8 @@
             }
 
             $.post("{{ route('api.gallery.keep') }}", param, function(){
-                $('.tweet-media').addClass('img-opacity');
+                $('.tweet-media').addClass('kept');
+                $('.keep-label').show();
             });
         }
 
@@ -230,12 +319,7 @@
             keep(userId, tweetId);
         }
 
-        function openUserPage(){
-
-        }
-
         function changeThumbnailSize(currentThumbnailSize) {
-
             @php
                 $url_change_thumbnail_api = route(ApiRoute::GALLERY_CHANGE_THUMBNAILSIZE);
             @endphp
@@ -243,7 +327,17 @@
             $.post("{{ $url_change_thumbnail_api }}", param, function(response) {
                 location.reload();
             });
-
         }
+        
+        function changeShowKept(userId) {
+            @php
+                $url_change_showkept_api = route(ApiRoute::GALLERY_CHANGE_SHOWKEPT);
+            @endphp
+            let param = { "user_id" : userId };
+            $.post("{{ $url_change_showkept_api }}", param, function(response) {
+                location.reload();
+            });
+        }
+
     </script>
 @endsection

@@ -22,6 +22,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 # キャラリーAPI
 Route::Post('/followcheck/api/gallery/keep','Api\Gallery\GalleryApiController@keep')
     ->name(ApiRoute::GALLERY_KEEP);
+Route::Post('/followcheck/api/gallery/unkeep','Api\Gallery\GalleryApiController@unkeep')
+    ->name(ApiRoute::GALLERY_UNKEEP);
+Route::Post('/followcheck/api/gallery/change_showkept','Api\Gallery\GalleryApiController@changeShowKept')
+    ->name(ApiRoute::GALLERY_CHANGE_SHOWKEPT);
 Route::Post('/followcheck/api/gallery/checked','Api\Gallery\GalleryApiController@checked')
     ->name(ApiRoute::GALLERY_CHECKED);
 Route::Get('/followcheck/api/gallery/mediaDetail','Api\Gallery\GalleryApiController@mediaDetail')

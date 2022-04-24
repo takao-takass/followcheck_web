@@ -10,6 +10,7 @@ use App\Http\Managers\Gallery\GalleryManager;
 use App\ViewModels\Gallery\GalleryViewModel;
 use App\Constants\WebRoute;
 use App\Constants\MediaThumbnailSize;
+use App\DataModels\RelationalUsers;
 
 class GalleryController extends Controller
 {
@@ -33,7 +34,7 @@ class GalleryController extends Controller
             $thumbnail_size = MediaThumbnailSize::MEDIUM;
         }
 
-        $param['viewModel'] = new GalleryViewModel($page, $thumbnail_size, $items);
+        $param['viewModel'] = new GalleryViewModel('', '', $page, $thumbnail_size, $items);
 
         return  response()
             ->view('gallery.index', $param)
@@ -64,7 +65,11 @@ class GalleryController extends Controller
             $thumbnail_size = MediaThumbnailSize::MEDIUM;
         }
 
-        $param['viewModel'] = new GalleryViewModel($page, $thumbnail_size, $items);
+        $relational_user = RelationalUsers::select(['name'])
+            ->where('user_id', $user_id)
+            ->first();
+
+        $param['viewModel'] = new GalleryViewModel($user_id, $relational_user['name'], $page, $thumbnail_size, $items);
 
         return  response()
             ->view('gallery.index', $param)

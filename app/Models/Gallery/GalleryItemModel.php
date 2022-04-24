@@ -10,7 +10,9 @@ class GalleryItemModel
         public string $thumbnail_url,
         public string $media_name,
         public string $type,
-        public string $tweet_text
+        public string $tweet_text,
+        public bool $kept,
+        public bool $shown
     ) {
     }
 }

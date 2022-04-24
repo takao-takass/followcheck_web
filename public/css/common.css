@@ -27,6 +27,20 @@
 }
 
 
+.thumbnail-box {
+    position: relative;
+}
+.keep-label{
+    position: absolute;
+    width: 30%;
+    padding-left: 10%;
+    bottom: 0px;
+    right: 0px;
+    background-color: #ad1e42;
+    color: white;
+}
+
+
 /* ユーザアイコン */
 .usericon {
     width:3.5em;

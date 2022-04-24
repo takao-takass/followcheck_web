@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Gallery;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cookie;
 use App\Http\Controllers\Controller;
 use App\Http\Managers\Gallery\GalleryManager;
 use App\Constants\MediaThumbnailSize;
@@ -15,23 +14,23 @@ class GalleryApiController extends Controller
     {
 
         if (!$this->isValidToken()) {
-            return response(401);
+            return response('', 401);
         }
 
 
         $tweet_id = $request->input('tweet_id');
         if ($tweet_id == null) {
-            return response(400);
+            return response('', 400);
         }
 
         $user_id = $request->input('user_id');
         if ($user_id == null) {
-            return response(400);
+            return response('', 400);
         }
 
         $media_name = $request->input('media_name');
         if ($media_name == null) {
-            return response(400);
+            return response('', 400);
         }
 
         $service_user_id = $this->session_user->service_user_id;
@@ -69,17 +68,17 @@ class GalleryApiController extends Controller
     {
 
         if (!$this->isValidToken()) {
-            return response(401);
+            return response('', 401);
         }
 
         $tweet_ids = $request->input('tweet_ids');
         if ($tweet_ids == null) {
-            return response(400);
+            return response('', 400);
         }
 
         $user_ids = $request->input('user_ids');
         if ($user_ids == null) {
-            return response(400);
+            return response('', 400);
         }
         $service_user_id = $this->session_user->service_user_id;
 
@@ -87,10 +86,10 @@ class GalleryApiController extends Controller
         $result = $manager->checked($service_user_id, $user_ids, $tweet_ids);
 
         if ($result == false) {
-            return response(400);
+            return response('', 400);
         }
 
-        return response(200);
+        return response('', 200);
     }
 
 
@@ -98,17 +97,17 @@ class GalleryApiController extends Controller
     {
 
         if (!$this->isValidToken()) {
-            return response(401);
+            return response('', 401);
         }
 
         $tweet_ids = $request->input('tweet_ids');
         if ($tweet_ids == null) {
-            return response(400);
+            return response('', 400);
         }
 
         $user_ids = $request->input('user_ids');
         if ($user_ids == null) {
-            return response(400);
+            return response('', 400);
         }
 
         $service_user_id = $this->session_user->service_user_id;
@@ -117,16 +116,69 @@ class GalleryApiController extends Controller
         $result = $manager->keep($service_user_id, $user_ids, $tweet_ids);
 
         if ($result == false) {
-            return response(400);
+            return response('', 400);
         }
 
-        return response(200);
+        return response('', 200);
+    }
+
+    public function unkeep(Request $request)
+    {
+
+        if (!$this->isValidToken()) {
+            return response('', 401);
+        }
+
+        $tweet_ids = $request->input('tweet_ids');
+        if ($tweet_ids == null) {
+            return response('', 400);
+        }
+
+        $user_ids = $request->input('user_ids');
+        if ($user_ids == null) {
+            return response('', 400);
+        }
+
+        $service_user_id = $this->session_user->service_user_id;
+
+        $manager = new GalleryManager();
+        $result = $manager->unkeep($service_user_id, $user_ids, $tweet_ids);
+
+        if ($result == false) {
+            return response('', 400);
+        }
+
+        return response('', 200);
+    }
+
+    public function changeShowKept(Request $request)
+    {
+
+        if (!$this->isValidToken()) {
+            return response('', 401);
+        }
+
+        $user_id = $request->input('user_id');
+        if ($user_id == null) {
+            return response('', 400);
+        }
+
+        $service_user_id = $this->session_user->service_user_id;
+
+        $manager = new GalleryManager();
+        $result = $manager->changeShowKept($service_user_id, $user_id);
+
+        if ($result == false) {
+            return response('', 400);
+        }
+
+        return response('', 200);
     }
 
     public function changeThumbnailSize(Request $request)
     {
         if (!$this->isValidToken()) {
-            return response(401);
+            return response('', 401);
         }
         
         $thumnbail_size = $request->input('thumnbail_size');
@@ -134,16 +186,13 @@ class GalleryApiController extends Controller
         switch ($thumnbail_size) {
             case MediaThumbnailSize::SMALL:
                 $set_size = MediaThumbnailSize::MEDIUM;
-                // Cookie::queue(Cookie::make('thumbnail_size', MediaThumbnailSize::MEDIUM, 525600)); // cookie of 1 year.
                 break;
             case MediaThumbnailSize::LARGE:
                 $set_size = MediaThumbnailSize::SMALL;
-                // Cookie::queue(Cookie::make('thumbnail_size', MediaThumbnailSize::SMALL, 525600)); // cookie of 1 year.
                 break;
             case MediaThumbnailSize::MEDIUM:
             default:
                 $set_size = MediaThumbnailSize::LARGE;
-                // Cookie::queue(Cookie::make('thumbnail_size', MediaThumbnailSize::LARGE, 525600)); // cookie of 1 year.
                 break;
         }
 
