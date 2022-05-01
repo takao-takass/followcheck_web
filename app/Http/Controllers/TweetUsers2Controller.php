@@ -53,7 +53,7 @@ class TweetUsers2Controller extends Controller
             ->toArray();
 
         $additional_user_id = $request->input('additional_user_id');
-        if($additional_user_id != null) {
+        if ($additional_user_id != null) {
 
             $additional_user = TweetTakeUsers::select(['user_id','status'])
                 ->where('service_user_id', $this->session_user->service_user_id)
@@ -100,7 +100,7 @@ class TweetUsers2Controller extends Controller
             ->whereIn('user_id', $user_ids)
             ->where('is_media', 1)
             ->where('media_ready', 1)
-            ->where('shown',1)
+            ->where('shown', 1)
             ->get()
             ->toArray();
 
@@ -152,8 +152,8 @@ class TweetUsers2Controller extends Controller
             return redirect()->route(WebRoute::LOGIN_LOGOUT);
         }
 
-        $screen_name = $request['user_id'];
-        if (empty($screen_name)) {
+        $raw_screen_names = $request['user_id'];
+        if (empty($raw_screen_names)) {
             $param['error'] = Invalid::REQUIRED;
             return redirect()->route(WebRoute::TWEETUSER_INDEX, $param);
         }
@@ -165,56 +165,61 @@ class TweetUsers2Controller extends Controller
             config('app.access_token'),
             config('app.access_token_secret')
         );
-        $response = $twitter_api->get(
-            "users/show",
-            ["screen_name" => $screen_name]
-        );
 
-        // 入力チェック
-        // APIからユーザが取得できない場合はエラー
-        if (!property_exists($response, 'id_str')) {
-            $param['error'] = Invalid::NOT_FOUND;
-            return redirect()->route(WebRoute::TWEETUSER_INDEX, $param);
-        }
+        // TODO: N+1問題あり
+        $screen_names = explode(" ", $raw_screen_names);
+        foreach ($screen_names as $screen_name) {
 
-        // 既に登録されているアカウントはエラー
-        $exists = DB::table('tweet_take_users')
-            ->where('user_id', $response->id_str)
-            ->where('service_user_id', $this->session_user->service_user_id)
-            ->count();
-        if ($exists > 0) {
-            $param['error'] = Invalid::DUPULICATED;
-            $param['additional_user_id'] = $response->id_str;
-            return redirect()->route(WebRoute::TWEETUSER_INDEX, $param);
-        }
-
-        // ダウンロードアカウントマスタに登録する
-        TweetTakeUsers::insert(
-            [
-                'service_user_id' => $this->session_user->service_user_id,
-                'user_id' => $response->id_str,
-                'status' => '0',
-                'deleted' => '0'
-            ]
-        );
-
-        $relational_user = RelationalUsers::where('user_id', $response->id_str)
-            ->first();
-
-        if($relational_user==null){
-
-            RelationalUsers::insert(
+            $response = $twitter_api->get(
+                "users/show",
+                ["screen_name" => $screen_name]
+            );
+    
+            // 入力チェック
+            // APIからユーザが取得できない場合はエラー
+            if (!property_exists($response, 'id_str')) {
+                $param['error'] = Invalid::NOT_FOUND;
+                return redirect()->route(WebRoute::TWEETUSER_INDEX, $param);
+            }
+    
+            // 既に登録されているアカウントはエラー
+            $exists = DB::table('tweet_take_users')
+                ->where('user_id', $response->id_str)
+                ->where('service_user_id', $this->session_user->service_user_id)
+                ->count();
+    
+            if ($exists > 0) {
+                $param['error'] = Invalid::DUPULICATED;
+                $param['additional_user_id'] = $response->id_str;
+                return redirect()->route(WebRoute::TWEETUSER_INDEX, $param);
+            }
+    
+            // ダウンロードアカウントマスタに登録する
+            TweetTakeUsers::insert(
                 [
+                    'service_user_id' => $this->session_user->service_user_id,
                     'user_id' => $response->id_str,
-                    'disp_name' => $response->screen_name,
-                    'name' => $response->name,
-                    'description' => $response->description,
-                    'theme_color' => '',
-                    'follow_count' => $response->followers_count,
-                    'follower_count' => $response->friends_count,
+                    'status' => '0',
                     'deleted' => '0'
                 ]
             );
+    
+            $relational_user = RelationalUsers::where('user_id', $response->id_str)->first();
+    
+            if ($relational_user==null) {
+                RelationalUsers::insert(
+                    [
+                        'user_id' => $response->id_str,
+                        'disp_name' => $response->screen_name,
+                        'name' => $response->name,
+                        'description' => $response->description,
+                        'theme_color' => '',
+                        'follow_count' => $response->followers_count,
+                        'follower_count' => $response->friends_count,
+                        'deleted' => '0'
+                    ]
+                );
+            }
         }
 
         return redirect()->route(WebRoute::TWEETUSER_INDEX);
