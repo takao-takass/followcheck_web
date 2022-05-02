@@ -180,6 +180,7 @@ class TweetUsers2Controller extends Controller
             // APIからユーザが取得できない場合はエラー
             if (!property_exists($response, 'id_str')) {
                 $param['error'] = Invalid::NOT_FOUND;
+                continue;
                 // return redirect()->route(WebRoute::TWEETUSER_INDEX, $param);
             }
     
@@ -192,6 +193,7 @@ class TweetUsers2Controller extends Controller
             if ($exists > 0) {
                 $param['error'] = Invalid::DUPULICATED;
                 $param['additional_user_id'] = $response->id_str;
+                continue;
                 // return redirect()->route(WebRoute::TWEETUSER_INDEX, $param);
             }
     
