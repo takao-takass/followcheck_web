@@ -167,6 +167,7 @@ class TweetUsers2Controller extends Controller
         );
 
         // TODO: N+1問題あり
+        $param['error'] = '';
         $screen_names = explode(" ", $raw_screen_names);
         foreach ($screen_names as $screen_name) {
 
@@ -179,7 +180,7 @@ class TweetUsers2Controller extends Controller
             // APIからユーザが取得できない場合はエラー
             if (!property_exists($response, 'id_str')) {
                 $param['error'] = Invalid::NOT_FOUND;
-                return redirect()->route(WebRoute::TWEETUSER_INDEX, $param);
+                // return redirect()->route(WebRoute::TWEETUSER_INDEX, $param);
             }
     
             // 既に登録されているアカウントはエラー
@@ -191,7 +192,7 @@ class TweetUsers2Controller extends Controller
             if ($exists > 0) {
                 $param['error'] = Invalid::DUPULICATED;
                 $param['additional_user_id'] = $response->id_str;
-                return redirect()->route(WebRoute::TWEETUSER_INDEX, $param);
+                // return redirect()->route(WebRoute::TWEETUSER_INDEX, $param);
             }
     
             // ダウンロードアカウントマスタに登録する
@@ -222,6 +223,6 @@ class TweetUsers2Controller extends Controller
             }
         }
 
-        return redirect()->route(WebRoute::TWEETUSER_INDEX);
+        return redirect()->route(WebRoute::TWEETUSER_INDEX, $param);
     }
 }
