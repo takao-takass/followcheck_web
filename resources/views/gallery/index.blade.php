@@ -228,15 +228,31 @@
             }
 
             if ($('.tweet-'+tweetId).first().hasClass('kept')) {
+                
                 $.post("{{ route('api.gallery.unkeep') }}", param, function(){
-                    $('.tweet-'+tweetId).removeClass('kept');
-                    $('.keep-label-'+tweetId).hide();
-                });
-            } else {
-                $.post("{{ route('api.gallery.keep') }}", param, function(){
+                    // success
+                })
+                .fail(function() {
                     $('.tweet-'+tweetId).addClass('kept');
                     $('.keep-label-'+tweetId).show();
                 });
+
+                $('.tweet-'+tweetId).removeClass('kept');
+                $('.keep-label-'+tweetId).hide();
+
+            } else {
+
+                $.post("{{ route('api.gallery.keep') }}", param, function(){
+                    // success
+                })
+                .fail(function() {
+                    $('.tweet-'+tweetId).removeClass('kept');
+                    $('.keep-label-'+tweetId).hide();
+                });
+
+                $('.tweet-'+tweetId).addClass('kept');
+                $('.keep-label-'+tweetId).show();
+
             }
 
         }
