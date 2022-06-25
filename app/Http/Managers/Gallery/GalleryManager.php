@@ -10,6 +10,7 @@ use App\DataModels\TweetTakeUsers;
 use App\Models\Gallery\GalleryItemModel;
 use App\Models\Gallery\MediaDetailModel;
 use App\Models\TweetTakeUser;
+use App\Constants\ListSort;
 
 /**
  * 観賞画面（新しいツイート順）
@@ -19,9 +20,9 @@ class GalleryManager
     const RECORDS_COUNT = 75;
 
     /**
-     * 観賞画面（新しいツイート順）をフェッチする
+     * 観賞画面をフェッチする
      */
-    public function fetch(string $service_user_id, int $page, string $user_id = null)
+    public function fetch(string $service_user_id, int $page, string $list_sort, string $user_id = null)
         : array
     {
 
@@ -49,8 +50,13 @@ class GalleryManager
 
         }
 
+        if ($list_sort == ListSort::DESC) {
+            $query = $query->orderByDesc('tweeted_datetime');
+        } else {
+            $query = $query->orderBy('tweeted_datetime');
+        }
+
         $query = $query
-            ->orderByDesc('tweeted_datetime')
             ->skip($page * self::RECORDS_COUNT)
             ->take(self::RECORDS_COUNT);
 

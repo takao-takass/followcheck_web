@@ -9,6 +9,7 @@ class GalleryViewModel
         public string $user_name,
         public int $page,
         public string $thumbnail_size,
+        public string $list_sort,
         public array $items,
     ) {
     }

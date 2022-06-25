@@ -32,6 +32,8 @@ Route::Get('/followcheck/api/gallery/mediaDetail','Api\Gallery\GalleryApiControl
     ->name(ApiRoute::GALLERY_MEDIADETAIL);
 Route::Post('/followcheck/api/gallery/change_thumbnailsize','Api\Gallery\GalleryApiController@changeThumbnailSize')
     ->name(ApiRoute::GALLERY_CHANGE_THUMBNAILSIZE);
+Route::Post('/followcheck/api/gallery/change_listsort','Api\Gallery\GalleryApiController@changeListSort')
+    ->name(ApiRoute::GALLERY_CHANGE_LISTSORT);
 
 
 

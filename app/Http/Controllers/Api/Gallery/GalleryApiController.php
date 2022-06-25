@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Managers\Gallery\GalleryManager;
 use App\Constants\MediaThumbnailSize;
+use App\Constants\ListSort;
 
 class GalleryApiController extends Controller
 {
@@ -199,6 +200,29 @@ class GalleryApiController extends Controller
                 break;
         }
 
-        return response($set_size, 200)->cookie('thumbnail_size', $set_size, 60*24*365);
+        return response($set_size, 200)
+            ->cookie('thumbnail_size', $set_size, 60*24*365);
+    }
+
+    public function changeListSort(Request $request)
+    {
+        if (!$this->isValidToken()) {
+            return response('', 401);
+        }
+        
+        $list_sort = $request->input('list_sort');
+        $set_list_sort = '';
+        switch ($list_sort) {
+            case ListSort::DESC:
+                $set_list_sort = ListSort::ASC;
+                break;
+            case ListSort::ASC:
+            default:
+                $set_list_sort = ListSort::DESC;
+                break;
+        }
+
+        return response($set_list_sort, 200)
+            ->cookie('list_sort', $set_list_sort, 60*24*365);
     }
 }

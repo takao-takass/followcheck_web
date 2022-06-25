@@ -10,6 +10,7 @@ use App\Http\Managers\Gallery\GalleryManager;
 use App\ViewModels\Gallery\GalleryViewModel;
 use App\Constants\WebRoute;
 use App\Constants\MediaThumbnailSize;
+use App\Constants\ListSort;
 use App\DataModels\RelationalUsers;
 
 class GalleryController extends Controller
@@ -25,8 +26,14 @@ class GalleryController extends Controller
         $page = $raw_page == null ? 0 : $raw_page;
         $service_user_id = $this->session_user->service_user_id;
 
+
+        $list_sort = $request->Cookie('list_sort');
+        if ($list_sort == null) {
+            $list_sort = ListSort::DESC;
+        }
+
         $manager = new GalleryManager();
-        $items = $manager->fetch($service_user_id, $page);
+        $items = $manager->fetch($service_user_id, $page, $list_sort);
 
         
         $thumbnail_size = $request->Cookie('thumbnail_size');
@@ -34,11 +41,12 @@ class GalleryController extends Controller
             $thumbnail_size = MediaThumbnailSize::MEDIUM;
         }
 
-        $param['viewModel'] = new GalleryViewModel('', '', $page, $thumbnail_size, $items);
+        $param['viewModel'] = new GalleryViewModel('', '', $page, $thumbnail_size, $list_sort, $items);
 
         return  response()
             ->view('gallery.index', $param)
-            ->cookie('thumbnail_size', $thumbnail_size, 60*24*365);
+            ->cookie('thumbnail_size', $thumbnail_size, 60*24*365)
+            ->cookie('list_sort', $list_sort, 60*24*365);
     }
 
     public function user(Request $request)
@@ -57,8 +65,14 @@ class GalleryController extends Controller
         $page = $raw_page == null ? 0 : $raw_page;
         $service_user_id = $this->session_user->service_user_id;
 
+
+        $list_sort = $request->Cookie('list_sort');
+        if ($list_sort == null) {
+            $list_sort = ListSort::DESC;
+        }
+
         $manager = new GalleryManager();
-        $items = $manager->fetch($service_user_id, $page, $user_id);
+        $items = $manager->fetch($service_user_id, $page, $list_sort, $user_id);
         
         $thumbnail_size = $request->Cookie('thumbnail_size');
         if ($thumbnail_size == null) {
@@ -69,10 +83,11 @@ class GalleryController extends Controller
             ->where('user_id', $user_id)
             ->first();
 
-        $param['viewModel'] = new GalleryViewModel($user_id, $relational_user['name'], $page, $thumbnail_size, $items);
+        $param['viewModel'] = new GalleryViewModel($user_id, $relational_user['name'], $page, $thumbnail_size, $list_sort, $items);
 
         return  response()
             ->view('gallery.index', $param)
-            ->cookie('thumbnail_size', $thumbnail_size, 60*24*365);
+            ->cookie('thumbnail_size', $thumbnail_size, 60*24*365)
+            ->cookie('list_sort', $list_sort, 60*24*365);
     }
 }
