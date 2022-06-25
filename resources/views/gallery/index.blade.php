@@ -2,6 +2,7 @@
     use App\Constants\WebRoute;
     use App\Constants\ApiRoute;
     use App\Constants\MediaThumbnailSize;
+    use App\Constants\ListSort;
 @endphp
 
 @extends('layout')
@@ -53,6 +54,22 @@
         
             <div class='{{$layout_cols}} mb-1'>
                 <button type="button" class="btn btn-secondary" style="width:100%; height:100%;" onclick="changeThumbnailSize('{{$viewModel->thumbnail_size}}')">サイズ変更</button>
+            </div>
+        
+            @php
+            switch ($viewModel->list_sort) {
+                case ListSort::DESC :
+                    $next_sort = '昇順';
+                    break;
+                case ListSort::ASC:
+                default:
+                    $next_sort = '降順';
+                    break;
+            }
+            @endphp
+            
+            <div class='{{$layout_cols}} mb-1'>
+                <button type="button" class="btn btn-secondary" style="width:100%; height:100%;" onclick="changeListSort('{{$viewModel->list_sort}}')">{{$next_sort}}に切替</button>
             </div>
         
             @if ($viewModel->user_id != '')
@@ -344,6 +361,16 @@
             @endphp
             let param = { "thumnbail_size" : currentThumbnailSize };
             $.post("{{ $url_change_thumbnail_api }}", param, function(response) {
+                location.reload();
+            });
+        }
+
+        function changeListSort(currentListSort) {
+            @php
+                $url_change_sort_api = route(ApiRoute::GALLERY_CHANGE_LISTSORT);
+            @endphp
+            let param = { "list_sort" : currentListSort };
+            $.post("{{ $url_change_sort_api }}", param, function(response) {
                 location.reload();
             });
         }
