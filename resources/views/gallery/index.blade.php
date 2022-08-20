@@ -183,6 +183,11 @@
             <div class='{{$layout_cols}} mb-1'>
                 <button type="button" class="btn btn-warning" style="width:100%; height:100%;" onclick="keepAll()">すべてKEEP</button>
             </div>
+            @if ($viewModel->user_id != '')
+            <div class='{{$layout_cols}} mb-1'>
+                <button type="button" class="btn btn-danger" style="width:100%; height:100%;" onclick="setNotTweetLongtime('{{$viewModel->user_id}}')">このユーザのツイート取得をやめる</button>
+            </div>
+            @endif
         </div>
         
         <!-- ページ下部のスペーサ -->
@@ -297,6 +302,22 @@
             $.post("{{ route('api.gallery.checked') }}", param, function(){
                 window.scroll({top: 0});
                 location.reload();
+            });
+
+        }
+        
+        function setNotTweetLongtime(userId){
+
+            let param = {
+                user_id: userId,
+            }
+            
+            @php
+                $url_set_not_tweet_longtime = route(ApiRoute::USER_SET_NOT_TWEET_LONGTIME);
+            @endphp
+
+            $.post("{{ $url_set_not_tweet_longtime }}", param, function(){
+                alert('ツイート取得を無効にしました');
             });
 
         }

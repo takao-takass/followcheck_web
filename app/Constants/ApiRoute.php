@@ -14,4 +14,7 @@ class ApiRoute
     const GALLERY_MEDIADETAIL = 'api.gallery.mediadetail';
     const GALLERY_CHANGE_THUMBNAILSIZE = 'api.gallery.change_thumbnailsize';
     const GALLERY_CHANGE_LISTSORT = 'api.gallery.change_listsort';
+
+    
+    const USER_SET_NOT_TWEET_LONGTIME = 'api.user.set_not_tweet_longtime';
 }
