@@ -36,6 +36,11 @@ Route::Post('/followcheck/api/gallery/change_listsort','Api\Gallery\GalleryApiCo
     ->name(ApiRoute::GALLERY_CHANGE_LISTSORT);
 
 
+# ユーザーAPI
+Route::Post('/followcheck/api/user/set_not_tweet_longtime','Api\User\TweetTakeUserApiController@setNotTweetLongtime')
+    ->name(ApiRoute::USER_SET_NOT_TWEET_LONGTIME);
+
+
 
 # ユーザ情報修復バッチ
 Route::Get('/followcheck/batch/UserRepair','Batch\UserRepairApiController@execute')
