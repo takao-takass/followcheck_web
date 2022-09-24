@@ -26,7 +26,17 @@ class GalleryManager
         : array
     {
 
-        $query = Tweets::select(['user_id','tweet_id','body','kept', 'shown'])
+        $query = Tweets::select
+        (
+            [
+                'user_id',
+                'tweet_id',
+                'tweeted_datetime',
+                'body',
+                'kept',
+                'shown'
+            ]
+        )
             ->where('service_user_id', $service_user_id)
             ->where('is_media', 1)
             ->where('media_ready', 1)
@@ -72,6 +82,8 @@ class GalleryManager
                 'thumb_directory_path',
                 'thumb_file_name',
                 'file_name',
+                'file_size',
+                'thumb_file_size',
             ]
         )
             ->where('service_user_id', $service_user_id)
@@ -99,10 +111,12 @@ class GalleryManager
                 $tweet_id,
                 "/img/tweetmedia/{$thumb_directory}/{$thumb_file}",
                 $tweet_media['file_name'],
+                $tweet_media['file_size'] + $tweet_media['thumb_file_size'],
                 $tweet_media['type'],
                 $tweets[$tweets_index]['body'],
                 $tweets[$tweets_index]['kept'] == '1' ? true : false,
                 $tweets[$tweets_index]['shown'] == '1' ? true : false,
+                $tweets[$tweets_index]['tweeted_datetime'],
             );
 
             array_push($models, $model);

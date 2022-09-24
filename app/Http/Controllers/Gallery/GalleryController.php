@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Gallery;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cookie;
 use App\Http\Controllers\Controller;
 use App\Http\Managers\Gallery\GalleryManager;
 use App\ViewModels\Gallery\GalleryViewModel;
@@ -36,12 +34,24 @@ class GalleryController extends Controller
         $items = $manager->fetch($service_user_id, $page, $list_sort);
 
         
+        $sum_media_size = array_sum(array_column($items, 'media_size'));
+        $min_tweeted_datetime = min(array_column($items, 'tweeted_datetime'));
+        
         $thumbnail_size = $request->Cookie('thumbnail_size');
         if ($thumbnail_size == null) {
             $thumbnail_size = MediaThumbnailSize::MEDIUM;
         }
 
-        $param['viewModel'] = new GalleryViewModel('', '', $page, $thumbnail_size, $list_sort, $items);
+        $param['viewModel'] = new GalleryViewModel(
+            '',
+            '',
+            $page,
+            $thumbnail_size,
+            $list_sort,
+            $items,
+            $sum_media_size,
+            $min_tweeted_datetime
+        );
 
         return  response()
             ->view('gallery.index', $param)
@@ -74,6 +84,9 @@ class GalleryController extends Controller
         $manager = new GalleryManager();
         $items = $manager->fetch($service_user_id, $page, $list_sort, $user_id);
         
+        $sum_media_size = array_sum(array_column($items, 'media_size'));
+        $min_tweeted_datetime = min(array_column($items, 'tweeted_datetime'));
+
         $thumbnail_size = $request->Cookie('thumbnail_size');
         if ($thumbnail_size == null) {
             $thumbnail_size = MediaThumbnailSize::MEDIUM;
@@ -83,7 +96,16 @@ class GalleryController extends Controller
             ->where('user_id', $user_id)
             ->first();
 
-        $param['viewModel'] = new GalleryViewModel($user_id, $relational_user['name'], $page, $thumbnail_size, $list_sort, $items);
+        $param['viewModel'] = new GalleryViewModel(
+            $user_id,
+            $relational_user['name'],
+            $page,
+            $thumbnail_size,
+            $list_sort,
+            $items,
+            $sum_media_size,
+            $min_tweeted_datetime
+        );
 
         return  response()
             ->view('gallery.index', $param)

@@ -9,10 +9,12 @@ class GalleryItemModel
         public string $tweet_id,
         public string $thumbnail_url,
         public string $media_name,
+        public int $media_size,
         public string $type,
         public string $tweet_text,
         public bool $kept,
-        public bool $shown
+        public bool $shown,
+        public string $tweeted_datetime
     ) {
     }
 }
