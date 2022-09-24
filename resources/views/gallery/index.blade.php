@@ -108,13 +108,13 @@
             @foreach ( $viewModel->items as $item )
 
             <div class='{{$layout_cols}} mb-1'>
+
                 <div class="thumbnail-box">
                     @if ($item->kept)
                     <a onclick="keep('{{$item->user_id}}', '{{$item->tweet_id}}')">
                     <img
                         alt=""
                         class='mr-3 thumb-radius thumb-back async-load tweet-media tweet-{{$item->tweet_id}} kept'
-                        data-toggle="tooltip" data-placement="top" title="{{$item->tweet_text}}"
                         style='width:100%;'
                         src="{{asset('./img/media_default.jpg')}}"
                         data-async-load='{{$item->thumbnail_url}}'>
@@ -125,7 +125,6 @@
                     <img
                         alt=""
                         class='mr-3 thumb-radius thumb-back async-load tweet-media tweet-{{$item->tweet_id}} img-opacity'
-                        data-toggle="tooltip" data-placement="top" title="{{$item->tweet_text}}"
                         style='width:100%;'
                         src="{{asset('./img/media_default.jpg')}}"
                         data-async-load='{{$item->thumbnail_url}}'>
@@ -136,7 +135,6 @@
                     <img
                         alt=""
                         class='mr-3 thumb-radius thumb-back async-load tweet-media tweet-{{$item->tweet_id}}'
-                        data-toggle="tooltip" data-placement="top" title="{{$item->tweet_text}}"
                         style='width:100%;'
                         src="{{asset('./img/media_default.jpg')}}"
                         data-async-load='{{$item->thumbnail_url}}'>
@@ -144,6 +142,9 @@
                     <p class="keep-label keep-label-{{$item->tweet_id}}" style="display: none;">K</p>
                     @endif
                 </div>
+
+                <label style="color:gray">{{preg_replace('/(http.+)/i', '', $item->tweet_text)}}</label>
+
                 <button 
                     type="button"
                     class="btn btn-outline-secondary btn-sm"
