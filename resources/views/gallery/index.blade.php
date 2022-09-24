@@ -26,6 +26,12 @@
     <!-- メインコンテンツ -->
     <div class="row mt-3"></div>
 
+    <div class="row">
+        <div class="col ml-3">
+            <label style="color:gray">{{$viewModel->tweeted_datetime}} [{{$viewModel->sum_media_size / 1000000}} MByte] </label>
+        </div>
+    </div>
+
     <div class="container-fluid">
 
     {{ Cookie::get('thumbnail_size') }}

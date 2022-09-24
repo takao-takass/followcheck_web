@@ -11,6 +11,8 @@ class GalleryViewModel
         public string $thumbnail_size,
         public string $list_sort,
         public array $items,
+        public int $sum_media_size,
+        public string $tweeted_datetime
     ) {
     }
 }
