@@ -34,7 +34,7 @@ class GalleryController extends Controller
         $items = $manager->fetch($service_user_id, $page, $list_sort);
 
         $sum_media_size = 0;
-        $min_tweeted_datetime = date_create();
+        $min_tweeted_datetime = '';
         if(count($items)){
             $sum_media_size = array_sum(array_column($items, 'media_size'));
             $min_tweeted_datetime = min(array_column($items, 'tweeted_datetime'));
@@ -88,7 +88,7 @@ class GalleryController extends Controller
         $items = $manager->fetch($service_user_id, $page, $list_sort, $user_id);
         
         $sum_media_size = 0;
-        $min_tweeted_datetime = date_create();
+        $min_tweeted_datetime = '';
         if(count($items)){
             $sum_media_size = array_sum(array_column($items, 'media_size'));
             $min_tweeted_datetime = min(array_column($items, 'tweeted_datetime'));
