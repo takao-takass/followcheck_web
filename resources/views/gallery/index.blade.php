@@ -143,7 +143,9 @@
                     @endif
                 </div>
 
+                @if ($viewModel->user_id != '')
                 <label style="color:gray">{{preg_replace('/(http.+)/i', '', $item->tweet_text)}}</label>
+                @endif
 
                 <button 
                     type="button"

@@ -113,7 +113,7 @@ class GalleryManager
                 $tweet_media['file_name'],
                 $tweet_media['file_size'] + $tweet_media['thumb_file_size'],
                 $tweet_media['type'],
-                substr($tweets[$tweets_index]['body'], 10),
+                $tweets[$tweets_index]['body'],
                 $tweets[$tweets_index]['kept'] == '1' ? true : false,
                 $tweets[$tweets_index]['shown'] == '1' ? true : false,
                 $tweets[$tweets_index]['tweeted_datetime'],
