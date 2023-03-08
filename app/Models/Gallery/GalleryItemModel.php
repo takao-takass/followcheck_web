@@ -7,6 +7,7 @@ class GalleryItemModel
     public function __construct(
         public string $user_id,
         public string $tweet_id,
+        public string $media_url,
         public string $thumbnail_url,
         public string $media_name,
         public int $media_size,
