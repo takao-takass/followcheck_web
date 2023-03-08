@@ -81,6 +81,7 @@ class GalleryManager
                 'type',
                 'thumb_directory_path',
                 'thumb_file_name',
+                'directory_path',
                 'file_name',
                 'file_size',
                 'thumb_file_size',
@@ -106,11 +107,15 @@ class GalleryManager
             $thumb_directory = explode("/", $tweet_media['thumb_directory_path'])[5];
             $thumb_file = $tweet_media['thumb_file_name'];
 
+            $media_directory = explode("/", $tweet_media['directory_path'])[5];
+            $media_file = $tweet_media['file_name'];
+
             $model = new GalleryItemModel(
                 $tweet_media['user_id'],
                 $tweet_id,
+                "/img/tweetmedia/{$media_directory}/{$media_file}",
                 "/img/tweetmedia/{$thumb_directory}/{$thumb_file}",
-                $tweet_media['file_name'],
+                $media_file,
                 $tweet_media['file_size'] + $tweet_media['thumb_file_size'],
                 $tweet_media['type'],
                 $tweets[$tweets_index]['body'],

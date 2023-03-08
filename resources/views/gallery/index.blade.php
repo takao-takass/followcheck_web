@@ -147,19 +147,30 @@
                 <label style="color:gray">{{preg_replace('/(http.+)/i', '', $item->tweet_text)}}</label>
                 @endif
 
-                <button 
-                    type="button"
-                    class="btn btn-outline-secondary btn-sm"
-                    style='width: 100%;'
-                    onclick='modal("{{$item->tweet_id}}", "{{$item->user_id}}", "{{$item->media_name}}")'>
-
-                    @if($item->type == 'video')
-                        ▶ 再生
-                    @else
-                        詳細
-                    @endif
-                    
-                </button>
+                <div class="row">
+                    <div class="col-9">
+                        <button 
+                            type="button"
+                            class="btn btn-outline-secondary btn-sm"
+                            style='width: 100%;'
+                            onclick='modal("{{$item->tweet_id}}", "{{$item->user_id}}", "{{$item->media_name}}")'>
+                            @if($item->type == 'video')
+                                ▶ 再生
+                            @else
+                                詳細
+                            @endif
+                        </button>
+                    </div>
+                    <div class="col-3">
+                        <a 
+                            class="btn btn-outline-secondary btn-sm"
+                            style='width: 100%;'
+                            href="{{$item->media_url}}"
+                            target="_blank" rel="noopener noreferrer">
+                            ➦
+                        </a>    
+                    </div>
+                </div>
             </div>
 
             @endforeach
